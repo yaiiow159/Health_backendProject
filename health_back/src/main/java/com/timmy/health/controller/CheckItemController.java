@@ -51,4 +51,14 @@ public class CheckItemController {
             return new Result(checkItemService.removeById(id),MessageConstant.DELETE_CHECKITEM_FAIL);
         }
     }
+
+    //更新檢查項目(顯示數據內容在表單裡面)
+    @PutMapping
+    public Result updateCheck(@RequestBody CheckItem checkItem){
+        if (checkItemService.updateById(checkItem)){
+            return new Result(checkItemService.updateById(checkItem));
+        } else{
+            return new Result(checkItemService.updateById(checkItem));
+        }
+    }
 }

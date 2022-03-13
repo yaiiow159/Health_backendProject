@@ -287,18 +287,19 @@
             },
             // 彈出編輯窗口
             handleUpdate(row) {
+                this.dialogFormVisible4Edit = true;
                 axios.get("/checkitems/" + row.id).then((resp) =>{
                     if (resp.data.flag && resp.data.data != null){
-                        this.dialogFormVisible4Edit = true;
+                        this.dialogFormVisible4Edit = false;
                         this.formData = resp.data.data;
                     } else {
-                        this.$message.error("資料同步失敗，請刷新");
+                        this.$message.error(resp.data.message);
                     }
                 }).finally(() =>{
                    this.findPage();
                 });
             },
-            //切換頁碼
+            //顯示當前頁數
             handleCurrentChange(currentPage) {
                 this.pagination.currentPage = currentPage;
                 this.findPage();
