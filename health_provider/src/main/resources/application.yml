@@ -1,0 +1,38 @@
+server:
+  port: 81
+
+#Spring相關設置
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/health?serverTimezone=GMT%2b8&useUnicode=true&characterEncoding=UTF-8
+      username: root
+      password: timmy072869
+
+#dubbo相關設置
+dubbo:
+  application:
+    name: health_provider
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  config-center:
+    timeout: 25000
+  scan:
+    base-packages: com.timmy.health.service.impl
+
+#MP相關設置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:com/timmy/health/mapper/*.xml
+  global-config:
+    db-config:
+      table-prefix: t_
+      id-type: auto
+---
+
+
+
+
+---

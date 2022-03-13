@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>健康管理系統</title>
+    <meta name="description" content="健康管理">
+    <meta name="keywords" content="健康管理">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入樣式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>預約管理<small>檢查專案管理</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
+            <el-breadcrumb-item>預約管理</el-breadcrumb-item>
+            <el-breadcrumb-item>檢查項管理</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-input placeholder="專案名稱" v-model="pagination.name" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-input placeholder="專案代碼" v-model="pagination.code" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-button @click="findPage()" class="dalfBut">查詢</el-button>
+                <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+            </div>
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序號"></el-table-column>
+                <el-table-column prop="code" label="專案代碼" align="center"></el-table-column>
+                <el-table-column prop="name" label="專案名稱" align="center"></el-table-column>
+                <el-table-column label="適用性別" align="center">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.sex == '0' ? '不限' : scope.row.sex == '1' ? '男' : '女'}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="age" label="適用年齡" align="center"></el-table-column>
+                <el-table-column prop="remark" label="專案說明" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">刪除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        class="pagiantion"
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+            <!-- 新增標簽彈層 -->
+            <div class="add-form">
+                <el-dialog title="新增檢查項" :visible.sync="dialogFormVisible">
+                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
+                             label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="專案代碼" prop="code">
+                                    <el-input v-model="formData.code"/>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="專案名稱" prop="name">
+                                    <el-input v-model="formData.name"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="性別">
+                                    <el-select v-model="formData.sex">
+                                        <el-option label="不限" value="0"></el-option>
+                                        <el-option label="男" value="1"></el-option>
+                                        <el-option label="女" value="2"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="適用年齡">
+                                    <el-input v-model="formData.age"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="類型">
+                                    <el-select v-model="formData.type">
+                                        <el-option label="檢查" value="1"></el-option>
+                                        <el-option label="檢驗" value="2"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="價格">
+                                    <el-input v-model="formData.price"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="專案說明">
+                                    <el-input v-model="formData.remark" type="textarea"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="注意事項">
+                                    <el-input v-model="formData.attention" type="textarea"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取消</el-button>
+                        <el-button type="primary" @click="handleAdd()">確定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+            <!-- 編輯標簽彈層 -->
+            <div class="add-form">
+                <el-dialog title="編輯檢查項" :visible.sync="dialogFormVisible4Edit">
+                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
+                             label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="專案代碼" prop="code">
+                                    <el-input v-model="formData.code"/>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="專案名稱" prop="name">
+                                    <el-input v-model="formData.name"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="性別">
+                                    <el-select v-model="formData.sex">
+                                        <el-option label="不限" value="0"></el-option>
+                                        <el-option label="男" value="1"></el-option>
+                                        <el-option label="女" value="2"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="適用年齡">
+                                    <el-input v-model="formData.age"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="類型">
+                                    <el-select v-model="formData.type">
+                                        <el-option label="檢查" value="1"></el-option>
+                                        <el-option label="檢驗" value="2"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="價格">
+                                    <el-input v-model="formData.price"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="專案說明">
+                                    <el-input v-model="formData.remark" type="textarea"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="注意事項">
+                                    <el-input v-model="formData.attention" type="textarea"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+                        <el-button type="primary" @click="handleEdit()">確定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入組件庫 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+    let vue = new Vue({
+        el: '#app',
+        data: {
+            pagination: {//分頁相關模型數據
+                currentPage: 1,//當前頁碼
+                pageSize: 10,//每頁顯示的記錄數
+                total: 0,//總記錄數
+                name: "",
+                code: ""
+            },
+            dataList: [],//當前頁要展示的分頁列表數據
+            formData: {},//表單數據
+            dialogFormVisible: false,//增加表單是否可見
+            dialogFormVisible4Edit: false,//編輯表單是否可見
+            rules: {//校驗規則
+                code: [{required: true, message: '專案代碼為必填專案', trigger: 'blur'}],
+                name: [{required: true, message: '專案名稱為必填專案', trigger: 'blur'}]
+            }
+        },
+
+        created() {
+            this.findPage(); //findPage() when initialize
+        },
+        methods: {
+            //編輯
+            handleEdit() {
+            },
+            //添加
+            handleAdd() {
+                //進行屬性校驗
+                this.$refs['dataAddForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post("/checkitems", this.formData).then((resp) => {
+                            if (resp.data.flag) {
+                                //保存成功
+                                this.dialogFormVisible = false;
+                                //更新頁面數據
+                                this.findPage();
+                                //彈出提示
+                                this.$message({
+                                    message: resp.data.message,
+                                    type: "success"
+                                });
+                            } else {
+                                //保存失敗
+                                this.$message.error(resp.data.message);
+                            }
+                        });
+                    } else {
+                        //校驗不通過 發送錯誤通知
+                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        return false;
+                    }
+                });
+            },
+            //分頁查詢
+            findPage() {
+                param = "?query";
+                param += "&name=" + this.pagination.name;
+                param += "&code=" + this.pagination.code;
+                axios.get("/checkitems/" + this.pagination.currentPage + "/" + this.pagination.pageSize + param).then((resp) => {
+                    this.pagination.pageSize = resp.data.data.size;
+                    this.pagination.total = resp.data.data.total;
+                    this.pagination.currentPage = resp.data.data.current
+                    this.dataList = resp.data.data.records;
+                });
+            },
+            // 重置表單
+            resetForm() {
+                this.formData = {};
+            },
+            // 彈出添加窗口
+            handleCreate() {
+                this.dialogFormVisible = true;
+                this.resetForm();
+            },
+            // 彈出編輯窗口
+            handleUpdate(row) {
+                axios.get("/checkitems/" + row.id).then((resp) =>{
+                    if (resp.data.flag && resp.data.data != null){
+                        this.dialogFormVisible4Edit = true;
+                        this.formData = resp.data.data;
+                    } else {
+                        this.$message.error("資料同步失敗，請刷新");
+                    }
+                }).finally(() =>{
+                   this.findPage();
+                });
+            },
+            //切換頁碼
+            handleCurrentChange(currentPage) {
+                this.pagination.currentPage = currentPage;
+                this.findPage();
+            },
+            // 刪除
+            handleDelete(row) {
+                this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原","提示",{type: "warning"}).then(() =>{
+                    axios.delete("/checkitems/" + row.id).then((resp) =>{
+                        if (resp.data.flag){
+                            this.$message({
+                                type: "success",
+                                message: resp.data.message
+                            });
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    }).finally(() =>{
+                        this.findPage();
+                    });
+                }).catch(() =>{
+                    this.$message.info("取消操作");
+                });
+            }
+        }
+    })
+</script>
+</html>
