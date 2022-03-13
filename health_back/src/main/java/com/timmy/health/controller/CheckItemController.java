@@ -25,7 +25,7 @@ public class CheckItemController {
     //添加檢查項目
     @PostMapping
     public Result add(@RequestBody CheckItem checkItem) {
-        if (checkItemService.save(checkItem)){
+        if (checkItemService.save(checkItem)) {
             return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);
         } else {
             return new Result(false, MessageConstant.ADD_CHECKITEM_FAIL);
@@ -34,31 +34,37 @@ public class CheckItemController {
 
     //分頁查詢功能
     @GetMapping("{currentPage}/{pageSize}")
-    public Result findPage(@PathVariable int currentPage,@PathVariable int pageSize,CheckItem checkItem){
+    public Result findPage(@PathVariable int currentPage, @PathVariable int pageSize, CheckItem checkItem) {
         IPage<CheckItem> page = checkItemService.findPage(currentPage, pageSize, checkItem);
-        if (currentPage > page.getPages()){
-            page = checkItemService.findPage((int)page.getPages(),pageSize,checkItem);
+        if (currentPage > page.getPages()) {
+            page = checkItemService.findPage((int) page.getPages(), pageSize, checkItem);
         }
-        return new Result(null != page,page);
+        return new Result(null != page, page);
     }
 
     //刪除檢查項目
     @DeleteMapping("{id}")
-    public Result deleteCheck(@PathVariable Integer id){
-        if (checkItemService.removeById(id)){
-            return new Result(checkItemService.removeById(id),MessageConstant.DELETE_CHECKITEM_SUCCESS);
+    public Result deleteCheck(@PathVariable Integer id) {
+        if (checkItemService.removeById(id)) {
+            return new Result(checkItemService.removeById(id), MessageConstant.DELETE_CHECKITEM_SUCCESS);
         } else {
-            return new Result(checkItemService.removeById(id),MessageConstant.DELETE_CHECKITEM_FAIL);
+            return new Result(checkItemService.removeById(id), MessageConstant.DELETE_CHECKITEM_FAIL);
+        }
+    }
+
+    @GetMapping("{id}")
+    public Result getCheckItem(@PathVariable Integer id) {
+        if (checkItemService.getById(id) != null) {
+            return new Result(true, checkItemService.getById(id));
+        } else {
+            return new Result(false, "查無此結果");
         }
     }
 
     //更新檢查項目(顯示數據內容在表單裡面)
     @PutMapping
-    public Result updateCheck(@RequestBody CheckItem checkItem){
-        if (checkItemService.updateById(checkItem)){
-            return new Result(checkItemService.updateById(checkItem));
-        } else{
-            return new Result(checkItemService.updateById(checkItem));
-        }
+    public Result updateCheck(@RequestBody CheckItem checkItem) {
+        boolean update = checkItemService.updateById(checkItem);
+        return new Result(update,update? "更新成功":"更新失敗");
     }
 }

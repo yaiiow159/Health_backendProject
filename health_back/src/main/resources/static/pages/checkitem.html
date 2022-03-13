@@ -235,6 +235,14 @@
         methods: {
             //編輯
             handleEdit() {
+                axios.put("/checkitems",this.formData).then((resp) =>{
+                    if (resp.data.flag){
+                        this.dialogFormVisible4Edit = false;
+                        this.$message.success(resp.data.message);
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                });
             },
             //添加
             handleAdd() {
