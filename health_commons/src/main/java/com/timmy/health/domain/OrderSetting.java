@@ -1,27 +1,58 @@
 package com.timmy.health.domain;
 
-import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
+import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleDropDbLinkStatement;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 
 /**
- * 预约设置
+ * 
+ * @TableName t_ordersetting
  */
+@TableName(value ="t_ordersetting")
 @Data
-public class OrderSetting implements Serializable{
-    private Integer id ;
-    private Date orderDate;//预约设置日期
-    private int number;//可预约人数
-    private int reservations ;//已预约人数
+@NoArgsConstructor
+@Validated
+public class OrderSetting implements Serializable {
+    /**
+     * 
+     */
+    @TableId(value = "id", type = IdType.AUTO)
+    @NotNull
+    private Integer id;
 
-    public OrderSetting() {
-    }
+    /**
+     * 約預日期
+     */
+    @TableField(value = "orderDate")
+    private Date orderdate;
 
-    public OrderSetting(Date orderDate, int number) {
-        this.orderDate = orderDate;
+    /**
+     * 可預約人數
+     */
+    @TableField(value = "number")
+    private Integer number;
+
+    /**
+     * 已預約人數
+     */
+    @TableField(value = "reservations")
+    private Integer reservations;
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+
+    public OrderSetting(Date orderdate, int number){
+        this.orderdate = orderdate;
         this.number = number;
     }
-
 }

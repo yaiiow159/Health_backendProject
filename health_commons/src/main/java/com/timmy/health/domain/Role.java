@@ -11,8 +11,8 @@ import java.util.Set;
 @Data
 public class Role implements Serializable {
     private Integer id;
-    private String name; // 角色名称
-    private String keyword; // 角色关键字，用于权限控制
+    private String name; // 角色名稱
+    private String keyword; // 角色關键字，用于權限控制
     private String description; // 描述
     private Set<User> users = new HashSet<User>(0);
     private Set<Permission> permissions = new HashSet<Permission>(0);

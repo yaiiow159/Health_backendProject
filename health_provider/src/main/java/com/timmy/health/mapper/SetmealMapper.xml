@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timmy.health.mapper.SetMealMapper">
+
+    <resultMap id="BaseResultMap" type="Setmeal">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="helpCode" column="helpCode" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="CHAR"/>
+        <result property="age" column="age" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="FLOAT"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="attention" column="attention" jdbcType="VARCHAR"/>
+        <result property="img" column="img" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--add setMeal and send back the id-->
+    <insert id="addSetMeal">
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_setmeal(name, code, helpCode, sex, age, price, remark, attention, img)
+        values (#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
+    </insert>
+
+    <!--設置SetMeal 和 checkGroup 關系表-->
+    <insert id="setSetMealAndCheckGroups" parameterType="map">
+        insert into t_setmeal_checkgroup(setmeal_id, checkgroup_id) values (#{setMealId},#{checkGroupId})
+    </insert>
+
+
+</mapper>

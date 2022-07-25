@@ -212,10 +212,10 @@
     let vue = new Vue({
         el: '#app',
         data: {
-            pagination: {//分頁相關模型數據
-                currentPage: 1,//當前頁碼
-                pageSize: 10,//每頁顯示的記錄數
-                total: 0,//總記錄數
+            pagination: {//page data
+                currentPage: 1,//current page
+                pageSize: 10,// the current pages number
+                total: 0,// total pages
                 name: "",
                 code: ""
             },
@@ -237,11 +237,12 @@
             handleEdit() {
                 axios.put("/checkitems",this.formData).then((resp) =>{
                     if (resp.data.flag){
-                        this.dialogFormVisible4Edit = false;
-                        this.$message.success(resp.data.message);
+                        this.$message({type: "success",message: resp.data.message});
                     } else {
                         this.$message.error(resp.data.message);
                     }
+                }).finally(()=> {
+                    this.dialogFormVisible4Edit = false;
                 });
             },
             //添加
@@ -251,22 +252,20 @@
                     if (valid) {
                         axios.post("/checkitems", this.formData).then((resp) => {
                             if (resp.data.flag) {
-                                //保存成功
-                                this.dialogFormVisible = false;
-                                //更新頁面數據
-                                this.findPage();
-                                //彈出提示
+                                //show message
                                 this.$message({
                                     message: resp.data.message,
                                     type: "success"
                                 });
                             } else {
-                                //保存失敗
                                 this.$message.error(resp.data.message);
                             }
+                        }).finally(() => {
+                            this.findPage();
+                            this.dialogFormVisible4Edit = false;
                         });
                     } else {
-                        //校驗不通過 發送錯誤通知
+                        // if the valid incorrect show the error message
                         this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
                         return false;
                     }
@@ -284,35 +283,36 @@
                     this.dataList = resp.data.data.records;
                 });
             },
-            // 重置表單
+            // reset the form
             resetForm() {
                 this.formData = {};
             },
-            // 彈出添加窗口
+            // create
             handleCreate() {
                 this.dialogFormVisible = true;
                 this.resetForm();
             },
-            // 彈出編輯窗口
+            // update the show data in the page
             handleUpdate(row) {
                 this.dialogFormVisible4Edit = true;
                 axios.get("/checkitems/" + row.id).then((resp) =>{
                     if (resp.data.flag && resp.data.data != null){
-                        this.dialogFormVisible4Edit = false;
+                        // the request data has data from row so show it in the row
                         this.formData = resp.data.data;
                     } else {
+                        // show the error message
                         this.$message.error(resp.data.message);
                     }
                 }).finally(() =>{
                    this.findPage();
                 });
             },
-            //顯示當前頁數
+            //show current page
             handleCurrentChange(currentPage) {
                 this.pagination.currentPage = currentPage;
                 this.findPage();
             },
-            // 刪除
+            // delete the row data
             handleDelete(row) {
                 this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原","提示",{type: "warning"}).then(() =>{
                     axios.delete("/checkitems/" + row.id).then((resp) =>{

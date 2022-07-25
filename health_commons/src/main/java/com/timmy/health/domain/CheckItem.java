@@ -1,27 +1,33 @@
 package com.timmy.health.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * 检查项
+ * checkItems
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("t_checkitem")
+@Validated
 public class CheckItem implements Serializable {
+
+    @NotNull(message = "檢查項目id不能為空")
     private Integer id;//primary key
     private String code;//code
     private String name;//project name
     private String sex;//sex
     private String age;//
-    private Float price;//价格
-    private String type;//检查项类型，分为检查和检验两种类型
-    private String remark;//项目说明
-    private String attention;//注意事项
+    private Float price;// price
+    private String type;//
+    private String remark;
+    private String attention;
 }

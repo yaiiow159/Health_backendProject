@@ -2,6 +2,8 @@ package com.timmy.health.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,9 +16,13 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.zookeeper.Op;
 import org.bouncycastle.util.Integers;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
 * @author examy
@@ -37,16 +43,28 @@ public class CheckitemServiceImpl extends ServiceImpl<CheckitemMapper, CheckItem
 
     @Override
     public IPage<CheckItem> findPage(int currenPage, int pageSize) {
-        return checkitemMapper.selectPage(new Page<CheckItem>(currenPage,pageSize),null);
+        return checkitemMapper.selectPage(new Page<>(currenPage, pageSize),null);
     }
 
     @Override
-    public IPage<CheckItem> findPage(int currenPage, int pageSize, CheckItem checkItem) {
+    public IPage<CheckItem> findPage(int currenPage, int pageSize, @NotNull CheckItem checkItem) {
         LambdaQueryWrapper<CheckItem> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(Strings.isNotEmpty(checkItem.getName()),CheckItem::getName,checkItem.getName());
         queryWrapper.like(Strings.isNotEmpty(checkItem.getCode()),CheckItem::getCode,checkItem.getCode());
 
-        return checkitemMapper.selectPage(new Page<CheckItem>(currenPage,pageSize),queryWrapper);
+        return checkitemMapper.selectPage(new Page<>(currenPage, pageSize),queryWrapper);
+    }
+
+    @Override
+    public List<CheckItem> getAllCheckItems() {
+        return checkitemMapper.selectList(null);
+    }
+
+    @Override
+    public int edit(@NotNull CheckItem checkItem) {
+        UpdateWrapper<CheckItem> updateWrapper = new UpdateWrapper();
+        update().eq("id",checkItem.getId());
+        return checkitemMapper.update(checkItem,updateWrapper);
     }
 
 }

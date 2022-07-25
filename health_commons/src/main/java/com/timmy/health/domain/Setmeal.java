@@ -1,22 +1,42 @@
 package com.timmy.health.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
-
+import org.springframework.validation.annotation.Validated;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
 
 @Data
+@Validated
 public class Setmeal implements Serializable {
+
+    @NotNull(message = "套餐主鍵不能為空")
+    @TableId
     private Integer id;
+
+    @NotBlank
     private String name;
+    @NotBlank
     private String code;
+    @NotBlank
     private String helpCode;
-    private String sex;//套餐适用性别：0不限 1男 2女
-    private String age;//套餐适用年龄
-    private Float price;//套餐价格
+    @NotBlank
+    private String sex;
+    @NotBlank
+    private String age;
+    @NotBlank
+    private Float price;
+    @NotBlank
     private String remark;
+    @NotBlank
     private String attention;
-    private String img;//套餐对应图片存储路径
-    private List<CheckGroup> checkGroups;//体检套餐对应的检查组，多对多关系
+    @NotBlank
+    private String img;
+
+    @TableField(exist = false)
+    private List<CheckGroup> checkGroups;//many to many
 }

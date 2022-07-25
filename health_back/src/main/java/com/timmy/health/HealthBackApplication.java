@@ -7,10 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableDubbo
 @SpringBootApplication
 public class HealthBackApplication {
-
     public static void main(String[] args) {
-        System.setProperty("dubbo.application.logger","log4j2");
+        //change the system property with the dubbo logger setting
+        System.setProperty("dubbo.application.logger","slf4j");
         SpringApplication.run(HealthBackApplication.class, args);
     }
-
 }

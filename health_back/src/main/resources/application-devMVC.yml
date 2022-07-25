@@ -1,4 +1,0 @@
-server:
-  servlet:
-    encoding:
-      charset: utf-8

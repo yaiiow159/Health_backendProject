@@ -1,9 +1,14 @@
 package com.timmy.health.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,7 +18,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("t_checkgroup")
+@Validated
 public class CheckGroup implements Serializable {
+
+
+    @NotNull(message = "檢查項目id不能為null")
     private Integer id;
     private String code;
     private String name;
@@ -21,5 +31,8 @@ public class CheckGroup implements Serializable {
     private String sex;
     private String remark;
     private String attention;
-    private List<CheckItem> checkItems;//一个检查组合包含多个檢查item
+
+    @TableField(exist = false)
+    private List<CheckItem> checkItems;
+
 }

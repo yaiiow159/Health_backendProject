@@ -127,20 +127,14 @@
                 <scope>test</scope>
             </dependency>
 
-            <!--轉換bytecode-->
-            <!-- https://mvnrepository.com/artifact/org.javassist/javassist -->
-            <dependency>
-                <groupId>org.javassist</groupId>
-                <artifactId>javassist</artifactId>
-                <version>3.28.0-GA</version>
-            </dependency>
+            <!-- transform bytecode-->
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
             </dependency>
 
-            <!--poi報表相關-->
+            <!--poi-->
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi</artifactId>
@@ -152,7 +146,7 @@
                 <version>5.0.0</version>
             </dependency>
 
-            <!--任務調度框架-->
+            <!--quartz-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-quartz</artifactId>
@@ -162,11 +156,6 @@
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-client</artifactId>
                 <version>1.19.4</version>
-            </dependency>
-            <dependency>
-                <groupId>com.qiniu</groupId>
-                <artifactId>qiniu-java-sdk</artifactId>
-                <version>7.9.3</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
             <dependency>
@@ -191,11 +180,9 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
-
-   <build>
+    <build>
         <plugins>
           <!--  <plugin>
                 <groupId>org.springframework.boot</groupId>
