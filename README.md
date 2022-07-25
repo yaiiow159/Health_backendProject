@@ -6,7 +6,7 @@ you also can choose the check group or Luxury combinations, and you also can boo
 , and show them on the calendar
 
 
-## Use technology
+# Technologies / Tools
 
 fronted tecnologies: Vue2、elementUI、javascript、html5、css3
 
@@ -19,7 +19,7 @@ Cloud Tec: GCP (Google cloud platoform storage)
 Version-Control : Git,Github
 
 
-# Fuctions
+# Functions
 __________________________
 
 1.  Crud function to add update delete and get the check item check group set meal
