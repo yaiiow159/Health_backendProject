@@ -1,4 +1,4 @@
-# Health-Backend-System
+# Health_Management-Backend-System
 
 # Introduction
 Health-Backend-System is a distributed system that can let user choose what they want to check such as their health option such as height, weight, and BMI
