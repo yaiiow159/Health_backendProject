@@ -6,6 +6,8 @@ front Tec: Vue2、elementUI、javascript
 
 backend Tec : Springboot、SpringMVC、Spring、Mybatis-Plus、Spring-task、duboo、zookeeper、Apache-POI
 
+Systme Tec : windows10、linux
+
 Cloud Tec: GCP (Google cloud platoform storage)
 
 
