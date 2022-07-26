@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/setMeals/")
+@RequestMapping("/setMeals")
 @Slf4j
 public class SetMealController {
 
@@ -31,12 +34,13 @@ public class SetMealController {
     @DubboReference(interfaceClass = SetMealService.class)
     private SetMealService setMealService;
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @PostMapping(value = "/upload")
     public Result upload(@RequestParam("imgFile") @NotNull MultipartFile imgFile) {
         String extension = null;
 
         String originalFilename = imgFile.getOriginalFilename();
-        if (originalFilename.lastIndexOf(".") > -1) {
+
+        if (Objects.requireNonNull(originalFilename).lastIndexOf(".") > -1) {
             extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
 
@@ -77,5 +81,26 @@ public class SetMealController {
         return new Result(null != setmealIPage.getRecords(), setmealIPage);
     }
 
+    @GetMapping("{id}")
+    public Result getMealById(@PathVariable Integer id) {
+        try {
+            Setmeal setmeal = setMealService.getMealById(id);
+            return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS, setmeal);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
+        }
+    }
+
+    @RequestMapping(value = "/findcheckGroupsByMealId")
+    public Result findcheckGroupsByMealId(Integer id) {
+        try {
+            List<Integer> checkGroups = setMealService.findCheckGroupById(id);
+            return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS, checkGroups);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
+        }
+    }
 
 }

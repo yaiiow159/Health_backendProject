@@ -2,7 +2,9 @@ package com.timmy.health.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Data
 @Validated
+@NoArgsConstructor
+@AllArgsConstructor
 public class Setmeal implements Serializable {
 
     @NotNull(message = "套餐主鍵不能為空")
@@ -37,6 +41,6 @@ public class Setmeal implements Serializable {
     @NotBlank
     private String img;
 
-    @TableField(exist = false)
+    @TableField(select = false)
     private List<CheckGroup> checkGroups;//many to many
 }

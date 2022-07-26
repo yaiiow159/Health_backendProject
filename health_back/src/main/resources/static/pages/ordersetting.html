@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh_Tw">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,11 +21,13 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1>預約管理<small>預約設置</small></h1>
+        <h1 class="order_manage">預約管理
+            <small class="check_manage">預約設置</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-            <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
-            <el-breadcrumb-item>預約管理</el-breadcrumb-item>
-            <el-breadcrumb-item>預約設置</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span>
+            </el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_title">預約管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_setting">預約設置</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
@@ -33,17 +35,19 @@
             <div class="box ordersetting">
                 <el-card class="box-card">
                     <div class="boxMain">
-                        <el-button style="margin-bottom: 20px;margin-right: 20px" type="primary" @click="downloadTemplate()">模板下載</el-button>
+                        <el-button style="margin-bottom: 20px;margin-right: 20px" type="success"
+                                   @click="downloadTemplate()"><span style="font-weight: bold">模板下載</span>
+                        </el-button>
                         <el-upload action="/orderSettings/upload/"
                                    name="excelFile"
                                    :show-file-list="false"
                                    :on-success="handleSuccess"
                                    :before-upload="beforeUpload">
-                            <el-button type="primary">上傳文件</el-button>
+                            <el-button type="primary"><span style="font-weight: bold">上傳文件</span></el-button>
                         </el-upload>
                     </div>
                     <div class="operations_tall">
-                        <span>操作說明：請點擊"模板下載"按鈕獲取模板文件，在模板文件中錄入預約設置數據后點擊"上傳文件"按鈕上傳模板文件。</span>
+                        操作說明：點擊"下載預約表格"按鈕獲取預約文件，在預約文件中寫上預約設置資料後點"上傳文件"按鈕上傳預約文件
                     </div>
                 </el-card>
                 <div class="calendar">
@@ -53,22 +57,21 @@
                             <span class="choose-month">{{ currentMonth }}月</span>
                         </div>
                         <div class="choose">
-                            <span @click="goCurrentMonth(currentYear,currentMonth)" class="gotoday">今天</span>
-                            <span @click="pickPre(currentYear,currentMonth)">?</span>
-                            <span @click="pickNext(currentYear,currentMonth)">?</span>
+                            <span class="front-month" @click="pickPre(currentYear,currentMonth)">前個月</span>
+                            <span @click="goCurrentMonth(currentYear,currentMonth)" class="gotoday">現在</span>
+                            <span class="next-month" @click="pickNext(currentYear,currentMonth)">下個月</span>
                         </div>
                         <div class="clearfix"></div>
-                    </div>
-                    <!-- 星期 -->
+                    </div>        <!-- 星期 -->
                     <div class="caldate">
                         <ul class="weekdays">
-                            <li>周一</li>
-                            <li>周二</li>
-                            <li>周三</li>
-                            <li>周四</li>
-                            <li>周五</li>
-                            <li>周六</li>
-                            <li>周日</li>
+                            <li>週一</li>
+                            <li>週二</li>
+                            <li>週三</li>
+                            <li>週四</li>
+                            <li>週五</li>
+                            <li>週六</li>
+                            <li>週日</li>
                         </ul>
                         <!-- 日期 -->
                         <ul class="days">
@@ -76,23 +79,24 @@
                             <li v-for="dayobject in days">
                                 <template>
                                     <!-- 非當前月份 -->
-                                    <div class="other-month" v-if="dayobject.day.getMonth()+1 != currentMonth">
+                                    <div class="other-month" v-if="dayobject.day.getMonth()+1 !== currentMonth">
                                         {{ dayobject.day.getDate() }}
                                     </div>
                                     <!-- 當前月 -->
-                                    <div class="everyday" v-if="dayobject.day.getMonth()+1 == currentMonth">
+                                    <div class="everyday" v-if="dayobject.day.getMonth()+1 === currentMonth">
                                         <span class="datenumber">{{ dayobject.day.getDate()}}</span>
 
                                         <template>
                                             <template v-for="obj in leftobj">
-                                                <template v-if="obj.date == dayobject.day.getDate()">
-                                                    <template v-if="obj.number > obj.reservations">
+
+                                                <template v-if="obj.date === dayobject.day.getDate()"> //check the date is or not
+                                                    <template v-if="obj.number > obj.reservations"> //check the number is > reservation or not
                                                         <div class="usual">
                                                             <p>可預約{{obj.number}}人</p>
                                                             <p>已預約{{obj.reservations}}人</p>
                                                         </div>
                                                     </template>
-                                                    <template v-else>
+                                                    <template v-else>   //else
                                                         <div class="fulled">
                                                             <p>可預約{{obj.number}}人</p>
                                                             <p>已預約{{obj.reservations}}人</p>
@@ -101,7 +105,9 @@
                                                     </template>
                                                 </template>
                                             </template>
-                                            <button v-if="dayobject.day > today" @click="handleOrderSet(dayobject.day)" class="orderbtn">設置</button>
+                                            <button v-if="dayobject.day > today" @click="handleOrderSet(dayobject.day)"
+                                                    class="orderbtn">設置
+                                            </button>
                                         </template>
 
                                     </div>
@@ -122,27 +128,27 @@
 <script>
     new Vue({
         el: '#app',
-        data:{
-            today:new Date(),//當前日期
+        data: {
+            today: new Date(),//當前日期
             currentDay: 1,
             currentMonth: 1,
             LocalMonth: 1,
             currentYear: 1970,
             currentWeek: 1,
             days: [],
-            leftobj: []//用于裝載頁面顯示的月份已經進行預約設置的數據
+            leftobj: []
         },
-        created: function () {//在vue初始化時調用
+        created: function () { //init when vue object create
             this.initData(null);
         },
         methods: {
             //orderSet
-            handleOrderSet(day){
+            handleOrderSet(day) {
             },
             //上傳之前進行文件格式校驗
-            beforeUpload(file){
+            beforeUpload(file) {
                 const isXLS = file.type === 'application/vnd.ms-excel';
-                if(isXLS){
+                if (isXLS) {
                     return true;
                 }
                 const isXLSX = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -152,35 +158,35 @@
                 this.$message.error('上傳文件只能是xls或者xlsx格式!');
                 return false;
             },
-            //下載模板文件
-            downloadTemplate(){
-                location.href="../template/ordersetting_template.xlsx";
+            //download the template when the user click the button and send to the location with url address
+            downloadTemplate() {
+                location.href = "../template/ordersetting_template.xlsx";
             },
-            //上傳成功提示
+            //show success message when the image uploaded
             handleSuccess(response, file) {
-                if(response.flag){
+                if (response.flag) {
                     this.$message({
                         message: response.message,
                         type: 'success'
                     });
-                }else{
+                } else {
                     this.$message.error(response.message);
                 }
                 console.log(response, file, fileList);
             },
-            //初始化當前頁要展示的日期
-            initData: function (cur) {
+            //init the day
+            initData: function (current) {
                 let d;
                 let now;
                 let dayobject;
                 let date;
                 let index = 0;   //控制顯示預定的天數
-                if (cur) {
-                    date = new Date(cur);
+                if (current) {
+                    date = new Date(current);
                 } else {
                     now = new Date();
                     d = new Date(this.formatDate(now.getFullYear(), now.getMonth(), 1));
-                    d.setDate(35);
+                    d.setDate(35); //set the 35 to max the table
                     date = new Date(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
                 }
                 this.currentDay = date.getDate();
@@ -189,7 +195,7 @@
                 this.currentWeek = date.getDay(); // //本月第一天是周幾（周日0 周六 6）
                 let today = new Date();
                 this.LocalMonth = today.getMonth() + 1;
-                if (this.currentWeek == 0) { //判斷是否是周日
+                if (this.currentWeek === 0) { //check if the week is sunday
                     this.currentWeek = 7;
                 }
                 let str = this.formatDate(this.currentYear, this.currentMonth, this.currentDay);
@@ -204,12 +210,10 @@
                     now = new Date();
                     if (d.getDate() === (now.getDate()) && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) {
                         dayobject.index = index++;//從今天開始顯示供預定的數量
-                    }
-                    else if (index != 0 && index < 3)
+                    } else if (index !== 0 && index < 3)
                         dayobject.index = index++;//從今天開始3天內顯示供預定的數量
                     this.days.push(dayobject);//將日期放入data 中的days數組 供頁面渲染使用
                 }
-                //其他周
                 for (let i = 1; i <= 35 - this.currentWeek; i++) {
                     d = new Date(str);
                     d.setDate(d.getDate() + i);
@@ -218,41 +222,38 @@
                     now = new Date();
                     if (d.getDate() === (now.getDate()) && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) {
                         dayobject.index = index++;
-                    }
-                    else if (index != 0 && index < 3)
+                    } else if (index !== 0 && index < 3)
                         dayobject.index = index++;
                     this.days.push(dayobject);
                 }
+                this.leftobj = [];
 
-                /*this.leftobj = [
-                    { date: 1, number: 120, reservations: 1 },
-                    { date: 3, number: 120, reservations: 1 },
-                    { date: 4, number: 120, reservations: 120 },
-                    { date: 6, number: 120, reservations: 1 },
-                    { date: 8, number: 120, reservations: 1 }
-                ];*/
+                axios.get("/orderSettings/getOrderDateByMonth/" + this.currentYear + "-" + this.currentMonth).then((resp) => {
+                    if (resp.data.flag) {
+                        this.leftobj = resp.data.data;
+                    } else {
+                        this.$message().error(resp.data.message);
+                    }
+                });
             },
             //check to current month
             goCurrentMonth: function (year, month) {
                 let d = new Date();
                 this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
             },
-            // move to frotnt day
+            // back to front day
             pickPre: function (year, month) {
-                // setDate(0); 上月最后一天
-                // setDate(-1); 上月倒數第二天
-                // setDate(dx) 參數dx為 上月最后一天的前后dx天
                 let d = new Date(this.formatDate(year, month, 1));
                 d.setDate(0);
                 this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
             },
-            //向后一個月
+            //next day
             pickNext: function (year, month) {
                 let d = new Date(this.formatDate(year, month, 1));
                 d.setDate(35);////獲取指定天之后的日期
                 this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
             },
-            // 返回 類似 2016-01-02 格式的字符串
+            // format the date to year-month-days
             formatDate: function (year, month, day) {
                 let y = year;
                 let m = month;

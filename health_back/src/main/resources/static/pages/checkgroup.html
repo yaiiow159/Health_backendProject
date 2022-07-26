@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh_TW">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +26,7 @@
             font-size: 14px;
             color: rgb(96, 98, 102);
             overflow: hidden;
-            flex: 1 1 0%;
+            flex: 1 1 0;
         }
 
         .datatable td, .datatable th {
@@ -44,11 +44,11 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1>預約管理<small>檢查組管理</small></h1>
+        <h1 class="order_manage">預約管理<small class="check_manage">檢查組管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-            <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
-            <el-breadcrumb-item>預約管理</el-breadcrumb-item>
-            <el-breadcrumb-item>檢查組管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_title">預約管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_setting">檢查組別管理</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
@@ -93,7 +93,7 @@
             </div>
             <!-- 新增標簽彈層 -->
             <div class="add-form">
-                <el-dialog title="新增檢查組" :visible.sync="dialogFormVisible">
+                <el-dialog title="新增檢查組別" :visible.sync="dialogFormVisible">
                     <template>
                         <el-tabs v-model="activeName" type="card">
                             <el-tab-pane label="基本信息" name="first">
@@ -101,12 +101,12 @@
                                     <el-row>
                                         <el-col :span="12">
                                             <el-form-item label="編號">
-                                                <el-input v-model="formData.code"/>
+                                                <el-input v-model="formData.code"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="12">
                                             <el-form-item label="名稱">
-                                                <el-input v-model="formData.name"/>
+                                                <el-input v-model="formData.name"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -122,7 +122,7 @@
                                         </el-col>
                                         <el-col :span="12">
                                             <el-form-item label="幫助編號">
-                                                <el-input v-model="formData.helpCode"/>
+                                                <el-input v-model="formData.helpCode"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -185,12 +185,12 @@
                                     <el-row>
                                         <el-col :span="12">
                                             <el-form-item label="編號">
-                                                <el-input v-model="formData.code"/>
+                                                <el-input v-model="formData.code"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="12">
                                             <el-form-item label="名稱">
-                                                <el-input v-model="formData.name"/>
+                                                <el-input v-model="formData.name"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -206,7 +206,7 @@
                                         </el-col>
                                         <el-col :span="12">
                                             <el-form-item label="幫助編號">
-                                                <el-input v-model="formData.helpCode"/>
+                                                <el-input v-model="formData.helpCode"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -355,10 +355,9 @@
             },
 
             handleUpdate(row) {
-
                 this.dialogFormVisible4Edit = true;
                 this.activeName = 'first';
-                axios.get("/checkgroups/" + row.id).then((resp) => {
+                axios.get("/checkgroups/getCheckGroupById?id=" + row.id).then((resp) => {
                     if (resp.data.flag) {
                         //success
                         this.formData = resp.data.data;
@@ -372,7 +371,6 @@
                         this.tableData = resp.data.data;
                         axios.get("/checkgroups/findCheckItemByGroupId?id=" + row.id).then((resp) => {
                             if (resp.data.flag) {
-                                this.$message({type: "success",message: resp.data.message});
                                 this.checkitemIds = resp.data.data;
                             } else {
                                 this.$message().error(resp.data.message);
@@ -397,7 +395,7 @@
                                 type: "success",
                                 message: resp.data.message
                             });
-                            axios.delete("/checkgroups/deleteGroupItemsIdByGroupId.do?id=" + row.id).then(() => {
+                            axios.delete("/checkgroups/deleteGroupItemsIdByGroupId/" + row.id).then(() => {
                                 if (resp.data.flag) {
                                     this.$message().success(resp.data.message)
                                 } else {

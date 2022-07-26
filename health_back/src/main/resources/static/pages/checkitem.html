@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh_TW">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,11 +15,11 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1>預約管理<small>檢查專案管理</small></h1>
+        <h1 class="order_manage">預約管理<small class="check_manage">檢查專案管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-            <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
-            <el-breadcrumb-item>預約管理</el-breadcrumb-item>
-            <el-breadcrumb-item>檢查項管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_title">預約管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_setting">檢查項管理</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
@@ -68,12 +68,12 @@
                         <el-row>
                             <el-col :span="12">
                                 <el-form-item label="專案代碼" prop="code">
-                                    <el-input v-model="formData.code"/>
+                                    <el-input v-model="formData.code"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
                                 <el-form-item label="專案名稱" prop="name">
-                                    <el-input v-model="formData.name"/>
+                                    <el-input v-model="formData.name"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -89,7 +89,7 @@
                             </el-col>
                             <el-col :span="12">
                                 <el-form-item label="適用年齡">
-                                    <el-input v-model="formData.age"/>
+                                    <el-input v-model="formData.age"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -104,7 +104,7 @@
                             </el-col>
                             <el-col :span="12">
                                 <el-form-item label="價格">
-                                    <el-input v-model="formData.price"/>
+                                    <el-input v-model="formData.price"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -138,12 +138,12 @@
                         <el-row>
                             <el-col :span="12">
                                 <el-form-item label="專案代碼" prop="code">
-                                    <el-input v-model="formData.code"/>
+                                    <el-input v-model="formData.code"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
                                 <el-form-item label="專案名稱" prop="name">
-                                    <el-input v-model="formData.name"/>
+                                    <el-input v-model="formData.name"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -159,7 +159,7 @@
                             </el-col>
                             <el-col :span="12">
                                 <el-form-item label="適用年齡">
-                                    <el-input v-model="formData.age"/>
+                                    <el-input v-model="formData.age"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -174,7 +174,7 @@
                             </el-col>
                             <el-col :span="12">
                                 <el-form-item label="價格">
-                                    <el-input v-model="formData.price"/>
+                                    <el-input v-model="formData.price"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>

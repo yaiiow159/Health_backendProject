@@ -32,7 +32,7 @@ public class CheckGroup implements Serializable {
     private String remark;
     private String attention;
 
-    @TableField(exist = false)
+    @TableField(select = false)
     private List<CheckItem> checkItems;
 
 }

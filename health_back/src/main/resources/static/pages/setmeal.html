@@ -72,11 +72,11 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1>預約管理<small>套餐管理</small></h1>
+        <h1 class="order_manage">預約管理<small class="check_manage">高級組合管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-            <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
-            <el-breadcrumb-item>預約管理</el-breadcrumb-item>
-            <el-breadcrumb-item>套餐管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_title">預約管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_setting">高級組合管理</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
@@ -93,20 +93,20 @@
             </div>
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序號"></el-table-column>
-                <el-table-column prop="code" label="套餐編碼" align="center"></el-table-column>
-                <el-table-column prop="name" label="套餐名稱" align="center"></el-table-column>
+                <el-table-column prop="code" label="高級組合編碼" align="center"></el-table-column>
+                <el-table-column prop="name" label="高級組合名稱" align="center"></el-table-column>
                 <el-table-column label="適用性別" align="center">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.sex == '0' ? '不限' : scope.row.sex == '1' ? '男' : '女'}}</span>
+                        <span>{{ scope.row.sex === '0' ? '不限' : scope.row.sex === '1' ? '男' : '女'}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="age" label="適用年齡" align="center"></el-table-column>
-                <el-table-column prop="helpCode" label="助記碼" align="center"></el-table-column>
+                <el-table-column prop="helpCode" label="記憶碼" align="center"></el-table-column>
                 <el-table-column prop="remark" label="說明" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini">編輯</el-button>
-                        <el-button size="mini" type="danger">刪除</el-button>
+                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">刪除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -122,7 +122,7 @@
             </div>
             <!-- 新增標簽彈層 -->
             <div class="add-form">
-                <el-dialog title="新增套餐" :visible.sync="dialogFormVisible">
+                <el-dialog title="新增高級組合" :visible.sync="dialogFormVisible">
                     <template>
                         <el-tabs v-model="activeName" type="card">
                             <el-tab-pane label="基本信息" name="first">
@@ -130,12 +130,12 @@
                                     <el-row>
                                         <el-col :span="12">
                                             <el-form-item label="編碼">
-                                                <el-input v-model="formData.code"/>
+                                                <el-input v-model="formData.code"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="12">
                                             <el-form-item label="名稱">
-                                                <el-input v-model="formData.name"/>
+                                                <el-input v-model="formData.name"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -150,20 +150,20 @@
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="12">
-                                            <el-form-item label="助記碼">
-                                                <el-input v-model="formData.helpCode"/>
+                                            <el-form-item label="記憶碼">
+                                                <el-input v-model="formData.helpCode"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
                                     <el-row>
                                         <el-col :span="12">
-                                            <el-form-item label="套餐價格">
-                                                <el-input v-model="formData.price"/>
+                                            <el-form-item label="高級組合價格">
+                                                <el-input v-model="formData.price"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="12">
                                             <el-form-item label="適用年齡">
-                                                <el-input v-model="formData.age"/>
+                                                <el-input v-model="formData.age"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -178,7 +178,8 @@
                                                         :show-file-list="false"
                                                         :on-success="handleAvatarSuccess"
                                                         :before-upload="beforeAvatarUpload">
-                                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                                    <img v-if="imageUrl" :src="imageUrl" class="avatar"
+                                                         alt="noShowAnyImage">
                                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                                 </el-upload>
                                             </el-form-item>
@@ -200,7 +201,7 @@
                                     </el-row>
                                 </el-form>
                             </el-tab-pane>
-                            <el-tab-pane label="檢查組信息" name="second">
+                            <el-tab-pane label="檢查組合信息" name="second">
                                 <div class="checkScrol">
                                     <table class="datatable">
                                         <thead>
@@ -254,9 +255,10 @@
             },
             dataList: [],//列表數據
             formData: {},//表單數據
-            tableData: [],//添加表單窗口中檢查組列表數據
-            checkgroupIds: [],//添加表單窗口中檢查組復選框對應id
-            dialogFormVisible: false//控制添加窗口顯示/隱藏
+            tableData: [],//添加表單窗口中檢查組合列表數據
+            checkgroupIds: [],//添加表單窗口中檢查組合復選框對應id
+            dialogFormVisible: false,//控制添加窗口顯示/隱藏
+            dialogFormVisible4Edit: false
         },
         created() {
             this.findPage();
@@ -274,10 +276,10 @@
                 const isJPG = file.type === 'image/jpeg';
                 const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!isJPG) {
-                    this.$message.error('上傳套餐圖片只能是 JPG 格式!');
+                    this.$message.error('上傳高級組合圖片只能是 JPG 格式!');
                 }
                 if (!isLt2M) {
-                    this.$message.error('上傳套餐圖片大小不能超過 2MB!');
+                    this.$message.error('上傳高級組合圖片大小不能超過 2MB!');
                 }
                 return isJPG && isLt2M;
             },
@@ -326,7 +328,7 @@
             handleCreate() {
                 this.dialogFormVisible = true;
                 this.resetForm();
-                axios.get("/checkgroups/").then((resp) => {
+                axios.get("/setMeals/").then((resp) => {
                     if (resp.data.flag) {
                         this.tableData = resp.data.data;
                     } else {
@@ -338,6 +340,57 @@
             handleCurrentChange(currentPage) {
                 this.pagination.currentPage = currentPage;
                 this.findPage();
+            },
+            handleDelete(row) {
+                this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原", "提示", {type: "warning"}).then(() => {
+                    axios.delete("/setMeals/" + row.id).then((resp) => {
+                        if (resp.data.flag) {
+                            this.$message({
+                                type: "success",
+                                message: resp.data.message
+                            });
+                            axios.delete("/setMeals/deleteCheckGroupByMealId/" + row.id).then(() => {
+                                if (resp.data.flag) {
+                                    this.$message().success(resp.data.message)
+                                } else {
+                                    this.$message().error(resp.data.message)
+                                }
+                            });
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    }).finally(() => {
+                        this.findPage();
+                    });
+                }).catch(() => {
+                    this.$message.info("取消操作");
+                });
+            },
+            handleUpdate(row) {
+                this.dialogFormVisible4Edit = true;
+                this.activeName = 'first';
+                axios.get("/setMeals/" + row.id).then((resp) => {
+                    if (resp.data.flag) {
+                        this.tableData = resp.data.data;
+                    } else {
+                        this.$message().error(resp.data.flag);
+                    }
+
+                    axios.get("/checkgroups/" + row.id).then((resp) => {
+                        if (resp.data.flag) {
+                            this.$message({type: "success", message: resp.data.message});
+                            axios.get("/setMeals/findcheckGroupsByMealId?id=" + row.id).then((resp) => {
+                                if (resp.data.flag) {
+                                    this.checkgroupIds = resp.data.data;
+                                } else {
+                                    this.$message().error(resp.data.message);
+                                }
+                            });
+                        } else {
+                            this.$message().error(resp.data.message);
+                        }
+                    });
+                });
             }
         }
     })

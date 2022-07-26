@@ -7,10 +7,12 @@ import com.timmy.health.service.OrderSettingService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @DubboService(interfaceClass = OrderSettingService.class)
+@Transactional
 public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, OrderSetting>
         implements OrderSettingService {
 
@@ -20,7 +22,7 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
     @Override
     public void add(@NotNull List<OrderSetting> orderSettingList) {
 
-        if (orderSettingList != null && orderSettingList.size() > 0) {
+        if (orderSettingList.size() > 0) {
             orderSettingList.forEach(orderSetting -> {
                         Long countOrderDate = orderSettingMapper.findCountOrderDate(orderSetting.getOrderdate());
                         if (countOrderDate > 0) {
@@ -33,5 +35,27 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
                     }
             );
         }
+
+    }
+
+    @Override
+    public List<Map<String, Object>> getOrderByDateTime(String date) {
+        Map<String, String> dateMap = new HashMap<>();
+        String firstDay = date + "-01";
+        String lastDay = date + "-31";
+        dateMap.put("firstday",firstDay);
+        dateMap.put("lastday",lastDay);
+        List<OrderSetting> orderList = orderSettingMapper.getOrderDateByCurrentMonth(dateMap);
+        List<Map<String, Object>> newOrderList = new ArrayList<>();
+        if (null != orderList && orderList.size() > 0) {
+             orderList.forEach(orderSetting -> {
+                 HashMap<String,Object> map = new HashMap<>();
+                 map.put("date",orderSetting.getOrderdate().getDate());
+                 map.put("number",orderSetting.getNumber());
+                 map.put("reservation",orderSetting.getReservations());
+                 newOrderList.add(map);
+             });
+        }
+        return newOrderList;
     }
 }

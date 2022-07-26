@@ -8,8 +8,6 @@ import com.timmy.health.service.CheckgroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,25 +62,25 @@ public class CheckgroupController {
         return new Result(null != groupIPage.getRecords(), groupIPage);
     }
 
-    @RequestMapping(value = "/findCheckItemByGroupId", method = RequestMethod.GET)
-    public Result findGroupItemByGroupId(Integer id) {
+    @RequestMapping(value = "/findCheckItemByGroupId",method = RequestMethod.GET)
+    public Result findCheckItemByGroupId(Integer id) {
         try {
             List<Integer> checkItemsId = checkgroupService.findCheckItemIds(id);
-            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS);
+            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS,checkItemsId);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(true, MessageConstant.QUERY_CHECKITEM_FAIL);
+            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL);
         }
     }
 
-    @GetMapping("{id}")
-    public Result getCheckGroupById(@PathVariable Integer id) {
+    @RequestMapping(value = "/getCheckGroupById",method = RequestMethod.GET)
+    public Result getCheckGroupById(Integer id) {
         try {
             CheckGroup checkGroup = checkgroupService.findById(id);
-            return new Result(false, MessageConstant.QUERY_CHECKITEM_SUCCESS, checkGroup);
+            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS, checkGroup);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(true, MessageConstant.QUERY_CHECKITEM_FAIL);
+            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL);
         }
     }
 
@@ -95,7 +93,7 @@ public class CheckgroupController {
         }
     }
 
-    @DeleteMapping(value = "/deleteGroupItemsIdByGroupId")
+    @DeleteMapping(value = "/deleteGroupItemsIdByGroupId" + "{id}")
     public Result deleteGroupItemsIdByGroupId(@PathVariable Integer id) {
           try {
               checkgroupService.deleteGroupItemByGroupId(id);

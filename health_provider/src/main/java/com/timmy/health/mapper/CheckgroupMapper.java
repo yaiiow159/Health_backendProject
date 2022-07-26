@@ -2,8 +2,6 @@ package com.timmy.health.mapper;
 
 import com.timmy.health.domain.CheckGroup;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Many;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

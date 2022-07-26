@@ -1,5 +1,6 @@
 package com.timmy.health;
 
+import com.timmy.health.utils.MybatisGenerator;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

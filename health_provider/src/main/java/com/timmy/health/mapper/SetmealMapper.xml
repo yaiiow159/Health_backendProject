@@ -19,17 +19,21 @@
 
     <!--add setMeal and send back the id-->
     <insert id="addSetMeal">
-        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
         insert into t_setmeal(name, code, helpCode, sex, age, price, remark, attention, img)
         values (#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
     </insert>
 
-    <!--設置SetMeal 和 checkGroup 關系表-->
+    <!--setting the relation table with-->
     <insert id="setSetMealAndCheckGroups" parameterType="map">
         insert into t_setmeal_checkgroup(setmeal_id, checkgroup_id) values (#{setMealId},#{checkGroupId})
     </insert>
+
+    <select id="findCheckGroupsById" parameterType="Integer" resultType="Integer">
+        select checkgroup_id from t_setmeal_checkgroup where setmeal_id = #{id}
+    </select>
 
 
 </mapper>

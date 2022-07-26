@@ -10,13 +10,17 @@ import java.io.Serializable;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class Result implements Serializable{
+
     private boolean flag;
     private String message;
     private Object data;
 
-    public Result(){
-
+    public Result(boolean flag, String message, Object data) {
+        this.flag = flag;
+        this.message = message;
+        this.data = data;
     }
 
     public Result(boolean flag, String message) {
@@ -29,13 +33,4 @@ public class Result implements Serializable{
         this.data = data;
     }
 
-    public Result(boolean flag) {
-        this.flag = flag;
-    }
-
-    public Result(boolean flag, String message, Object data) {
-        this.flag = flag;
-        this.message = message;
-        this.data = data;
-    }
 }

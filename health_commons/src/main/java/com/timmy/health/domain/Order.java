@@ -7,10 +7,10 @@ import java.util.Date;
 
 @Data
 public class Order implements Serializable{
-    public static final String ORDERTYPE_TELEPHONE = "电话预约";
-    public static final String ORDERTYPE_WEIXIN = "微信预约";
-    public static final String ORDERSTATUS_YES = "已到诊";
-    public static final String ORDERSTATUS_NO = "未到诊";
+    public static final String ORDERTYPE_TELEPHONE = "電話預約";
+    public static final String ORDERTYPE_WEIXIN = "手機預約";
+    public static final String ORDERSTATUS_YES = "已到診";
+    public static final String ORDERSTATUS_NO = "未到診";
     private Integer id;
     private Integer memberId;
     private Date orderDate;

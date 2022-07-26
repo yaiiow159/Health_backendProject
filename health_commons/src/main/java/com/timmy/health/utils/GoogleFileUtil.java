@@ -15,13 +15,18 @@ import java.nio.file.Paths;
 public class GoogleFileUtil {
 
     private static final String BUCKET_NAME = "health_pictures";
+    private static final String KEY_FOR_ACCESS = "C:\\Users\\examy\\Downloads\\tonal-nucleus-357206-299f76243d44.json";
+    private static final String GCP_URL = "https://www.googleapis.com/auth/cloud-platform";
 
+
+    // get the credential
     private static GoogleCredentials getGoogleAccess() throws IOException {
         return GoogleCredentials
-                .fromStream(new FileInputStream("C:\\Users\\examy\\Downloads\\tonal-nucleus-357206-299f76243d44.json"))
-                .createScoped(Lists.newArrayList(("https://www.googleapis.com/auth/cloud-platform")));
+                .fromStream(new FileInputStream(KEY_FOR_ACCESS))
+                .createScoped(Lists.newArrayList((GCP_URL)));
     }
 
+    // get the storage
     private static Storage getStorage(GoogleCredentials googleCredentials) {
         return StorageOptions.newBuilder().setCredentials(googleCredentials).build().getService();
     }

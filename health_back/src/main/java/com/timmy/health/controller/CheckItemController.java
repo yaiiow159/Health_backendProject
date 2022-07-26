@@ -80,7 +80,7 @@ public class CheckItemController {
             return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS, checkItemList);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(true, MessageConstant.QUERY_CHECKITEM_FAIL);
+            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL);
         }
     }
 }

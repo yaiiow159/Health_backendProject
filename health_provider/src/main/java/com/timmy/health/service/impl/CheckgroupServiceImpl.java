@@ -1,6 +1,8 @@
 package com.timmy.health.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,6 +13,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +25,13 @@ import java.util.Map;
  * @createDate 2022-04-17 02:59:38
  */
 @DubboService(interfaceClass = CheckgroupService.class)
+@Transactional
 public class CheckgroupServiceImpl extends ServiceImpl<CheckgroupMapper, CheckGroup> implements CheckgroupService {
 
     @Autowired
     private CheckgroupMapper checkgroupMapper;
 
-    private <T extends CheckGroup, E> @NotNull Map<String, Integer> checkedMapInput(CheckGroup t, Integer[] e) {
+    private void checkedMapInput(CheckGroup t, Integer[] e) {
         Map<String, Integer> map = new HashMap<>();
         if (null != e && e.length > 0) {
             for (Integer eId : e) {
@@ -36,7 +40,6 @@ public class CheckgroupServiceImpl extends ServiceImpl<CheckgroupMapper, CheckGr
                 checkgroupMapper.setCheckGroupAndCheckItem(map);
             }
         }
-        return map;
     }
 
     public void add(CheckGroup checkGroup, Integer[] checkitemIds) {
@@ -48,7 +51,7 @@ public class CheckgroupServiceImpl extends ServiceImpl<CheckgroupMapper, CheckGr
 
     @Override
     public IPage<CheckGroup> getPages(Integer currentPage, Integer pageSize, @NotNull CheckGroup checkGroup) {
-        LambdaQueryWrapper<CheckGroup> queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<CheckGroup> queryWrapper = new LambdaQueryWrapper<>();
         //t_checkgroup(code,name,sex,helpCode,remark,attention)
         queryWrapper
                 .like(Strings.isNotEmpty(checkGroup.getName()),

@@ -1,5 +1,4 @@
-package com.timmy.health;
-
+package com.timmy.health.utils;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -8,17 +7,14 @@ import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@SpringBootTest
-public class ProviderTest {
 
+@Slf4j
+public class MybatisGenerator {
     private static final String URL = "jdbc:mysql://localhost:3306/health?serverTimezone=GMT%2b8";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "timmy072869";
@@ -30,10 +26,8 @@ public class ProviderTest {
     private static final String SERVICEIMPLPAHT = ROOTPATH + "/health_provider/src/main/java/com/timmy/health/service/impl";
     private static final String CONTROLLERPATH = ROOTPATH + "/health_back/src/main/java/com/timmy/health/controller";
 
-    @Test
-    void testMpCodeGenerator(){
-        List<String> tables = new ArrayList<>();
-        tables.add("t_checkgroup");
+    public static void generateTable(String @NotNull ... tableName){
+        List<String> tables = new ArrayList<>(Arrays.asList(tableName));
 
         FastAutoGenerator.create(URL, USERNAME, PASSWORD)
                 .globalConfig(builder -> builder.author("TimmyChung")
@@ -61,29 +55,32 @@ public class ProviderTest {
                         .formatServiceImplFileName("%sServiceImpl")
                         //entity
                         .entityBuilder()
-                        .fileOverride()
                         .enableChainModel()
                         .enableLombok()
+                        .fileOverride()
                         .enableRemoveIsPrefix()
                         .idType(IdType.ASSIGN_ID)
                         .enableTableFieldAnnotation()
                         //controller
                         .controllerBuilder()
                         .formatFileName("%sController")
+                        .fileOverride()
                         .enableRestStyle()
                         //mapper
                         .mapperBuilder()
                         .superClass(BaseMapper.class)
                         .enableBaseResultMap()
                         .enableBaseColumnList()
-                        .fileOverride()
                         .formatMapperFileName("%sMapper")
+                        .fileOverride()
                         .enableMapperAnnotation()
                         .formatXmlFileName("%sMapper"))
                 .templateEngine(new VelocityTemplateEngine())
                 .execute();
     }
-    private static Map<OutputFile, String> getPathInfo() {
+    
+    private static @NotNull
+    Map<OutputFile, String> getPathInfo() {
         Map<OutputFile , String> pathInfo = new HashMap<>(5);
         pathInfo.put(OutputFile.entity, DOMAINPATH);
         pathInfo.put(OutputFile.mapper, MAPPERPATH);
@@ -93,5 +90,4 @@ public class ProviderTest {
         pathInfo.put(OutputFile.xml, XMLPATH);
         return pathInfo;
     }
-
 }

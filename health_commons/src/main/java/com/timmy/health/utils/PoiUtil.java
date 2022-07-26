@@ -12,6 +12,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Slf4j
@@ -26,17 +27,18 @@ public class PoiUtil {
             throw new FileNotFoundException("文件不存在");
         }
         String fileName = file.getOriginalFilename();
+        assert fileName != null;
         if (!fileName.endsWith(xls) && !fileName.endsWith(xlsx)) {
             throw new IOException("格式錯誤 只能傳送excel檔案格式 xls 或 xlsx");
         }
     }
 
-    public static Workbook getWorkBook(@NotNull MultipartFile file) throws FileNotFoundException {
+    public static Workbook getWorkBook(@NotNull MultipartFile file) {
         String filename = file.getOriginalFilename();
         Workbook workbook = null;
         try {
             InputStream is = file.getInputStream();
-            if (filename.endsWith(xls)) {
+            if (Objects.requireNonNull(filename).endsWith(xls)) {
                 workbook = new HSSFWorkbook(is);
             } else if (filename.endsWith(xlsx)) {
                 workbook = new XSSFWorkbook(is);
@@ -55,11 +57,12 @@ public class PoiUtil {
         List<String[]> list = new ArrayList<>();
 
         if ((workbook = getWorkBook(file)) != null) {
-            for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) {
+
+            for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) { //get the sheets that the workbook has
                 Sheet sheet = workbook.getSheetAt(sheetNum);
 
-                int firstRowNum = sheet.getFirstRowNum();
-                int lastRowNum = sheet.getLastRowNum();
+                int firstRowNum = sheet.getFirstRowNum(); //the first row that has a data
+                int lastRowNum = sheet.getLastRowNum(); // the last row that has a data
 
                 // run the row except firstRow because it's a title row
                 for (int rowNum = firstRowNum + 1; rowNum <= lastRowNum; rowNum++) {
@@ -68,7 +71,7 @@ public class PoiUtil {
                     if (null == row) continue;
 
                     int firstCellNum = row.getFirstCellNum();
-                    int lastCellNum = row.getPhysicalNumberOfCells();
+                    int lastCellNum = row.getPhysicalNumberOfCells(); //get the existing cells of number
                     String[] cells = new String[row.getPhysicalNumberOfCells()];
 
                     for (int cellNum = firstCellNum; cellNum < lastCellNum; cellNum++) {
