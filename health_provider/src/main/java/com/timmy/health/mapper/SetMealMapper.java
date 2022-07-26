@@ -11,6 +11,8 @@ import java.util.Map;
 @Repository
 public interface SetMealMapper extends BaseMapper<Setmeal> {
     void setSetMealAndCheckGroups(Map<String, Integer> map);
+
     void addSetMeal(Setmeal setmeal);
+
     List<Integer> findCheckGroupsById(Integer id);
 }

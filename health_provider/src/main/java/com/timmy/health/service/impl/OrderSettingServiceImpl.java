@@ -29,7 +29,7 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
                             orderSettingMapper.editNumberByOrderDate(orderSetting);
                         } else {
                             // the order is new order so can add
-                            orderSettingMapper.insert(orderSetting);
+                            orderSettingMapper.add(orderSetting);
                         }
                     }
             );
@@ -63,13 +63,13 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
     }
 
     @Override
-    public void editNumberByDate(OrderSetting orderSetting) {
-        Date orderdate = orderSetting.getOrderdate();
-        long count = orderSettingMapper.findCountOrderDate(orderdate);
+    public void editNumberByDate(@NotNull OrderSetting orderSetting) {
+        Date orderDate = orderSetting.getOrderdate();
+        long count = orderSettingMapper.findCountOrderDate(orderDate);
         if (count > 0) {
             orderSettingMapper.editNumberByOrderDate(orderSetting);
         } else {
-            orderSettingMapper.insert(orderSetting);
+            orderSettingMapper.add(orderSetting);
         }
     }
 }

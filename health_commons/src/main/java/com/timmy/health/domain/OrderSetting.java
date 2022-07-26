@@ -1,7 +1,5 @@
 package com.timmy.health.domain;
 
-import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleDropDbLinkStatement;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 
 /**
  * 
@@ -26,13 +23,12 @@ public class OrderSetting implements Serializable {
     /**
      * 
      */
-    @TableId(value = "id", type = IdType.AUTO)
-    @NotNull
+    @TableId(value = "id")
     private Integer id;
-
     /**
      * 約預日期
      */
+    @NotNull
     @TableField(value = "orderDate")
     private Date orderdate;
 
@@ -51,7 +47,7 @@ public class OrderSetting implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public OrderSetting(Date orderdate, int number){
+    public OrderSetting(@NotNull Date orderdate, int number){
         this.orderdate = orderdate;
         this.number = number;
     }

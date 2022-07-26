@@ -33,8 +33,7 @@ public class OrderSettingController {
             List<OrderSetting> orderSettingList = new ArrayList<>();
 
             for (String[] s: readExcel) {
-                Date date = SDF.parse(s[0]);
-                OrderSetting orderSetting = new OrderSetting(date, Integer.parseInt(s[1]));
+                OrderSetting orderSetting = new OrderSetting(new Date(s[0]), Integer.parseInt(s[1]));
                 orderSettingList.add(orderSetting);
             }
             orderSettingService.add(orderSettingList);
@@ -47,9 +46,8 @@ public class OrderSettingController {
 
     @GetMapping(value = "/getOrderDateByMonth/{date}")
     public Result getOrderSettinByDate(@PathVariable String date) {
-        String format = SDF.format(date);
         try {
-            List<Map<String, Object>> dateTime = orderSettingService.getOrderByDateTime(format);
+            List<Map<String, Object>> dateTime = orderSettingService.getOrderByDateTime(date);
             return new Result(true,MessageConstant.ORDERSETTING_SUCCESS,dateTime);
         } catch (Exception e) {
             e.printStackTrace();

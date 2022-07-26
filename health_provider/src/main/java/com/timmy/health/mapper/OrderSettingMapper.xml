@@ -4,16 +4,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.timmy.health.mapper.OrderSettingMapper">
 
+    <insert id="add" parameterType="orderSetting">
+        insert into t_ordersetting(orderdate, number, reservations)
+        values (#{orderdate}, #{number}, #{reservations})
+    </insert>
+
     <update id="editNumberByOrderDate" parameterType="OrderSetting">
-        update t_ordersetting set number = #{number} where orderDate = #{orderdate}
+        update t_ordersetting
+        set number = #{number}
+        where orderDate = #{orderdate}
     </update>
 
     <select id="findCountOrderDate" parameterType="date" resultType="long">
-        select count(id) from t_ordersetting where orderDate = #{orderDate}
+        select count(id)
+        from t_ordersetting
+        where orderDate = #{orderDate}
     </select>
 
     <select id="getOrderDateByCurrentMonth" parameterType="map" resultType="orderSetting">
-        select * from t_ordersetting where orderDate between #{firstday} and #{lastday}
+        select *
+        from t_ordersetting
+        where orderDate between #{firstday} and #{lastday}
     </select>
 
 </mapper>

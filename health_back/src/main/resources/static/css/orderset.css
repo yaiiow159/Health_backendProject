@@ -158,7 +158,8 @@
     height: 100%;
     background: #ff9c9d;
     text-align: center;
-    color: #fff;
+    color: darkred;
+    font-weight: bolder;
     display: flex;
     flex-direction: column;
     justify-content: center;
