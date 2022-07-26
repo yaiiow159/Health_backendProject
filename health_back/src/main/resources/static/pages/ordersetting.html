@@ -88,15 +88,15 @@
 
                                         <template>
                                             <template v-for="obj in leftobj">
-
-                                                <template v-if="obj.date === dayobject.day.getDate()"> //check the date is or not
-                                                    <template v-if="obj.number > obj.reservations"> //check the number is > reservation or not
+                                                <!--check the date-->
+                                                <template v-if="obj.date === dayobject.day.getDate()">
+                                                    <template v-if="obj.number > obj.reservations">
                                                         <div class="usual">
                                                             <p>可預約{{obj.number}}人</p>
                                                             <p>已預約{{obj.reservations}}人</p>
                                                         </div>
                                                     </template>
-                                                    <template v-else>   //else
+                                                    <template v-else>
                                                         <div class="fulled">
                                                             <p>可預約{{obj.number}}人</p>
                                                             <p>已預約{{obj.reservations}}人</p>
@@ -142,8 +142,33 @@
             this.initData(null);
         },
         methods: {
-            //orderSet
             handleOrderSet(day) {
+                this.$prompt('請輸入可預約人數', '預約設置', {
+                    confirmButtonText: '確定',
+                    cancelButtonText: '取消',
+                    inputPattern: /^[0-9}*[1-9][0-9]*$/,
+                    inputErrorMessage: "只能輸入正整數"
+                }).then(({value}) => {
+                    axios.post("/orderSettings/editNumberByDate/", {
+                        number:value, //reservation numbers
+                        orderDate:this.formatDate(day.getFullYear(), day.getMonth() + 1, 1) //format the date
+                    }).then((resp) => {
+                        if (resp.data.flag) {
+                            this.initData(this.formatDate(day.getFullYear(), day.getMonth() + 1, 1))
+                            this.$message({
+                                type: 'success',
+                                message: resp.data.message
+                            });
+                        } else {
+                            this.$message().error(resp.data.message);
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消輸入預約'
+                    });
+                });
             },
             //上傳之前進行文件格式校驗
             beforeUpload(file) {

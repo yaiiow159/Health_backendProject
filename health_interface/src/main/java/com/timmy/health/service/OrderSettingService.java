@@ -10,4 +10,7 @@ public interface OrderSettingService extends IService<OrderSetting> {
     void add(List<OrderSetting> orderSettingList);
 
     List<Map<String, Object>> getOrderByDateTime(String date);
+
+    void editNumberByDate(OrderSetting orderSetting);
+
 }

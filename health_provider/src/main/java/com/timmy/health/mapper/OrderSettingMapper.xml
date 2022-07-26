@@ -5,7 +5,7 @@
 <mapper namespace="com.timmy.health.mapper.OrderSettingMapper">
 
     <update id="editNumberByOrderDate" parameterType="OrderSetting">
-        update t_ordersetting set number = #{number} where orderdate = #{orderdate}
+        update t_ordersetting set number = #{number} where orderDate = #{orderdate}
     </update>
 
     <select id="findCountOrderDate" parameterType="date" resultType="long">

@@ -21,7 +21,6 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
 
     @Override
     public void add(@NotNull List<OrderSetting> orderSettingList) {
-
         if (orderSettingList.size() > 0) {
             orderSettingList.forEach(orderSetting -> {
                         Long countOrderDate = orderSettingMapper.findCountOrderDate(orderSetting.getOrderdate());
@@ -41,21 +40,36 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
     @Override
     public List<Map<String, Object>> getOrderByDateTime(String date) {
         Map<String, String> dateMap = new HashMap<>();
+
         String firstDay = date + "-01";
         String lastDay = date + "-31";
-        dateMap.put("firstday",firstDay);
-        dateMap.put("lastday",lastDay);
+
+        dateMap.put("firstday", firstDay);
+        dateMap.put("lastday", lastDay);
+
         List<OrderSetting> orderList = orderSettingMapper.getOrderDateByCurrentMonth(dateMap);
         List<Map<String, Object>> newOrderList = new ArrayList<>();
+
         if (null != orderList && orderList.size() > 0) {
-             orderList.forEach(orderSetting -> {
-                 HashMap<String,Object> map = new HashMap<>();
-                 map.put("date",orderSetting.getOrderdate().getDate());
-                 map.put("number",orderSetting.getNumber());
-                 map.put("reservation",orderSetting.getReservations());
-                 newOrderList.add(map);
-             });
+            orderList.forEach(orderSetting -> {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("date", orderSetting.getOrderdate().getDate());
+                map.put("number", orderSetting.getNumber());
+                map.put("reservation", orderSetting.getReservations());
+                newOrderList.add(map);
+            });
         }
         return newOrderList;
+    }
+
+    @Override
+    public void editNumberByDate(OrderSetting orderSetting) {
+        Date orderdate = orderSetting.getOrderdate();
+        long count = orderSettingMapper.findCountOrderDate(orderdate);
+        if (count > 0) {
+            orderSettingMapper.editNumberByOrderDate(orderSetting);
+        } else {
+            orderSettingMapper.insert(orderSetting);
+        }
     }
 }

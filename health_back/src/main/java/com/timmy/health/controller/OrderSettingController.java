@@ -9,7 +9,7 @@ import com.timmy.health.utils.PoiUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +20,8 @@ import java.util.Map;
 @RequestMapping(value = "/orderSettings")
 public class OrderSettingController {
 
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+
     @DubboReference(interfaceClass = OrderSettingService.class)
     private OrderSettingService orderSettingService;
 
@@ -29,17 +31,12 @@ public class OrderSettingController {
         try {
             List<String[]> readExcel = PoiUtil.readExcel(file);
             List<OrderSetting> orderSettingList = new ArrayList<>();
-            readExcel.forEach(s -> {
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat();
-                            Date date = sdf.parse(s[0]);
-                            OrderSetting orderSetting = new OrderSetting(date, Integer.parseInt(s[1]));
-                            orderSettingList.add(orderSetting);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-            );
+
+            for (String[] s: readExcel) {
+                Date date = SDF.parse(s[0]);
+                OrderSetting orderSetting = new OrderSetting(date, Integer.parseInt(s[1]));
+                orderSettingList.add(orderSetting);
+            }
             orderSettingService.add(orderSettingList);
             return new Result(true, MessageConstant.IMPORT_ORDERSETTING_SUCCESS);
         } catch (Exception e) {
@@ -50,9 +47,21 @@ public class OrderSettingController {
 
     @GetMapping(value = "/getOrderDateByMonth/{date}")
     public Result getOrderSettinByDate(@PathVariable String date) {
+        String format = SDF.format(date);
         try {
-            List<Map<String, Object>> dateTime = orderSettingService.getOrderByDateTime(date);
+            List<Map<String, Object>> dateTime = orderSettingService.getOrderByDateTime(format);
             return new Result(true,MessageConstant.ORDERSETTING_SUCCESS,dateTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.ORDERSETTING_FAIL);
+        }
+    }
+
+    @PostMapping("/editNumberByDate")
+    public Result editNumberByDate(@RequestBody OrderSetting orderSetting){
+        try {
+            orderSettingService.editNumberByDate(orderSetting);
+            return new Result(true,MessageConstant.ORDERSETTING_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false,MessageConstant.ORDERSETTING_FAIL);
