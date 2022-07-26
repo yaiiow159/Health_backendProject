@@ -14,7 +14,7 @@ backend tecnologies : Springboot、SpringMVC、Spring、Mybatis-Plus、Spring-ta
 
 Systme : Windows10、Linux
 
-Cloud Tec: GCP (Google cloud platoform storage)
+Cloud platform: GCP (Google cloud platoform storage)
 
 Version-Control : Git,Github
 
