@@ -239,6 +239,7 @@
                             type: "success",
                             message: resp.data.message
                         });
+                        this.dialogFormVisible = false;
                     } else {
                         this.$message().error(resp.data.message);
                     }

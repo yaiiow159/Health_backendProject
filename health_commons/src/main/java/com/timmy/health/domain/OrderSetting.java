@@ -28,7 +28,6 @@ public class OrderSetting implements Serializable {
     /**
      * 約預日期
      */
-    @NotNull
     @TableField(value = "orderDate")
     private Date orderdate;
 

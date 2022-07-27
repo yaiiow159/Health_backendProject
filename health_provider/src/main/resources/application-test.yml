@@ -28,7 +28,7 @@ spring:
   mail:
     host: smtp.gmail.com
     username: examyou076@gmail.com
-    password: yaiiow159
+    password: spjbxszljagplkyl
     protocol: smtp
     properties:
       mail:
@@ -37,7 +37,7 @@ spring:
           auth: true
           starttls:
             enable: true
-        timeout: 160000
+          timeout: 5000
         debug: true
     port: 587
 #dubbo setting

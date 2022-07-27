@@ -28,14 +28,16 @@ spring:
   mail:
     host: smtp.gmail.com
     username: examyou076@gmail.com
-    password: yaiiow159
+    password: spjbxszljagplkyl
     protocol: smtp
     properties:
       mail:
-        ssl:
-          enable: true
-        auth: true
-        timeout: 160000
+        smtp:
+          soketFactoryClass: javax.net.ssl.SSLSocketFactory
+          auth: true
+          starttls:
+            enable: true
+          timeout: 5000
     port: 587
 #dubbo setting
 dubbo:
