@@ -3,7 +3,7 @@
 # Introduction
 Health-Backend-System is a distributed system that can let user choose what they want to check to such as their health option such as height, weight, and BMI
 you also can choose the check group or Luxury combinations, and you also can book the date that you want to check, the backend system can record the date that you choose 
-, and show them on the calendar
+, and show them on the calendar and also you still can rebook too 
 
 
 # Technologies / Tools
