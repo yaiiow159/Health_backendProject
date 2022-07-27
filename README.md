@@ -12,7 +12,7 @@ fronted tecnologies: Vue2、elementUI、javascript、html5、css3
 
 backend tecnologies : Springboot、SpringMVC、Spring、Mybatis-Plus、Spring-task、duboo、zookeeper、Apache-POI
 
-Systme : Windows10、Linux
+Operation System : Windows10、Linux
 
 Cloud platform: GCP (Google cloud platoform storage)
 
