@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <!-- 頁面meta -->
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>醫療管理系統</title>
@@ -33,11 +33,11 @@
                     <span class="logo-lg"><img src="../img/logo.png" class="img" alt="NotfoundAnyPng"></span>
                 </a>
                 <div class="right-menu">
-                    <span class="help" @click=sendMail()><i class="fa fa-mail-forward" aria-hidden="true"></i>聯繫我們</span>
+                    <span class="help" @click="openMailBox()"><i class="fa fa-mail-forward" aria-hidden="true"></i>聯繫我們</span>
                     <el-dropdown class="avatar-container right-menu-item" trigger="click">
                         <div class="avatar-wrapper">
                             <img src="../img/user2-160x160.jpg" class="user-avatar" alt="notHaveImage">
-                            Timmy.Chung
+                            TimmyChung
                         </div>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
@@ -102,7 +102,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取消</el-button>
-                <el-button type="primary" @click="handleAdd()">確定</el-button>
+                <el-button type="button" @click="sendMailCheck()">確定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -115,8 +115,9 @@
 <script src="../js/vue.js"></script>
 <script src="../plugins/elementui/index.js"></script>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
 <script>
-    new Vue({
+   let vue = new Vue({
         el: '#app',
         data:{
             menuList:[
@@ -214,9 +215,8 @@
                     ]
                 }
             ],
-            dialogFormVisible:false,
-            dialogFormVisible4Edit:false,
 
+            dialogFormVisible:false,
             mail:{
                 name: "",
                 message: "",
@@ -228,8 +228,11 @@
             }
         },
         methods: {
-            sendMail(){
+            openMailBox(){
                 this.dialogFormVisible = true;
+                this.resetMailList();
+            },
+            sendMailCheck(){
                 axios.post("/mails/sendMail/",this.mail).then((resp)=>{
                     if (resp.data.flag) {
                         this.$message({
@@ -239,10 +242,8 @@
                     } else {
                         this.$message().error(resp.data.message);
                     }
-                }).finally(()=>{
-                    this.resetMailList();
                 });
-            },
+            }
         }
     });
     $(function() {

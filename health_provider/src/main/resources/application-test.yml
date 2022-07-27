@@ -29,10 +29,17 @@ spring:
     host: smtp.gmail.com
     username: examyou076@gmail.com
     password: yaiiow159
+    protocol: smtp
     properties:
       mail:
-        ssl:
-          enable: true
+        smtp:
+          soketFactoryClass: javax.net.ssl.SSLSocketFactory
+          auth: true
+          starttls:
+            enable: true
+        timeout: 160000
+        debug: true
+    port: 587
 #dubbo setting
 dubbo:
   application:
@@ -42,6 +49,8 @@ dubbo:
     port: 2181
   config-center:
     timeout: 25000
+  provider:
+    timeout: 30000
   scan:
     base-packages: com.timmy.health.service.impl
 #MyBatisPlus setting

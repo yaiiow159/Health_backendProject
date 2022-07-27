@@ -1,5 +1,3 @@
-gmail:
-  address: "examyou076@gmail.com"
 #spring setting
 spring:
   datasource:
@@ -28,10 +26,14 @@ spring:
     host: smtp.gmail.com
     username: examyou076@gmail.com
     password: yaiiow159
+    protocol: smtp
     properties:
       mail:
         ssl:
           enable: true
+        auth: true
+        timeout: 160000
+    port: 587
 server:
   port: 82
 # dubbo setting
@@ -43,6 +45,7 @@ dubbo:
     port: 2181
   consumer:
     check: false
+    timeout: 60000
   config-center:
     timeout: 60000
   scan:

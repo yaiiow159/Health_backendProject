@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,8 +15,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 @DubboService(interfaceClass = MailService.class)
 public class MailServiceImpl implements MailService {
 
-    @Value("${getter.address}")
-    private static String GETTER;
+    private static final String GETTER = "examyou076@gmail.com";
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -25,7 +23,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendMail(@NotNull Mail mail) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(mail.getName());
+        message.setFrom(mail.getAddress());
         message.setSubject(mail.getTitle());
         message.setText(mail.getMessage());
         message.setTo(GETTER);

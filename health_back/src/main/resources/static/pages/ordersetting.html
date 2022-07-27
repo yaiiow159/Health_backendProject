@@ -73,19 +73,17 @@
                             <li>週六</li>
                             <li>週日</li>
                         </ul>
-                        <!-- 日期 -->
+                        <!-- day -->
                         <ul class="days">
-                            <!-- v-for循環 每一次循環用<li>標簽創建一天 -->
                             <li v-for="dayobject in days">
                                 <template>
-                                    <!-- 非當前月份 -->
+                                    <!-- if not the current month -->
                                     <div class="other-month" v-if="dayobject.day.getMonth()+1 !== currentMonth">
                                         {{ dayobject.day.getDate() }}
                                     </div>
-                                    <!-- 當前月 -->
+                                    <!-- is current month -->
                                     <div class="everyday" v-if="dayobject.day.getMonth()+1 === currentMonth">
                                         <span class="datenumber">{{ dayobject.day.getDate()}}</span>
-
                                         <template>
                                             <template v-for="obj in leftobj">
                                                 <!--check the date-->

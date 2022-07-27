@@ -38,7 +38,7 @@
                 <el-table-column prop="name" label="專案名稱" align="center"></el-table-column>
                 <el-table-column label="適用性別" align="center">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.sex == '0' ? '不限' : scope.row.sex == '1' ? '男' : '女'}}</span>
+                        <span>{{ scope.row.sex === '0' ? '不限' : scope.row.sex === '1' ? '男' : '女'}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="age" label="適用年齡" align="center"></el-table-column>
