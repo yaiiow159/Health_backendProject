@@ -18,6 +18,10 @@ Cloud platform: GCP (Google cloud platoform storage)
 
 Version-Control : Git,Github
 
+Relational DataBase: mysql
+
+NoSql DataBase: redis
+
 IDE : Intellij IDEA
 
 # Functions
