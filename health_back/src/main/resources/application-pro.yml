@@ -12,6 +12,14 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  mail:
+    host: smtp.gmail.com
+    username: examyou076@gmail.com
+    password: yaiiow159
+    properties:
+      mail:
+        ssl:
+          enable: true
   #redis setting
   redis:
     password: timmy0728
@@ -38,7 +46,8 @@ dubbo:
   scan:
     base-packages: com.timmy.health.controller
 #redis setting
-
+getter:
+  address: "examyou076@gmail.com"
 
 
 

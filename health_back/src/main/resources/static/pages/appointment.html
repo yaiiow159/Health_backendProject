@@ -17,20 +17,20 @@
     <div class="content-header">
         <h1 class="order_manage">預約管理<small class="check_manage">檢查專案管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-            <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
             <el-breadcrumb-item><span class="order_title">預約管理</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_setting">檢查項管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_setting">預約項目管理</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
         <div class="box">
             <div class="filter-container">
-                <el-input placeholder="專案名稱" v-model="pagination.name" style="width: 17%;"
+                <el-input placeholder="預約人數" v-model="pagination.number" style="width: 200px;"
                           class="filter-item"></el-input>
-                <el-input placeholder="專案代碼" v-model="pagination.code" style="width: 17%;"
+                <el-input placeholder="預約日期" v-model="pagination.date" style="width: 200px;"
                           class="filter-item"></el-input>
                 <el-button @click="findPage()" class="dalfBut">查詢</el-button>
-                <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+                <el-button type="primary" class="butT" @click="handleCreate()">新增預約</el-button>
             </div>
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序號"></el-table-column>
@@ -38,7 +38,7 @@
                 <el-table-column prop="name" label="專案名稱" align="center"></el-table-column>
                 <el-table-column label="適用性別" align="center">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.sex == '0' ? '不限' : scope.row.sex == '1' ? '男' : '女'}}</span>
+                        <span>{{ scope.row.sex === '0' ? '不限' : scope.row.sex === '1' ? '男' : '女'}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="age" label="適用年齡" align="center"></el-table-column>
@@ -60,65 +60,20 @@
                         :total="pagination.total">
                 </el-pagination>
             </div>
-            <!-- 新增標簽彈層 -->
+
             <div class="add-form">
-                <el-dialog title="新增檢查項" :visible.sync="dialogFormVisible">
+                <el-dialog title="新增預約" :visible.sync="dialogFormVisible">
                     <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="專案代碼" prop="code">
-                                    <el-input v-model="formData.code"></el-input>
+                                <el-form-item label="預約日期" prop="date">
+                                    <el-input v-model="formData.date"></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="專案名稱" prop="name">
-                                    <el-input v-model="formData.name"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="性別">
-                                    <el-select v-model="formData.sex">
-                                        <el-option label="不限" value="0"></el-option>
-                                        <el-option label="男" value="1"></el-option>
-                                        <el-option label="女" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="適用年齡">
-                                    <el-input v-model="formData.age"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="類型">
-                                    <el-select v-model="formData.type">
-                                        <el-option label="檢查" value="1"></el-option>
-                                        <el-option label="檢驗" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="價格">
-                                    <el-input v-model="formData.price"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="專案說明">
-                                    <el-input v-model="formData.remark" type="textarea"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="注意事項">
-                                    <el-input v-model="formData.attention" type="textarea"></el-input>
+                            <el-col :span="6">
+                                <el-form-item label="預約人數" prop="number">
+                                    <el-input v-model="formData.number"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -132,63 +87,18 @@
 
             <!-- 編輯標簽彈層 -->
             <div class="add-form">
-                <el-dialog title="編輯檢查項" :visible.sync="dialogFormVisible4Edit">
-                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
+                <el-dialog title="編輯預約" :visible.sync="dialogFormVisible4Edit">
+                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="top"
                              label-width="100px">
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="專案代碼" prop="code">
-                                    <el-input v-model="formData.code"></el-input>
+                                <el-form-item label="預約人數" prop="number">
+                                    <el-input v-model="formData.number"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="專案名稱" prop="name">
-                                    <el-input v-model="formData.name"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="性別">
-                                    <el-select v-model="formData.sex">
-                                        <el-option label="不限" value="0"></el-option>
-                                        <el-option label="男" value="1"></el-option>
-                                        <el-option label="女" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="適用年齡">
-                                    <el-input v-model="formData.age"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="類型">
-                                    <el-select v-model="formData.type">
-                                        <el-option label="檢查" value="1"></el-option>
-                                        <el-option label="檢驗" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="價格">
-                                    <el-input v-model="formData.price"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="專案說明">
-                                    <el-input v-model="formData.remark" type="textarea"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="注意事項">
-                                    <el-input v-model="formData.attention" type="textarea"></el-input>
+                                <el-form-item label="預約日期" prop="date">
+                                    <el-input v-model="formData.date"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -216,16 +126,16 @@
                 currentPage: 1,//current page
                 pageSize: 10,// the current pages number
                 total: 0,// total pages
-                name: "",
-                code: ""
+                number: "",
+                date: ""
             },
             dataList: [],//當前頁要展示的分頁列表數據
             formData: {},//表單數據
             dialogFormVisible: false,//增加表單是否可見
             dialogFormVisible4Edit: false,//編輯表單是否可見
             rules: {//校驗規則
-                code: [{required: true, message: '專案代碼為必填專案', trigger: 'blur'}],
-                name: [{required: true, message: '專案名稱為必填專案', trigger: 'blur'}]
+                number: [{required: true, message: '預約人數為必填項', trigger: 'blur'}],
+                date: [{required: true, message: '預約日期為必填項', trigger: 'blur'}]
             }
         },
 
@@ -247,7 +157,6 @@
             },
             //添加
             handleAdd() {
-                //進行屬性校驗
                 this.$refs['dataAddForm'].validate((valid) => {
                     if (valid) {
                         axios.post("/checkitems", this.formData).then((resp) => {
@@ -304,7 +213,7 @@
                         this.$message.error(resp.data.message);
                     }
                 }).finally(() =>{
-                   this.findPage();
+                    this.findPage();
                 });
             },
             //show current page

@@ -793,3 +793,9 @@ label input[type="radio"]:checked {
     cursor:pointer;
     font-weight: bolder;
 }
+
+.mail_title {
+    color: mediumseagreen;
+    font-weight: bolder;
+    font-style: italic;
+}

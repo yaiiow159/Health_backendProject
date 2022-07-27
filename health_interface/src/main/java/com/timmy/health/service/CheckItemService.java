@@ -9,9 +9,13 @@ import java.util.List;
 
 public interface CheckItemService extends IService<CheckItem> {
     boolean save(CheckItem checkItem);
+
     IPage<CheckItem> findPage(int currenPage, int pageSize);
-    IPage<CheckItem> findPage(int currenPage, int pageSize,CheckItem checkItem);
+
+    IPage<CheckItem> findPage(int currenPage, int pageSize, CheckItem checkItem);
+
     List<CheckItem> getAllCheckItems();
+
     int edit(CheckItem checkItem);
 }
 

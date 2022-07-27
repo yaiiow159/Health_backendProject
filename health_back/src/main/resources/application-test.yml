@@ -1,3 +1,5 @@
+gmail:
+  address: "examyou076@gmail.com"
 #spring setting
 spring:
   datasource:
@@ -22,6 +24,14 @@ spring:
     lettuce:
       pool:
         enabled: true
+  mail:
+    host: smtp.gmail.com
+    username: examyou076@gmail.com
+    password: yaiiow159
+    properties:
+      mail:
+        ssl:
+          enable: true
 server:
   port: 82
 # dubbo setting

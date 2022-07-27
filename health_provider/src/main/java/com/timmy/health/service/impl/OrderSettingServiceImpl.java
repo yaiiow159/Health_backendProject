@@ -55,7 +55,7 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("date", orderSetting.getOrderdate().getDate());
                 map.put("number", orderSetting.getNumber());
-                map.put("reservation", orderSetting.getReservations());
+                map.put("reservations", orderSetting.getReservations());
                 newOrderList.add(map);
             });
         }

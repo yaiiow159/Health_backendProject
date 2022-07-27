@@ -25,6 +25,14 @@ spring:
       shutdown:
         await-termination: false
         await-termination-period: 10s
+  mail:
+    host: smtp.gmail.com
+    username: examyou076@gmail.com
+    password: yaiiow159
+    properties:
+      mail:
+        ssl:
+          enable: true
 #dubbo setting
 dubbo:
   application:
