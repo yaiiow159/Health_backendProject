@@ -4,7 +4,7 @@
     <!-- 頁面meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>傳智健康</title>
+    <title>醫療管理系統</title>
     <meta name="description" content="醫療管理系統">
     <meta name="keywords" content="醫療管理系統">
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
@@ -89,7 +89,7 @@
                 <el-input placeholder="記憶代碼" v-model="pagination.helpCode" style="width: 150px;"
                           class="filter-item"></el-input>
                 <el-button @click="findPage()" class="dalfBut">查詢</el-button>
-                <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+                <el-button type="primary" class="butT" @click="handleCreate()">新增</el-button>
             </div>
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序號"></el-table-column>
@@ -215,7 +215,9 @@
                                         <tbody>
                                         <tr v-for="c in tableData">
                                             <td>
-                                                <input :id="c.id" v-model="checkgroupIds" type="checkbox" :value="c.id">
+                                                <label>
+                                                    <input :id="c.id" v-model="checkgroupIds" type="checkbox" :value="c.id">
+                                                </label>
                                             </td>
                                             <td><label :for="c.id">{{c.code}}</label></td>
                                             <td><label :for="c.id">{{c.name}}</label></td>
@@ -253,7 +255,7 @@
                 name: "",
                 helpCode: ""
             },
-            dataList: [],//列表數據
+            dataList: [],//
             formData: {},//表單數據
             tableData: [],//添加表單窗口中檢查組合列表數據
             checkgroupIds: [],//添加表單窗口中檢查組合復選框對應id
@@ -264,7 +266,7 @@
             this.findPage();
         },
         methods: {
-            //response為服務端返回的值，file為當前上傳的文件封裝成的js對象
+            //response is the return value ，file object is the return file json
             handleAvatarSuccess(response, file) {
                 //the picture if the imageUrl is notNull
                 this.imageUrl = "https://storage.googleapis.com/health_pictures/" + response.data;

@@ -11,6 +11,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.Map;
  */
 @DubboService(interfaceClass = CheckgroupService.class)
 @Transactional
+@Service
 public class CheckgroupServiceImpl extends ServiceImpl<CheckgroupMapper, CheckGroup> implements CheckgroupService {
 
     @Autowired
@@ -87,8 +89,8 @@ public class CheckgroupServiceImpl extends ServiceImpl<CheckgroupMapper, CheckGr
     }
 
     @Override
-    public boolean deleteGroupItemByGroupId(Integer id) {
-        return checkgroupMapper.deleteCheckItemsByGroupId(id);
+    public void deleteGroupItemByGroupId(Integer id) {
+        checkgroupMapper.deleteCheckItemsByGroupId(id);
     }
 
     @Override

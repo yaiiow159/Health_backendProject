@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="醫療管理系統">
+    <meta name="keywords" content="醫療管理系統">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <title>醫療管理系統</title>
+
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body class="hold-transition skin-purple sidebar-mini">
+<div id="app">
+    <div class="login-container">
+        <div class="loginBox">
+            <form method="post" class="login-form" action="/pages/login.html" label-position="left">
+                <div class="title-container">
+                    <div class="logoInfo clearfix">
+                        <em class="title">歡迎來到醫療管理系統</em>
+                    </div>
+                </div>
+                <div>
+                        <span class="svg-container svg-container_login">
+                          <span class="user"></span>
+                        </span>
+                    <label id="userName">
+                        <input style="border-block-color: black;width: 80%; height: 30px;" type="text" name="username"
+                               placeholder="請輸入使用者姓名"/>
+                    </label>
+                </div>
+                <div>
+                        <span class="svg-container">
+                          <span class="username"></span>
+                        </span>
+                    <label>
+                        <input style="border-block-color: black;width: 80%; height: 30px;" type="password" name="password"
+                               placeholder="請輸入使用者密碼"/>
+                    </label>
+                </div>
+                <input type="submit" style="width:50%;margin-top: 20px;;margin-bottom:20px; height: 30px"
+                       value="登錄"/>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+</html>

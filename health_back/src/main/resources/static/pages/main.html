@@ -41,7 +41,7 @@
                         </div>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
-                                <span class="change_pwd">修改密碼</span>
+                                <span class="change_pwd" @click="changePassword()">修改密碼</span>
                             </el-dropdown-item>
                             <el-dropdown-item>
                                 <span class="pass">退出</span>
@@ -74,7 +74,7 @@
         </el-container>
     </el-container>
     <div class="add-form">
-        <el-dialog class="mail_title" title="有任何問題歡迎寫在下方留言處" :visible.sync="dialogFormVisible" >
+        <el-dialog class="mail_title" title="帳戶修改" :visible.sync="dialogFormVisible" >
             <el-form ref="dataAddForm" :model="mail" label-position="right"
                      label-width="100px">
                 <el-row>
@@ -103,6 +103,29 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取消</el-button>
                 <el-button type="button" @click="sendMailCheck()">確定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+    <div class="add-form">
+        <el-dialog class="mail_title" title="有任何問題歡迎寫在下方留言處" :visible.sync="dialogFormVisible4Edit" >
+            <el-form ref="dataAddForm" :model="user" label-position="right"
+                     label-width="100px">
+                <el-row>
+                    <el-col :span="12" >
+                        <el-form-item label="姓名:" prop="name">
+                            <el-input v-model="user.name" style="width: 100%"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="使用者密碼:" prop="password">
+                            <el-input v-model="user.password" style="width: 100%"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button type="button" @click="sendCheckForLogin()">確定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -217,14 +240,23 @@
             ],
 
             dialogFormVisible:false,
+            dialogFormVisible4Edit:false,
             mail:{
                 name: "",
                 message: "",
                 address: "",
                 title: ""
             },
+            user:{
+                name: "",
+                password:"",
+            },
+
             resetMailList(){
                 this.mail = {};
+            },
+            resetUserList(){
+                this.user = {};
             }
         },
         methods: {
@@ -240,6 +272,22 @@
                             message: resp.data.message
                         });
                         this.dialogFormVisible = false;
+                    } else {
+                        this.$message().error(resp.data.message);
+                    }
+                });
+            },
+            changePassword(){
+                this.dialogFormVisible4Edit = true;
+                this.resetUserList();
+            },
+            sendCheckForLogin(){
+                axios.put("/security/changePassword",this.user).then((resp)=>{
+                    if(resp.data.flag){
+                        this.$message({
+                           type: "success",
+                           message: resp.data.message
+                        });
                     } else {
                         this.$message().error(resp.data.message);
                     }

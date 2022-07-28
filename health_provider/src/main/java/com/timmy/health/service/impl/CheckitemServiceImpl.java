@@ -12,6 +12,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import java.util.List;
 */
 @DubboService(interfaceClass = CheckItemService.class)
 @Transactional
+@Service
 public class CheckitemServiceImpl extends ServiceImpl<CheckitemMapper, CheckItem> implements CheckItemService{
 
     @Autowired

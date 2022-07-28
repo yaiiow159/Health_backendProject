@@ -10,8 +10,8 @@ import java.util.Set;
 @Data
 public class Permission implements Serializable{
     private Integer id;
-    private String name; // 權限名稱
-    private String keyword; // 權限關鍵字，權限控制
-    private String description; // 描述
-    private Set<Role> roles = new HashSet<Role>(0);
+    private String name;
+    private String keyword;
+    private String description;
+    private Set<Role> roles = new HashSet<>(0);
 }

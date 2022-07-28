@@ -19,7 +19,7 @@ public interface CheckgroupService extends IService<CheckGroup> {
 
     List<Integer> findCheckItemIds(Integer id);
 
-    boolean deleteGroupItemByGroupId(Integer id);
+    void deleteGroupItemByGroupId(Integer id);
 
     void editCheckGroup(CheckGroup checkGroup, Integer[] checkitemIds);
 

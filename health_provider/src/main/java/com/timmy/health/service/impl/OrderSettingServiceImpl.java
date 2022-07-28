@@ -7,12 +7,14 @@ import com.timmy.health.service.OrderSettingService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @DubboService(interfaceClass = OrderSettingService.class)
 @Transactional
+@Service
 public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, OrderSetting>
         implements OrderSettingService {
 
@@ -34,15 +36,26 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
                     }
             );
         }
-
     }
 
     @Override
-    public List<Map<String, Object>> getOrderByDateTime(String date) {
+    public List<Map<String, Object>> getOrderByDateTime(@NotNull String date) {
         Map<String, String> dateMap = new HashMap<>();
-
+        //
         String firstDay = date + "-01";
-        String lastDay = date + "-31";
+        String lastDay;
+
+        //judge the date of the months
+        if (date.startsWith("02", 5)) {
+            lastDay = date + "-28";
+        } else if (date.startsWith("04", 5) ||
+                date.startsWith("06", 5) ||
+                date.startsWith("09", 5) ||
+                date.startsWith("11", 5)) {
+            lastDay = date + "30";
+        } else {
+            lastDay = date + "-31";
+        }
 
         dateMap.put("firstday", firstDay);
         dateMap.put("lastday", lastDay);

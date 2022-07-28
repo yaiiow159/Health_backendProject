@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timmy.health.mapper.RoleMapper">
+
+    <select id="getRoleByUserId" parameterType="Integer" resultType="Role">
+        select r.*
+        from t_role r
+                 join t_user_role tr on r.id = tr.role_id and tr.user_id = #{id}
+    </select>
+
+</mapper>

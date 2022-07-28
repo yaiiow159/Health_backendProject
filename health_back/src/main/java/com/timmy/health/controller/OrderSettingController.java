@@ -9,8 +9,6 @@ import com.timmy.health.utils.PoiUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,8 +17,6 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/orderSettings")
 public class OrderSettingController {
-
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
     @DubboReference(interfaceClass = OrderSettingService.class)
     private OrderSettingService orderSettingService;
