@@ -22,15 +22,17 @@ Relational DataBase: mysql
 
 NoSql DataBase: redis
 
+Testing tool: Postman
+
 IDE : Intellij IDEA
 
 # Functions
 __________________________
 
-1.  Crud function to add update delete and get the check item check group set meal
-2.  Use RestAPI to have a beautiful code style
-3.  use Redis to store the image name to make sure that the user uploads the image or not
+1.  CRUD functions for checkitem checkgroup and set
+2.  Use RestAPI
+3.  use Redis to store the image name
 4.  use Google Cloud Storage to save the image file that can that the user download
-5.  Can show the order date on the calendar and also can change the orderDate 
-6.  use the spring task to set the timing to delete the un upload image on the google cloud storag
-7. if you have the equestion to the system you can use the contact us to send mail
+5.  Can booking on the calendar and rebook 
+6.  use the spring task to set the timing to delete the un upload image on the google cloud storage
+7.  Can send email 
