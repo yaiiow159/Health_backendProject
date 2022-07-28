@@ -46,13 +46,13 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
         String lastDay;
 
         //judge the date of the months
-        if (date.startsWith("02", 5)) {
+        if (date.startsWith("2", 5)) {
             lastDay = date + "-28";
-        } else if (date.startsWith("04", 5) ||
-                date.startsWith("06", 5) ||
-                date.startsWith("09", 5) ||
+        } else if (date.startsWith("4", 5) ||
+                date.startsWith("6", 5) ||
+                date.startsWith("9", 5) ||
                 date.startsWith("11", 5)) {
-            lastDay = date + "30";
+            lastDay = date + "-30";
         } else {
             lastDay = date + "-31";
         }
@@ -80,9 +80,9 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
         Date orderDate = orderSetting.getOrderdate();
         long count = orderSettingMapper.findCountOrderDate(orderDate);
         if (count > 0) {
-            orderSettingMapper.editNumberByOrderDate(orderSetting);
+            orderSettingMapper.editNumberByOrderDate(orderSetting); // if count > 0 mean that the user is already book
         } else {
-            orderSettingMapper.add(orderSetting);
+            orderSettingMapper.add(orderSetting); //so if count is zero so that user need to add the new book
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.timmy.health.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.timmy.health.domain.Role;
 import com.timmy.health.domain.User;
@@ -11,6 +13,8 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -38,6 +42,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return user;
     }
 
+    @Override
+    public void editUser(User user) {
+        UpdateWrapper<User> queryWrapper = new UpdateWrapper<>();
+        if (Objects.nonNull(user)) {
+            queryWrapper.set("password", "username");
+            userMapper.update(user, queryWrapper);
+        }
+    }
 
+    @Override
+    public User findUser(String username) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        return userMapper.selectOne(queryWrapper);
+    }
 
 }

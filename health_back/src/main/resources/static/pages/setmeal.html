@@ -244,10 +244,10 @@
     let vue = new Vue({
         el: '#app',
         data: {
-            autoUpload: true,//自動上傳
-            imageUrl: null,//模型數據，用于上傳圖片完成后圖片預覽
-            activeName: 'first',//添加/編輯窗口Tab標簽名稱
-            pagination: {//分頁相關屬性
+            autoUpload: true,
+            imageUrl: null,
+            activeName: 'first',
+            pagination: {
                 currentPage: 1,
                 pageSize: 10,
                 total: 100,
@@ -255,11 +255,11 @@
                 name: "",
                 helpCode: ""
             },
-            dataList: [],//
-            formData: {},//表單數據
-            tableData: [],//添加表單窗口中檢查組合列表數據
-            checkgroupIds: [],//添加表單窗口中檢查組合復選框對應id
-            dialogFormVisible: false,//控制添加窗口顯示/隱藏
+            dataList: [],
+            formData: {},
+            tableData: [],
+            checkgroupIds: [],
+            dialogFormVisible: false,
             dialogFormVisible4Edit: false
         },
         created() {

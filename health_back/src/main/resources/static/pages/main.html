@@ -37,14 +37,14 @@
                     <el-dropdown class="avatar-container right-menu-item" trigger="click">
                         <div class="avatar-wrapper">
                             <img src="../img/user2-160x160.jpg" class="user-avatar" alt="notHaveImage">
-                            TimmyChung
+                            {{user.name}}
                         </div>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
                                 <span class="change_pwd" @click="changePassword()">修改密碼</span>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <span class="pass">退出</span>
+                                <span class="pass" @click="exit()">退出</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -74,7 +74,7 @@
         </el-container>
     </el-container>
     <div class="add-form">
-        <el-dialog class="mail_title" title="帳戶修改" :visible.sync="dialogFormVisible" >
+        <el-dialog class="mail_title" title="有任何問題歡迎提供在下方郵件正文處" :visible.sync="dialogFormVisible" >
             <el-form ref="dataAddForm" :model="mail" label-position="right"
                      label-width="100px">
                 <el-row>
@@ -107,7 +107,7 @@
         </el-dialog>
     </div>
     <div class="add-form">
-        <el-dialog class="mail_title" title="有任何問題歡迎寫在下方留言處" :visible.sync="dialogFormVisible4Edit" >
+        <el-dialog class="mail_title" title="帳戶修改" :visible.sync="dialogFormVisible4Edit" >
             <el-form ref="dataAddForm" :model="user" label-position="right"
                      label-width="100px">
                 <el-row>
@@ -145,12 +145,6 @@
         data:{
             menuList:[
                 {
-                    "path": "1",
-                    "title": "工作臺",
-                    "icon":"fa-dashboard",
-                    "children": []
-                },
-                {
                     "path": "2",
                     "title": "會員管理",
                     "icon":"fa-user-md",
@@ -163,7 +157,7 @@
                         },
                         {
                             "path": "/2-2",
-                            "title": "體檢上傳",
+                            "title": "新會員註冊",
                             "children":[]
                         },
                         {
@@ -213,7 +207,7 @@
                 },
                 {
                     "path": "4",
-                    "title": "健康評估",
+                    "title": "健康報告",
                     "icon":"fa-stethoscope",
                     "children":[
                         {
@@ -259,6 +253,7 @@
                 this.user = {};
             }
         },
+
         methods: {
             openMailBox(){
                 this.dialogFormVisible = true;
@@ -282,7 +277,7 @@
                 this.resetUserList();
             },
             sendCheckForLogin(){
-                axios.put("/security/changePassword",this.user).then((resp)=>{
+                axios.put("/users/changePassword",this.user).then((resp)=>{
                     if(resp.data.flag){
                         this.$message({
                            type: "success",
@@ -292,7 +287,11 @@
                         this.$message().error(resp.data.message);
                     }
                 });
+            },
+            exit(){
+                location.href = "login.html";
             }
+
         }
     });
     $(function() {

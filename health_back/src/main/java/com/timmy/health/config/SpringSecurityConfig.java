@@ -12,36 +12,45 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     //passwordEncoder (required))
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Override
     protected void configure(@NotNull HttpSecurity http) throws Exception {
-        //if it's a login page then let the filter pass the request or can submit the form by front-end
+        // the overridden method is to check and set the http filter rules
         http
-                .authorizeRequests()
-                .antMatchers("/pages/**").permitAll()
-                .anyRequest().authenticated()
+                .authorizeRequests().antMatchers("/pages/**").authenticated()
+                .anyRequest().authenticated() //need to authenticate
                 .and()
-                .formLogin().loginPage("/pages/login.html").permitAll()
-                .loginProcessingUrl("/pages/login.html")
-                .defaultSuccessUrl("/pages/main.html").failureForwardUrl("/login.html")
+                .formLogin()
+                .loginPage("/pages/login.html").permitAll()
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/pages/main.html").failureForwardUrl("/pages/login.html")
                 .usernameParameter("username").passwordParameter("password")
                 .and()
-                .logout().permitAll()
+                .logout().permitAll().invalidateHttpSession(true).logoutSuccessUrl("/pages/login.html")
                 .and().csrf().disable();
+
+        http.headers().frameOptions().sameOrigin(); //enable to use the iframe
     }
+
 
     //choose the static file that you want to ignore
     @Override
     public void configure(@NotNull WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/js/**","/css/**","/plugins/**","/template/","/img/**");
+
+        web.ignoring().antMatchers("/pages/login.html",
+                "/js/**",
+                "/css/**",
+                "/plugins/**",
+                "/template/*",
+                "/img/**");
     }
 
 }

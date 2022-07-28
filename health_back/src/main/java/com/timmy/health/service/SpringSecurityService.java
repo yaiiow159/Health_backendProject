@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,13 +17,18 @@ import java.util.Set;
 
 
 @Slf4j
+@Service
 public class SpringSecurityService implements UserDetailsService {
+
+    //the method is to set the checking of the user
 
     @DubboReference(interfaceClass = UserService.class)
     private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        //use the method to check the user permissions and role
+
         User user = userService.getByUserName(username);
         Set<Role> roles = Objects.requireNonNull(user).getRoles();
 

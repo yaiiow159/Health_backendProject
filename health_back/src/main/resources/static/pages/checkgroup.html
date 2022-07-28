@@ -69,7 +69,7 @@
                 <el-table-column prop="name" label="檢查組名稱" align="center"></el-table-column>
                 <el-table-column label="適用性別" align="center">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.sex == '0' ? '不限' : scope.row.sex == '1' ? '男' : '女'}}</span>
+                        <span>{{ scope.row.sex === '0' ? '不限' : scope.row.sex === '1' ? '男' : '女'}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="helpCode" label="幫助編號" align="center"></el-table-column>
@@ -156,7 +156,9 @@
                                         <tbody>
                                         <tr v-for="c in tableData">
                                             <td>
-                                                <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
+                                                <label>
+                                                    <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
+                                                </label>
                                             </td>
                                             <td><label :for="c.id">{{c.code}}</label></td>
                                             <td><label :for="c.id">{{c.name}}</label></td>
@@ -240,7 +242,9 @@
                                         <tbody>
                                         <tr v-for="c in tableData">
                                             <td>
-                                                <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
+                                                <label>
+                                                    <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
+                                                </label>
                                             </td>
                                             <td><label :for="c.id">{{c.code}}</label></td>
                                             <td><label :for="c.id">{{c.name}}</label></td>

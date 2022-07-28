@@ -173,10 +173,10 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="價格">
-                                    <el-input v-model="formData.price"></el-input>
-                                </el-form-item>
-                            </el-col>
+                        <el-form-item label="價格">
+                            <el-input v-model="formData.price"></el-input>
+                        </el-form-item>
+                        </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="24">
@@ -192,9 +192,9 @@
                                 </el-form-item>
                             </el-col>
                         </el-row>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
                         <el-button type="primary" @click="handleEdit()">確定</el-button>
                     </div>
                 </el-dialog>
@@ -233,6 +233,13 @@
             this.findPage(); //findPage() when initialize
         },
         methods: {
+            showErrorMsg(reason){
+                if (reason.eq("Error: Request failed with status code 403")){
+                    this.$message().error("權限不足");
+                } else {
+                    this.$message().error("未知的錯誤");
+                }
+            },
             //編輯
             handleEdit() {
                 axios.put("/checkitems",this.formData).then((resp) =>{
@@ -241,6 +248,8 @@
                     } else {
                         this.$message.error(resp.data.message);
                     }
+                }).catch(reason => {
+                    this.showErrorMsg(reason);
                 }).finally(()=> {
                     this.dialogFormVisible4Edit = false;
                 });
@@ -260,15 +269,17 @@
                             } else {
                                 this.$message.error(resp.data.message);
                             }
-                        }).finally(() => {
-                            this.findPage();
-                            this.dialogFormVisible4Edit = false;
+                        }).catch(reason => {
+                            this.showErrorMsg(reason);
                         });
                     } else {
                         // if the valid incorrect show the error message
                         this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
                         return false;
                     }
+                }).finally(()=>{
+                    this.findPage();
+                    this.dialogFormVisible4Edit= false;
                 });
             },
             //分頁查詢
@@ -303,6 +314,8 @@
                         // show the error message
                         this.$message.error(resp.data.message);
                     }
+                }).catch(reason => {
+                    this.showErrorMsg(reason);
                 }).finally(() =>{
                    this.findPage();
                 });
@@ -324,6 +337,8 @@
                         } else {
                             this.$message.error(resp.data.message);
                         }
+                    }).catch(reason => {
+                        this.showErrorMsg(reason);
                     }).finally(() =>{
                         this.findPage();
                     });

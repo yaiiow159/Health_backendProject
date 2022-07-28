@@ -9,6 +9,7 @@ import com.timmy.health.utils.PoiUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ public class OrderSettingController {
             List<String[]> readExcel = PoiUtil.readExcel(file);
             List<OrderSetting> orderSettingList = new ArrayList<>();
 
-            for (String[] s: readExcel) {
+            for (String[] s : readExcel) {
                 OrderSetting orderSetting = new OrderSetting(new Date(s[0]), Integer.parseInt(s[1]));
                 orderSettingList.add(orderSetting);
             }
@@ -44,21 +45,21 @@ public class OrderSettingController {
     public Result getOrderSettinByDate(@PathVariable String date) {
         try {
             List<Map<String, Object>> dateTime = orderSettingService.getOrderByDateTime(date);
-            return new Result(true,MessageConstant.ORDERSETTING_SUCCESS,dateTime);
+            return new Result(true, MessageConstant.ORDERSETTING_SUCCESS, dateTime);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.ORDERSETTING_FAIL);
+            return new Result(false, MessageConstant.ORDERSETTING_FAIL);
         }
     }
 
     @PostMapping("/editNumberByDate")
-    public Result editNumberByDate(@RequestBody OrderSetting orderSetting){
+    public Result editNumberByDate(@RequestBody OrderSetting orderSetting) {
         try {
             orderSettingService.editNumberByDate(orderSetting);
-            return new Result(true,MessageConstant.ORDERSETTING_SUCCESS);
+            return new Result(true, MessageConstant.ORDERSETTING_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.ORDERSETTING_FAIL);
+            return new Result(false, MessageConstant.ORDERSETTING_FAIL);
         }
     }
 

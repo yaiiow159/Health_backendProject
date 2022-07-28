@@ -37,6 +37,10 @@ spring:
     lettuce:
       pool:
         enabled: true
+  security:
+    user:
+      name: root
+      password: root
 server:
   port: 82
 # dubbo setting

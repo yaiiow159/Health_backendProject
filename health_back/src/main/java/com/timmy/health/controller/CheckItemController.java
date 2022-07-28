@@ -8,6 +8,7 @@ import com.timmy.health.entity.Result;
 import com.timmy.health.service.CheckItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class CheckItemController {
 
 
     @PutMapping
+    @PreAuthorize("hasAuthority('CHECKITEM_EDIT')")
     public Result editCheckItem(@RequestBody CheckItem checkItem) {
         if (checkItemService.edit(checkItem) > -1) {
             return new Result(true, MessageConstant.EDIT_CHECKITEM_SUCCESS);
@@ -34,6 +36,7 @@ public class CheckItemController {
 
     //add checkItem
     @PostMapping
+    @PreAuthorize("hasAuthority('CHECKITEM_ADD')")
     public Result add(@RequestBody CheckItem checkItem) {
         if (checkItemService.save(checkItem)) {
             return new Result(true, Optional.of(MessageConstant.ADD_CHECKITEM_SUCCESS));
@@ -54,6 +57,7 @@ public class CheckItemController {
 
     //delete checkItem
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')") //if the user have the premisson the user can delete the checkitem
     public Result deleteCheck(@PathVariable Integer id) {
         if (checkItemService.removeById(id)) {
             return new Result(checkItemService.removeById(id), Optional.of(MessageConstant.DELETE_CHECKITEM_SUCCESS));
@@ -64,6 +68,7 @@ public class CheckItemController {
 
     // get checkItem
     @GetMapping("{id}")
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     public Result getCheckItem(@PathVariable Integer id) {
         if (checkItemService.getById(id) != null) {
             return new Result(true, checkItemService.getById(id));

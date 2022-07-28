@@ -7,6 +7,7 @@ import com.timmy.health.entity.Result;
 import com.timmy.health.service.CheckgroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class CheckgroupController {
     private CheckgroupService checkgroupService;
 
     @PutMapping("{checkitemIds}")
+    @PreAuthorize("hasAuthority('CHECKGROUP_EDIT')")
     public Result editCheckGroup(@RequestBody CheckGroup checkGroup,@PathVariable Integer[] checkitemIds) {
         try {
             checkgroupService.editCheckGroup(checkGroup,checkitemIds);
@@ -39,6 +41,7 @@ public class CheckgroupController {
 
     // make sure the checkitemId have the relation with checkgroup then add
     @PostMapping("{checkitemIds}")
+    @PreAuthorize("hasAuthority('CHECKGROUP_ADD')")
     public Result add(@RequestBody CheckGroup checkGroup,@PathVariable Integer[] checkitemIds) {
         try {
             checkgroupService.add(checkGroup, checkitemIds);
@@ -74,6 +77,7 @@ public class CheckgroupController {
     }
 
     @RequestMapping(value = "/getCheckGroupById",method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     public Result getCheckGroupById(Integer id) {
         try {
             CheckGroup checkGroup = checkgroupService.findById(id);
@@ -85,6 +89,7 @@ public class CheckgroupController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('CHECKGROUP_DELETE')")
     public Result deleteCheckGroupById(@PathVariable Integer id) {
         if (checkgroupService.deleteById(id)) {
             return new Result(true, MessageConstant.DELETE_CHECKGROUP_SUCCESS);
@@ -94,6 +99,7 @@ public class CheckgroupController {
     }
 
     @DeleteMapping(value = "/deleteGroupItemsIdByGroupId" + "{id}")
+    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")
     public Result deleteGroupItemsIdByGroupId(@PathVariable Integer id) {
           try {
               checkgroupService.deleteGroupItemByGroupId(id);
@@ -106,6 +112,7 @@ public class CheckgroupController {
 
     //find all checkgroups
     @GetMapping
+    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     public Result getAllCheckgroups(){
         try {
             List<CheckGroup> checkGroupList = checkgroupService.getAll();

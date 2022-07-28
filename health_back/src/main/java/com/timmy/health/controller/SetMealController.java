@@ -13,6 +13,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,6 +58,7 @@ public class SetMealController {
     }
 
     @PostMapping("{checkgroupIds}")
+    @PreAuthorize("hasAuthority('SETMEAL_ADD')")
     public Result add(@RequestBody Setmeal setmeal, @PathVariable Integer[] checkgroupIds) {
         try {
             setMealService.add(setmeal, checkgroupIds);
@@ -81,6 +83,7 @@ public class SetMealController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAuthority('SETMEAL_QUERY')")
     public Result getMealById(@PathVariable Integer id) {
         try {
             Setmeal setmeal = setMealService.getMealById(id);
@@ -92,6 +95,7 @@ public class SetMealController {
     }
 
     @RequestMapping(value = "/findcheckGroupsByMealId")
+    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     public Result findcheckGroupsByMealId(Integer id) {
         try {
             List<Integer> checkGroups = setMealService.findCheckGroupById(id);
