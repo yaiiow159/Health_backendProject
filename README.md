@@ -1,12 +1,7 @@
-# Health_backendProject
+# 健康管理系統
+-----------------------------------------------------------------------------------
+系統介紹: 使用springboot + vue的分布式系統，使用dubbo作為服務控管搭配zookeeper作為服務註冊中心
 
-Use technology
-__________________________
-front Tec: Vue2、elementUI、javascript
-
-backend Tec : Springboot、SpringMVC、Spring、Mybatis-Plus、Spring-task、duboo、zookeeper、Apache-POI
-
-Cloud Tec: GCP (Google cloud platoform storage)
 
 
 Project Basic Features
