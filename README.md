@@ -1,6 +1,6 @@
 # 健康管理系統
 
-## 系統介紹: 使用springboot + vue的分布式權限管理系統，使用dubbo作為服務控管搭配zookeeper作為服務註冊中心
+系統介紹: 使用springboot + vue的分布式權限管理系統，使用dubbo作為服務控管搭配zookeeper作為服務註冊中心
 系統方面拆分成四個模組，health-provider、health-backender、health-common、health-interface
 
 模組說明:
