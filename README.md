@@ -1,7 +1,22 @@
 # 健康管理系統
 
-系統介紹: 使用springboot + vue的分布式權限管理系統，使用dubbo作為服務控管搭配zookeeper作為服務註冊中心
+## 系統介紹: 
+使用springboot + vue的分布式權限管理系統，使用dubbo作為服務控管搭配zookeeper作為服務註冊中心
 系統方面拆分成四個模組，health-provider、health-backender、health-common、health-interface
+
+## 功能介紹: <br>
+### 會員管理: <br>
+- 會員檔案功能
+- 會員註冊功能
+- 會員統計功能
+
+### 預約管理: <br>
+- 預約列表功能
+- 預約設定功能
+- 套餐配置功能
+- 檢查配套功能
+
+
 
 模組說明:
 + health-provider:主要提供式服務提供模組裡面有mybatis-mapper各項xml文件以及服務實現物件提供dubbo發現服務 
