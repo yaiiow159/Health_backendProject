@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timmy.health.mapper.MemberMapper">
+
+    <select id="getMemberSum" resultType="java.lang.Integer">
+        select count(*) as memberCount from t_member
+    </select>
+
+    <select id="findMemberCountBeforeDate" parameterType="string" resultType="java.lang.Integer">
+        select count(id) from t_member where regTime = #{value}
+    </select>
+
+    <select id="findMemberCountByDate" parameterType="string" resultType="java.lang.Integer">
+        select count(id) from t_member where regTime = #{value}
+    </select>
+
+    <select id="findMemberCountAfterDate" parameterType="string" resultType="java.lang.Integer">
+        select count(id) from t_member where regTime >= #{value}
+    </select>
+
+    <select id="findMemberTotalCount" resultType="int"> select count(id) from t_member </select>
+
+    <select id="findMemberCountByDateRange" parameterType="Map" resultType="java.lang.Integer">
+        select COUNT(id) from t_member where regTime between #{beforeDate} and #{afterDate}
+    </select>
+</mapper>

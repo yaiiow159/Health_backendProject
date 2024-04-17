@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh_TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="健康管理">
+    <meta name="keywords" content="健康管理">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <title>健康管理系統</title>
+
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1 class="order_manage">系統設置<small class="check_manage">選單管理</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_title">系統設置</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_setting">選單管理</span></el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-input placeholder="選單名稱" v-model="pagination.name" style="width: 17%;"
+                          class="filter-item"></el-input>
+                <el-input placeholder="選單等級" v-model="pagination.priority" style="width: 17%;"
+                          class="filter-item"></el-input>
+                <el-button @click="findPage()" class="dalfBut">查詢</el-button>
+                <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+            </div>
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序號"></el-table-column>
+                <el-table-column prop="name" label="選單名稱" align="center"></el-table-column>
+                <el-table-column prop="linkUrl" label="選單URL" align="center"></el-table-column>
+                <el-table-column prop="path" label="路徑順序" align="center"></el-table-column>
+                <el-table-column prop="priority" label="排列順序" align="center"></el-table-column>
+                <el-table-column prop="icon" label="選單圖標" align="center"></el-table-column>
+                <el-table-column prop="description" label="描述" align="center"></el-table-column>
+                <el-table-column prop="parentMenuId" label="上級選單" align="center"></el-table-column>
+                <el-table-column prop="level" label="選單等級" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">刪除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        class="pagiantion"
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+            <!-- 新增標簽彈層 -->
+            <div class="add-form">
+                <el-dialog title="新增菜单" :visible.sync="dialogFormVisible">
+                    <el-form ref="menuAddForm" :model="formData" :rules="rules" label-width="100px">
+                        <el-form-item label="選單名稱" prop="name">
+                            <el-input v-model="formData.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="選單URL" prop="linkUrl">
+                            <el-input v-model="formData.linkUrl"></el-input>
+                        </el-form-item>
+                        <el-form-item label="路徑順序" prop="path">
+                            <el-input v-model="formData.path" type="number"></el-input>
+                        </el-form-item>
+                        <el-form-item label="排列順序" prop="priority">
+                            <el-input v-model="formData.priority" type="number"></el-input>
+                        </el-form-item>
+                        <el-form-item label="選單圖標" prop="icon">
+                            <el-input v-model="formData.icon"></el-input>
+                        </el-form-item>
+                        <el-form-item label="描述" prop="description">
+                            <el-input v-model="formData.description" type="textarea"></el-input>
+                        </el-form-item>
+                        <el-form-item label="上級選單" prop="parentMenuId">
+                            <font color="red" style="font-size: 12px;">*不選擇的視為最上層菜單</font>
+                            <el-select v-model="formData.parentMenuId">
+                                <el-option label="不選擇" value="0">無</el-option>
+                                <el-option v-for="parentMenu in tableData" :key="parentMenu.id" :label="parentMenu.name" :value="parentMenu.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取消</el-button>
+                        <el-button type="primary" @click="handleAdd()">確定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+            <div class="edit-form">
+                <el-dialog title="編輯菜單" :visible.sync="dialogFormVisible4Edit">
+                    <el-form ref="menuEditForm" :model="formData" :rules="rules" label-width="100px">
+                        <el-form-item label="菜單名稱" prop="name">
+                            <el-input v-model="formData.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="菜单URL" prop="linkUrl">
+                            <el-input v-model="formData.linkUrl"></el-input>
+                        </el-form-item>
+                        <el-form-item label="路径顺序" prop="path">
+                            <el-input v-model="formData.path" type="number"></el-input>
+                        </el-form-item>
+                        <el-form-item label="排列顺序" prop="priority">
+                            <el-input v-model="formData.priority" type="number"></el-input>
+                        </el-form-item>
+                        <el-form-item label="菜單圖示" prop="icon">
+                            <el-input v-model="formData.icon"></el-input>
+                        </el-form-item>
+                        <el-form-item label="描述" prop="description">
+                            <el-input v-model="formData.description" type="textarea"></el-input>
+                        </el-form-item>
+                        <el-form-item label="上级菜单" prop="parentMenuId">
+                            <font color="red" style="font-size: 12px;">*不選擇的視為最上層菜單</font>
+                            <el-select v-model="formData.parentMenuId">
+                                <el-option label="不選擇" value="0">無</el-option>
+                                <el-option v-for="parentMenu in tableData" :key="parentMenu.id" :label="parentMenu.name" :value="parentMenu.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+                        <el-button type="primary" @click="handleEdit()">确定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+    let vue = new Vue({
+        el: '#app',
+        data: {
+            pagination: {//page data
+                currentPage: 1,//current page
+                pageSize: 10,// the current pages number
+                total: 0,// total pages
+                name: "",
+                priority: ""
+            },
+            dataList: [],//當前頁要展示的分頁列表數據
+            formData: {},//表單數據
+            tableData: [],//表格數據
+            selectMenus: [],
+            dialogFormVisible: false,//增加表單是否可見
+            dialogFormVisible4Edit: false,//編輯表單是否可見
+            rules: {//校驗規則
+                name: [
+                    {required: true, message: '請輸入菜單名稱', trigger: 'blur'}
+                ],
+                linkUrl: [
+                    {required: true, message: '請輸入菜單URL', trigger: 'blur'}
+                ],
+                path: [
+                    {required: true, message: '請輸入菜單路徑', trigger: 'blur'}
+                ],
+                priority: [
+                    {required: true, message: '請輸入菜單等級', trigger: 'blur'}
+                ]
+            }
+        },
+
+        created() {
+            this.findPage();
+        },
+        methods: {
+            showErrorMsg(reason){
+                if (reason.eq("Error: Request failed with status code 403")){
+                    this.$message().error("權限不足");
+                } else {
+                    this.$message().error("未知的錯誤");
+                }
+            },
+            //編輯
+            handleEdit() {
+                //進行屬性校驗
+                this.$refs['menuEditForm'].validate((valid) => {
+                    if (valid) {
+                        axios.put("/menus",this.formData).then((resp) =>{
+                            if (resp.data.flag){
+                                this.$message({type: "success",message: resp.data.message});
+                            } else {
+                                this.$message.error(resp.data.message);
+                            }
+                        }).catch(reason => {
+                            this.showErrorMsg(reason);
+                        }).finally(()=> {
+                            this.dialogFormVisible4Edit = false;
+                        });
+                    } else {
+                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        return false;
+                    }
+                });
+            },
+            //添加
+            handleAdd() {
+                //進行屬性校驗
+                this.$refs['menuAddForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post("/menus", this.formData).then((resp) => {
+                            if (resp.data.flag) {
+                                this.$message({
+                                    message: resp.data.message,
+                                    type: "success"
+                                });
+                            } else {
+                                this.$message.error(resp.data.message);
+                            }
+                        }).catch(reason => {
+                            this.showErrorMsg(reason);
+                        });
+                    } else {
+                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        return false;
+                    }
+                }).finally(()=>{
+                    this.findPage();
+                    this.dialogFormVisible4Edit= false;
+                });
+            },
+            //分頁查詢
+            findPage() {
+                let param = "?query";
+                param += "&name=" + this.pagination.name;
+                param += "&priority=" + this.pagination.priority;
+                axios.get("/menus/" + this.pagination.currentPage + "/" + this.pagination.pageSize + param).then((resp) => {
+                    this.pagination.pageSize = resp.data.data.size;
+                    this.pagination.total = resp.data.data.total;
+                    this.pagination.currentPage = resp.data.data.current
+                    this.dataList = resp.data.data.records;
+                });
+            },
+            // reset the form
+            resetForm() {
+                this.formData = {};
+            },
+            // create
+            handleCreate() {
+                this.dialogFormVisible = true;
+                this.resetForm();
+                axios.get("/menus").then((resp) =>{
+                    if (resp.data.flag){
+                        this.tableData = resp.data.data;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
+            handleUpdate(row) {
+                this.dialogFormVisible4Edit = true;
+                axios.get("/menus/" + row.id).then((resp) =>{
+                    if (resp.data.flag && resp.data.data != null){
+                        this.formData = resp.data.data;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                    // 取得所有選單選項
+                    axios.get("/menus").then((resp) =>{
+                        if (resp.data.flag){
+                            this.tableData = resp.data.data;
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    })
+                    // 取得之前已選取之上級選單選項
+                    axios.get("/menus/getParentMenu/" + row.id).then((resp) =>{
+                        if (resp.data.flag){
+                            this.selectMenus = resp.data.data;
+                            for (let i = 0; i < this.tableData.length; i++) {
+                                for (let j = 0; j < this.selectMenus.length; j++) {
+                                    if (this.tableData[i].id === this.selectMenus[j].id) {
+                                        this.tableData[i].checked = true;
+                                    }
+                                }
+                            }
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    })
+                }).catch(reason => {
+                    this.showErrorMsg(reason);
+                }).finally(() =>{
+                    this.findPage();
+                });
+            },
+            handleCurrentChange(currentPage) {
+                this.pagination.currentPage = currentPage;
+                this.findPage();
+            },
+            handleDelete(row) {
+                this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原","提示",{type: "warning"}).then(() =>{
+                    axios.delete("/menus/" + row.id).then((resp) =>{
+                        if (resp.data.flag){
+                            this.$message({
+                                type: "success",
+                                message: resp.data.message
+                            });
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    }).catch(reason => {
+                        this.showErrorMsg(reason);
+                    }).finally(() =>{
+                        this.findPage();
+                    });
+                }).catch(() =>{
+                    this.$message.info("取消操作");
+                });
+            }
+        }
+    })
+</script>
+</html>

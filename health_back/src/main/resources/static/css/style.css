@@ -773,6 +773,26 @@ label input[type="radio"]:checked {
     cursor:pointer;
 }
 
+.user_title {
+    font-size: 14px;
+    font-weight: bolder;
+    color: darkseagreen;
+}
+
+.user_setting {
+    font-size: 12px;
+    font-weight: bolder;
+    color: darkseagreen;
+}
+
+.user_setting :hover {
+    cursor:pointer;
+}
+
+.user_title :hover {
+    cursor:pointer;
+}
+
 .top_pages {
     color: darkseagreen;
     font-size: 16px;
@@ -788,6 +808,14 @@ label input[type="radio"]:checked {
     color: lightslategray; font-weight: bold;
 }
 
+.system_manage {
+    color: lightslategray; font-weight: bold;
+}
+
+.user_manage {
+    color: lightslategray; font-weight: bold;
+}
+
 .change_pwd  .pass{
     display:block;
     cursor:pointer;
@@ -798,4 +826,12 @@ label input[type="radio"]:checked {
     color: mediumseagreen;
     font-weight: bolder;
     font-style: italic;
+}
+
+.error-page {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bolder;
+    color: red;
+    margin: 30px;
 }

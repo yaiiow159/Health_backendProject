@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>健康管理系統</title>
+  <meta name="description" content="健康管理">
+  <meta name="keywords" content="健康管理">
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../plugins/echarts/echarts.js"></script>
+</head>
+<body class="hold-transition">
+<div id="app">
+  <div class="content-header">
+    <h1>統計分析<small>套餐佔比</small></h1>
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
+      <el-breadcrumb-item>統計分析</el-breadcrumb-item>
+      <el-breadcrumb-item>套餐佔比</el-breadcrumb-item>
+    </el-breadcrumb>
+  </div>
+  <div class="app-container">
+    <div class="box">
+      <div id="chart1" style="height:600px;"></div>
+    </div>
+  </div>
+</div>
+</body>
+<!-- 引入組件庫 -->
+<script src="../js/vue.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script type="text/javascript">
+  var myChart1 = echarts.init(document.getElementById('chart1'));
+
+
+  axios.get("/report/getSetmealReport").then((res)=>{
+    myChart1.setOption({
+      title : {
+        text: '套餐預約佔比',
+        subtext: '',
+        x:'center'
+      },
+      tooltip : {//提示框組件
+        trigger: 'item',//觸發類型，在餅形圖中為item
+        formatter: "{a} <br/>{b} : {c} ({d}%)"//提示內容格式
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: res.data.data.setmealNames
+      },
+      series : [
+        {
+          name: '套餐預約佔比',
+          type: 'pie',
+          radius : '55%',
+          center: ['50%', '60%'],
+          data: res.data.data.setmealCount,
+          itemStyle: {
+            emphasis: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    });
+  });
+</script>
+</html>

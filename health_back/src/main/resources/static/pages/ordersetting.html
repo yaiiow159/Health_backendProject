@@ -77,16 +77,13 @@
                         <ul class="days">
                             <li v-for="dayobject in days">
                                 <template>
-                                    <!-- if not the current month -->
                                     <div class="other-month" v-if="dayobject.day.getMonth()+1 !== currentMonth">
                                         {{ dayobject.day.getDate() }}
                                     </div>
-                                    <!-- is current month -->
                                     <div class="everyday" v-if="dayobject.day.getMonth()+1 === currentMonth">
                                         <span class="datenumber">{{ dayobject.day.getDate()}}</span>
                                         <template>
                                             <template v-for="obj in leftobj">
-                                                <!--check the date-->
                                                 <template v-if="obj.date === dayobject.day.getDate()">
                                                     <template v-if="obj.number > obj.reservations">
                                                         <div class="usual">
@@ -136,7 +133,7 @@
             days: [],
             leftobj: []
         },
-        created: function () { //init when vue object create
+        created: function () {
             this.initData(null);
         },
         methods: {
@@ -148,7 +145,7 @@
                     inputErrorMessage: "只能輸入正整數"
                 }).then(({value}) => {
                     axios.post("/orderSettings/editNumberByDate/", {
-                        number:value, //reservation numbers
+                        number:value,
                         orderDate:this.formatDate(day.getFullYear(), day.getMonth() + 1, 1) //format the date
                     }).then((resp) => {
                         if (resp.data.flag) {
@@ -181,11 +178,9 @@
                 this.$message.error('上傳文件只能是xls或者xlsx格式!');
                 return false;
             },
-            //download the template when the user click the button and send to the location with url address
             downloadTemplate() {
                 location.href = "../template/ordersetting_template.xlsx";
             },
-            //show success message when the image uploaded
             handleSuccess(response, file) {
                 if (response.flag) {
                     this.$message({
@@ -203,7 +198,7 @@
                 let now;
                 let dayobject;
                 let date;
-                let index = 0;   //控制顯示預定的天數
+                let index = 0;
                 if (current) {
                     date = new Date(current);
                 } else {
@@ -218,13 +213,11 @@
                 this.currentWeek = date.getDay(); // //本月第一天是周幾（周日0 周六 6）
                 let today = new Date();
                 this.LocalMonth = today.getMonth() + 1;
-                if (this.currentWeek === 0) { //check if the week is sunday
+                if (this.currentWeek === 0) {
                     this.currentWeek = 7;
                 }
                 let str = this.formatDate(this.currentYear, this.currentMonth, this.currentDay);
                 this.days.length = 0;
-                // 今天是周日，放在第一行第7個位置，前面6個
-                //初始化本周
                 for (let i = this.currentWeek - 1; i >= 0; i--) {
                     let d = new Date(str);
                     d.setDate(d.getDate() - i);
@@ -232,15 +225,15 @@
                     dayobject.day = d;
                     now = new Date();
                     if (d.getDate() === (now.getDate()) && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) {
-                        dayobject.index = index++;//從今天開始顯示供預定的數量
+                        dayobject.index = index++;
                     } else if (index !== 0 && index < 3)
-                        dayobject.index = index++;//從今天開始3天內顯示供預定的數量
-                    this.days.push(dayobject);//將日期放入data 中的days數組 供頁面渲染使用
+                        dayobject.index = index++;
+                    this.days.push(dayobject);
                 }
                 for (let i = 1; i <= 35 - this.currentWeek; i++) {
                     d = new Date(str);
                     d.setDate(d.getDate() + i);
-                    dayobject = {};//dayobject   {day:date,index:2}
+                    dayobject = {};
                     dayobject.day = d;
                     now = new Date();
                     if (d.getDate() === (now.getDate()) && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) {

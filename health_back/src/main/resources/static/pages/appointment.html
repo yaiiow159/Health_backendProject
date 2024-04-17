@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="../plugins/elementui/index.css">
     <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .setmeal-tabs {
+            margin: 0 auto;
+            width: 90%;
+        }
+    </style>
 </head>
 <body class="hold-transition">
 <div id="app">
@@ -25,26 +32,28 @@
     <div class="app-container">
         <div class="box">
             <div class="filter-container">
-                <el-input placeholder="預約人數" v-model="pagination.number" style="width: 200px;"
-                          class="filter-item"></el-input>
-                <el-input placeholder="預約日期" v-model="pagination.date" style="width: 200px;"
-                          class="filter-item"></el-input>
+                <el-input placeholder="會員ID" v-model="pagination.memberId" style="width: 200px;" class="filter-item"></el-input>
+                <el-date-picker placeholder="預約日期" v-model="pagination.orderDate" type="date" value-format="yyyy-MM-dd" style="width: 200px;" class="filter-item"></el-date-picker>
+                <el-select v-model="pagination.orderType" placeholder="預約類型" style="width: 200px;">
+                    <el-option label="線上預約" value="線上預約"></el-option>
+                    <el-option label="到診預約" value="到診預約"></el-option>
+                </el-select>
+                <el-select v-model="pagination.orderStatus" placeholder="預約狀態" style="width: 200px;">
+                    <el-option label="已到診" value="已到診"></el-option>
+                    <el-option label="未到診" value="未到診"></el-option>
+                </el-select>
                 <el-button @click="findPage()" class="dalfBut">查詢</el-button>
-                <el-button type="primary" class="butT" @click="handleCreate()">新增預約</el-button>
+                <el-button type="primary" @click="handleCreate()">新增預約</el-button>
             </div>
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序號"></el-table-column>
-                <el-table-column prop="code" label="專案代碼" align="center"></el-table-column>
-                <el-table-column prop="name" label="專案名稱" align="center"></el-table-column>
-                <el-table-column label="適用性別" align="center">
-                    <template slot-scope="scope">
-                        <span>{{ scope.row.sex === '0' ? '不限' : scope.row.sex === '1' ? '男' : '女'}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="age" label="適用年齡" align="center"></el-table-column>
-                <el-table-column prop="remark" label="專案說明" align="center"></el-table-column>
+                <el-table-column prop="memberId" label="會員ID" align="center"></el-table-column>
+                <el-table-column prop="orderDate" label="預約日期" align="center"></el-table-column>
+                <el-table-column prop="orderType" label="預約類型" align="center"></el-table-column>
+                <el-table-column prop="orderStatus" label="預約狀態" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleSearch(scope.row)">查看</el-button>
                         <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.row)">刪除</el-button>
                     </template>
@@ -63,21 +72,49 @@
 
             <div class="add-form">
                 <el-dialog title="新增預約" :visible.sync="dialogFormVisible">
-                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
-                             label-width="100px">
+                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="預約日期" prop="date">
-                                    <el-input v-model="formData.date"></el-input>
+                                <el-form-item label="會員ID" prop="memberId">
+                                    <el-input v-model="formData.memberId" type="number"></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="6">
-                                <el-form-item label="預約人數" prop="number">
-                                    <el-input v-model="formData.number"></el-input>
+                            <el-col :span="12">
+                                <el-form-item label="預約日期" prop="orderDate">
+                                    <el-date-picker v-model="formData.orderDate" type="date" placeholder="選擇日期"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="預約類型" prop="orderType">
+                                    <el-select v-model="formData.orderType" placeholder="選擇預約類型">
+                                        <el-option label="電話預約" value="電話預約"></el-option>
+                                        <el-option label="手機預約" value="手機預約"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="選擇套餐" prop="setmealId">
+                                    <el-select v-model="setmealIds" placeholder="選擇套餐">
+                                        <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
+                                    </el-select>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                     </el-form>
+                    <el-tabs v-model="activeTab" class="setmeal-tabs">
+                        <el-tab-pane label="套餐詳情" name="setmeal">
+                            <p>套餐名稱: {{ setmeal.name }}</p>
+                            <p>套餐代碼: {{ setmeal.code }}</p>
+                            <p>幫助代碼: {{ setmeal.helpCode }}</p>
+                            <p>套餐備註: {{ setmeal.remark }}</p>
+                            <p>套餐價格: {{ setmeal.price }}</p>
+                            <p>適用年齡: {{ setmeal.age }}</p>
+                        </el-tab-pane>
+                    </el-tabs>
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="dialogFormVisible = false">取消</el-button>
                         <el-button type="primary" @click="handleAdd()">確定</el-button>
@@ -85,24 +122,52 @@
                 </el-dialog>
             </div>
 
-            <!-- 編輯標簽彈層 -->
-            <div class="add-form">
+            <!-- 編輯標籤彈層 -->
+            <div class="edit-form">
                 <el-dialog title="編輯預約" :visible.sync="dialogFormVisible4Edit">
-                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="top"
-                             label-width="100px">
+                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="top" label-width="100px">
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="預約人數" prop="number">
-                                    <el-input v-model="formData.number"></el-input>
+                                <el-form-item label="會員ID" prop="memberId">
+                                    <el-input v-model="formData.memberId" type="number"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="預約日期" prop="date">
-                                    <el-input v-model="formData.date"></el-input>
+                                <el-form-item label="預約日期" prop="orderDate">
+                                    <el-date-picker v-model="formData.orderDate" type="date" placeholder="選擇日期"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="預約類型" prop="orderType">
+                                    <el-select v-model="formData.orderType" placeholder="選擇預約類型">
+                                        <el-option label="電話預約" value="電話預約"></el-option>
+                                        <el-option label="手機預約" value="手機預約"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="選擇套餐" prop="setmealId">
+                                    <el-select v-model="setmealIds" placeholder="選擇套餐">
+                                        <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
+                                    </el-select>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                     </el-form>
+                    <el-tabs v-model="activeTab" class="setmeal-tabs">
+                        <el-tab-pane label="套餐详情" name="setmeal">
+                            <p>套餐名稱: {{ setmeal.name }}</p>
+                            <p>套餐代碼: {{ setmeal.code }}</p>
+                            <p>幫助代碼: {{ setmeal.helpCode }}</p>
+                            <p>套餐備註: {{ setmeal.remark }}</p>
+                            <p>套餐價格: {{ setmeal.price }}</p>
+                            <p>適用年齡: {{ setmeal.age }}</p>
+                        </el-tab-pane>
+                    </el-tabs>
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
                         <el-button type="primary" @click="handleEdit()">確定</el-button>
@@ -122,125 +187,148 @@
     let vue = new Vue({
         el: '#app',
         data: {
-            pagination: {//page data
-                currentPage: 1,//current page
-                pageSize: 10,// the current pages number
-                total: 0,// total pages
-                number: "",
-                date: ""
+            pagination: {
+                currentPage: 1,
+                pageSize: 10,
+                total: 0,
+                name: "",
+                orderDate: "",
+                orderStatus: "",
+                orderType: "",
             },
-            dataList: [],//當前頁要展示的分頁列表數據
-            formData: {},//表單數據
-            dialogFormVisible: false,//增加表單是否可見
-            dialogFormVisible4Edit: false,//編輯表單是否可見
-            rules: {//校驗規則
-                number: [{required: true, message: '預約人數為必填項', trigger: 'blur'}],
-                date: [{required: true, message: '預約日期為必填項', trigger: 'blur'}]
-            }
+            activeTab: "0",
+            setmealIds: null,
+            setmealDetail: {},
+            setmeals: [],
+            setmeal: {},
+            dataList: [],
+            formData: {},
+            dialogFormVisible: false,
+            dialogFormVisible4Edit: false,
+            rules: {
+                orderDate: [{ required: true, message: '預約日期為必填項', trigger: 'blur' }],
+                orderType: [{ required: true, message: '預約類型為必填項', trigger: 'blur' }],
+            },
+        },
+
+        watch: {
+           setmealIds(newValue) {
+               if (newValue) {
+                   this.fetchSetmealsDetail(newValue);
+               }
+           }
         },
 
         created() {
-            this.findPage(); //findPage() when initialize
+            this.findPage();
         },
         methods: {
-            //編輯
             handleEdit() {
-                axios.put("/checkitems",this.formData).then((resp) =>{
-                    if (resp.data.flag){
-                        this.$message({type: "success",message: resp.data.message});
-                    } else {
-                        this.$message.error(resp.data.message);
-                    }
-                }).finally(()=> {
-                    this.dialogFormVisible4Edit = false;
-                });
-            },
-            //添加
-            handleAdd() {
-                this.$refs['dataAddForm'].validate((valid) => {
+                this.$refs['dataEditForm'].validate((valid) => {
                     if (valid) {
-                        axios.post("/checkitems", this.formData).then((resp) => {
+                        this.formData.setmealId = this.setmealIds;
+                        axios.put("/orders", this.formData).then((resp) => {
                             if (resp.data.flag) {
-                                //show message
-                                this.$message({
-                                    message: resp.data.message,
-                                    type: "success"
-                                });
+                                this.$message({ type: "success", message: resp.data.message });
+                                this.dialogFormVisible4Edit = false;
+                                this.findPage();
                             } else {
                                 this.$message.error(resp.data.message);
                             }
-                        }).finally(() => {
-                            this.findPage();
-                            this.dialogFormVisible4Edit = false;
                         });
                     } else {
-                        // if the valid incorrect show the error message
+                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        return false;
+                    }
+                })
+            },
+            handleAdd() {
+                this.$refs['dataAddForm'].validate((valid) => {
+                    if (valid) {
+                        this.formData.setmealId = this.setmealIds;
+                        axios.post("/orders", this.formData).then((resp) => {
+                            if (resp.data.flag) {
+                                this.$message({ type: "success", message: resp.data.message });
+                                this.dialogFormVisible = false;
+                                this.findPage();
+                            } else {
+                                this.$message.error(resp.data.message);
+                            }
+                        });
+                    } else {
                         this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
                         return false;
                     }
                 });
             },
-            //分頁查詢
             findPage() {
-                param = "?query";
-                param += "&name=" + this.pagination.name;
-                param += "&code=" + this.pagination.code;
-                axios.get("/checkitems/" + this.pagination.currentPage + "/" + this.pagination.pageSize + param).then((resp) => {
-                    this.pagination.pageSize = resp.data.data.size;
-                    this.pagination.total = resp.data.data.total;
-                    this.pagination.currentPage = resp.data.data.current
+                let param = "?query";
+                if (this.pagination.orderDate) {
+                    param += "&orderDate=" + this.pagination.orderDate;
+                }
+                if (this.pagination.orderStatus) {
+                    param += "&orderStatus=" + this.pagination.orderStatus;
+                }
+                if (this.pagination.orderType) {
+                    param += "&orderType=" + this.pagination.orderType;
+                }
+                axios.get("/orders" + `/${this.pagination.currentPage}`+ `/${this.pagination.pageSize}` + param).then((resp) => {
                     this.dataList = resp.data.data.records;
+                    this.pagination.total = resp.data.data.total;
                 });
             },
-            // reset the form
-            resetForm() {
-                this.formData = {};
-            },
-            // create
-            handleCreate() {
-                this.dialogFormVisible = true;
-                this.resetForm();
-            },
-            // update the show data in the page
-            handleUpdate(row) {
-                this.dialogFormVisible4Edit = true;
-                axios.get("/checkitems/" + row.id).then((resp) =>{
-                    if (resp.data.flag && resp.data.data != null){
-                        // the request data has data from row so show it in the row
-                        this.formData = resp.data.data;
-                    } else {
-                        // show the error message
-                        this.$message.error(resp.data.message);
-                    }
-                }).finally(() =>{
-                    this.findPage();
-                });
-            },
-            //show current page
             handleCurrentChange(currentPage) {
                 this.pagination.currentPage = currentPage;
                 this.findPage();
             },
-            // delete the row data
+            resetForm() {
+                this.formData = {};
+            },
+            handleCreate() {
+                this.resetForm();
+                this.fetchSetmeals();
+                this.dialogFormVisible = true;
+            },
+            handleUpdate(row) {
+                this.resetForm();
+                this.formData = Object.assign({}, row);
+                this.dialogFormVisible4Edit = true;
+            },
+            fetchSetmeals() {
+                axios.get("/setMeals/findAll").then((resp) => {
+                if (resp.data.flag) {
+                    this.setmeals = resp.data.data;
+                } else {
+                    this.$message.error("獲取套餐選項失敗");
+                }
+                });
+            },
+            fetchSetmealsDetail(id) {
+                axios.get(`/setMeals/getSetMealByOrderId/${id}`).then(resp => {
+                    if(resp.data.flag) {
+                        this.setmealDetail = resp.data.data;
+                    }
+                }).catch(error => {
+                    console.error('獲取套餐詳細訊息失敗:', error);
+                    this.setmealDetail = {};
+                });
+            },
             handleDelete(row) {
-                this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原","提示",{type: "warning"}).then(() =>{
-                    axios.delete("/checkitems/" + row.id).then((resp) =>{
-                        if (resp.data.flag){
-                            this.$message({
-                                type: "success",
-                                message: resp.data.message
-                            });
+                this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原", "提示", { type: "warning" }).then(() => {
+                    axios.delete("/orders/" + row.id).then((resp) => {
+                        if (resp.data.flag) {
+                            this.$message({ type: "success", message: resp.data.message });
+                            this.findPage();
                         } else {
                             this.$message.error(resp.data.message);
                         }
-                    }).finally(() =>{
-                        this.findPage();
                     });
-                }).catch(() =>{
+                }).catch(() => {
                     this.$message.info("取消操作");
                 });
-            }
+            },
         }
-    })
+    });
 </script>
+
 </html>

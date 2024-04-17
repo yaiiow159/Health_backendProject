@@ -1,18 +1,15 @@
 package com.timmy.health.domain;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-
-@Data
-public class Member implements Serializable{
-
-    @TableId
-    @NotNull
+@Getter
+@Setter
+public class Member implements java.io.Serializable {
     private Integer id;
     private String fileNumber;
     private String name;

@@ -4,11 +4,41 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.timmy.health.mapper.PermissionMapper">
 
-    <select id="getPermissionByRoleId" resultType="Permission">
+    <resultMap id="BaseResultMap" type="com.timmy.health.domain.Permission">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="keyword" property="keyword"/>
+        <result column="description" property="description"/>
+    </resultMap>
+
+    <select id="getPermissionByRoleId" resultType="com.timmy.health.domain.Permission">
         select tp.*
         from t_role_permission trp
                  join t_permission tp on tp.id = trp.permission_id and trp.role_id = #{id}
     </select>
 
+    <select id="getPages" resultMap="BaseResultMap">
+        select id, name, keyword, description
+        from t_permission
+        where 1=1
+        <if test="permission.keyword != null and permission.keyword != ''">
+            and keyword like #{permission.keyword}
+        </if>
+        <if test="permission.name != null and permission.name != ''">
+            and name like #{permission.name}
+        </if>
+    </select>
 
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.timmy.health.domain.Permission">
+        insert into t_permission(name, keyword, description) values(#{name},#{keyword},#{description})
+    </insert>
+
+    <update id="edit" parameterType="com.timmy.health.domain.Permission">
+        update t_permission set name = #{name}, keyword = #{keyword}, description = #{description}
+        where id = #{id}
+    </update>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select id,name,description,keyword from t_permission where id = #{id}
+    </select>
 </mapper>

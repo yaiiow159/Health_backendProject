@@ -131,7 +131,7 @@
             </div>
 
             <!-- 編輯標簽彈層 -->
-            <div class="add-form">
+            <div class="edit-form">
                 <el-dialog title="編輯檢查項" :visible.sync="dialogFormVisible4Edit">
                     <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
@@ -230,7 +230,7 @@
         },
 
         created() {
-            this.findPage(); //findPage() when initialize
+            this.findPage();
         },
         methods: {
             showErrorMsg(reason){
@@ -261,7 +261,6 @@
                     if (valid) {
                         axios.post("/checkitems", this.formData).then((resp) => {
                             if (resp.data.flag) {
-                                //show message
                                 this.$message({
                                     message: resp.data.message,
                                     type: "success"
@@ -273,7 +272,6 @@
                             this.showErrorMsg(reason);
                         });
                     } else {
-                        // if the valid incorrect show the error message
                         this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
                         return false;
                     }
@@ -284,7 +282,7 @@
             },
             //分頁查詢
             findPage() {
-                param = "?query";
+                let param = "?query";
                 param += "&name=" + this.pagination.name;
                 param += "&code=" + this.pagination.code;
                 axios.get("/checkitems/" + this.pagination.currentPage + "/" + this.pagination.pageSize + param).then((resp) => {
@@ -303,15 +301,12 @@
                 this.dialogFormVisible = true;
                 this.resetForm();
             },
-            // update the show data in the page
             handleUpdate(row) {
                 this.dialogFormVisible4Edit = true;
                 axios.get("/checkitems/" + row.id).then((resp) =>{
                     if (resp.data.flag && resp.data.data != null){
-                        // the request data has data from row so show it in the row
                         this.formData = resp.data.data;
                     } else {
-                        // show the error message
                         this.$message.error(resp.data.message);
                     }
                 }).catch(reason => {

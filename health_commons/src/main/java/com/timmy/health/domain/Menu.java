@@ -8,10 +8,9 @@ import java.io.Serializable;
 import java.util.*;
 
 @Data
-public class Menu implements Serializable{
+public class Menu implements Serializable {
 
     @TableId
-    @NotNull
     private Integer id;
     private String name;
     private String linkUrl;

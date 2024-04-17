@@ -13,7 +13,6 @@ import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -23,12 +22,10 @@ import java.util.Map;
 
 @DubboService(interfaceClass = SetMealService.class)
 @Transactional
-@Service
 public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, Setmeal> implements SetMealService {
 
     @Autowired
     private SetMealMapper setMealMapper;
-    //use to set the img name to make sure the img is send to database or not
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -38,7 +35,6 @@ public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, Setmeal> impl
         Integer setMealId = setmeal.getId();
         Map<String, Integer> map = setSetMealAndCheckGroupRelate(setMealId, checkgroupIds);
         setMealMapper.setSetMealAndCheckGroups(map);
-        //make sure if the img have not add to the database
         redisTemplate.opsForSet().add(RedisConstant.SETMEAL_PIC_DB_RESOURCE, setmeal.getImg());
     }
 
@@ -70,6 +66,16 @@ public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, Setmeal> impl
     @Override
     public List<Integer> findCheckGroupById(Integer id) {
         return setMealMapper.findCheckGroupsById(id);
+    }
+
+    @Override
+    public List<Map<String, Object>> findSetmealCount() {
+        return setMealMapper.findSetmealCount();
+    }
+
+    @Override
+    public List<Setmeal> findAll() {
+        return setMealMapper.selectList(null);
     }
 
 

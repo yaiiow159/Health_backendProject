@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh_TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="健康管理">
+    <meta name="keywords" content="健康管理">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <title>健康管理系統</title>
+
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1 class="order_manage">系統配置<small class="check_manage">權限管理</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_manage">系統配置</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_title">權限管理</span></el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-input placeholder="角色名稱" v-model="pagination.name" style="width: 17%;"
+                          class="filter-item"></el-input>
+                <el-input placeholder="角色關鍵字" v-model="pagination.keyword" style="width: 17%;"
+                          class="filter-item"></el-input>
+                <el-button @click="findPage()" class="dalfBut">查詢</el-button>
+                <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+            </div>
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序號"></el-table-column>
+                <el-table-column prop="name" label="角色名稱" align="center"></el-table-column>
+                <el-table-column prop="keyword" label="關鍵字" align="center"></el-table-column>
+                <el-table-column prop="description" label="描述" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">刪除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        class="pagiantion"
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+            <!-- 新增標簽彈層 -->
+            <div class="add-form">
+                <el-dialog title="新增角色" :visible.sync="dialogFormVisible">
+                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
+                             label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="角色名稱" prop="name">
+                                    <el-input v-model="formData.name"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="角色關鍵字" prop="keyword">
+                                    <el-input v-model="formData.keyword"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="描述">
+                                    <el-input v-model="formData.description" type="textarea"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取消</el-button>
+                        <el-button type="primary" @click="handleAdd()">確定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+            <!-- 編輯標簽彈層 -->
+            <div class="add-form">
+                <el-dialog title="編輯角色" :visible.sync="dialogFormVisible4Edit">
+                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
+                             label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="角色名稱" prop="name">
+                                    <el-input v-model="formData.name"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="角色關鍵字" prop="keyword">
+                                    <el-input v-model="formData.keyword"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="描述" prop="description">
+                                    <el-input v-model="formData.description"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+                        <el-button type="primary" @click="handleEdit()">確定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入組件庫 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+    let vue = new Vue({
+        el: '#app',
+        data: {
+            pagination: {//page data
+                currentPage: 1,//current page
+                pageSize: 10,// the current pages number
+                total: 0,// total pages
+                name: "",
+                keyword: ""
+            },
+            dataList: [],//當前頁要展示的分頁列表數據
+            formData: {},//表單數據
+            dialogFormVisible: false,//增加表單是否可見
+            dialogFormVisible4Edit: false,//編輯表單是否可見
+            rules: {//校驗規則
+                name: [{required: true, message: '權限名稱為必填欄位', trigger: 'blur'}],
+                keyword: [{required: true, message: '權限關鍵字為必填欄位', trigger: 'blur'}]
+            }
+        },
+
+        created() {
+            this.findPage(); //findPage() when initialize
+        },
+        methods: {
+            showErrorMsg(reason){
+                if (reason.eq("Error: Request failed with status code 403")){
+                    this.$message().error("權限不足");
+                } else {
+                    this.$message().error("未知的錯誤");
+                }
+            },
+            //編輯
+            handleEdit() {
+                axios.put("/permissions",this.formData).then((resp) =>{
+                    if (resp.data.flag){
+                        this.$message({type: "success",message: resp.data.message});
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                }).catch(reason => {
+                    this.showErrorMsg(reason);
+                }).finally(()=> {
+                    this.findPage();
+                    this.dialogFormVisible4Edit = false;
+                });
+            },
+            //添加
+            handleAdd() {
+                //進行屬性校驗
+                this.$refs['dataAddForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post("/permissions", this.formData).then((resp) => {
+                            if (resp.data.flag) {
+                                this.$message({
+                                    message: resp.data.message,
+                                    type: "success"
+                                });
+                            } else {
+                                this.$message.error(resp.data.message);
+                            }
+                        }).catch(reason => {
+                            this.showErrorMsg(reason);
+                        });
+                    } else {
+                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        return false;
+                    }
+                }).finally(()=>{
+                    this.findPage();
+                    this.dialogFormVisible4Edit= false;
+                });
+            },
+            //分頁查詢
+            findPage() {
+                let param = "?query";
+                param += "&name=" + this.pagination.name;
+                param += "&keyword=" + this.pagination.keyword;
+                axios.get("/permissions/" + this.pagination.currentPage + "/" + this.pagination.pageSize + param).then((resp) => {
+                    this.pagination.pageSize = resp.data.data.size;
+                    this.pagination.total = resp.data.data.total;
+                    this.pagination.currentPage = resp.data.data.current
+                    this.dataList = resp.data.data.records;
+                });
+            },
+            // reset the form
+            resetForm() {
+                this.formData = {};
+            },
+            // create
+            handleCreate() {
+                this.dialogFormVisible = true;
+                this.resetForm();
+            },
+            handleUpdate(row) {
+            this.dialogFormVisible4Edit = true;
+            axios.get("/permissions/" + row.id).then((resp) =>{
+                if (resp.data.flag && resp.data.data != null){
+                    this.formData = resp.data.data;
+                } else {
+                    this.$message.error(resp.data.message);
+                }
+            }).catch(reason => {
+                this.showErrorMsg(reason);
+            }).finally(() =>{
+                this.findPage();
+            });
+        },
+        //show current page
+            handleCurrentChange(currentPage) {
+                this.pagination.currentPage = currentPage;
+                this.findPage();
+            },
+            // delete the row data
+            handleDelete(row) {
+                this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原","提示",{type: "warning"}).then(() =>{
+                    axios.delete("/permissions/" + row.id).then((resp) =>{
+                        if (resp.data.flag){
+                            this.$message({
+                                type: "success",
+                                message: resp.data.message
+                            });
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    }).catch(reason => {
+                        this.showErrorMsg(reason);
+                    }).finally(() =>{
+                        this.findPage();
+                    });
+                }).catch(() =>{
+                    this.$message.info("取消操作");
+                });
+            }
+        }
+    })
+</script>
+</html>

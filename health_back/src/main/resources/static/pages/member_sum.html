@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="健康管理">
+    <meta name="keywords" content="健康管理">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <title>健康管理系統</title>
+
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1 class="order_manage">會員管理<small class="check_manage">會員統計</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_title">會員管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="order_setting">會員統計</span></el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-date-picker
+                        v-model="dateTime.before"
+                        type="date"
+                        placeholder="註冊日期(前)"
+                        style="width: 17%;"
+                        class="filter-item"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+
+                <el-date-picker
+                        v-model="dateTime.after"
+                        type="date"
+                        placeholder="註冊日期(後)"
+                        style="width: 17%;"
+                        class="filter-item"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-button @click="getMemberSum()" class="dalfBut">查詢</el-button>
+            </div>
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column prop="sum" label="會員總數" align="center"></el-table-column>
+            </el-table>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入組件庫 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+    let vue = new Vue({
+        el: '#app',
+            data: {
+            sum: 0,
+                dateTime: {
+                before: null,
+                    after: null
+            },
+            dataList: []
+        },
+
+            created() {
+            this.getMemberSum();
+        },
+        methods: {
+            showErrorMsg(reason) {
+                if (reason === "Error: Request failed with status code 403") {
+                    this.$message.error("權限不足");
+                } else {
+                    this.$message.error("未知的錯誤");
+                }
+            },
+
+            getMemberSum() {
+                axios.get("/members/sum", {
+                    params: {
+                        beforeDate: this.dateTime.before,
+                        afterDate: this.dateTime.after
+                    }
+                }).then((resp) => {
+                    this.dataList = [{ sum: resp.data }];
+                }).catch((error) => {
+                    this.showErrorMsg(error.toString());
+                });
+            },
+        }
+    })
+</script>
+</html>

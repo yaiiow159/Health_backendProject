@@ -4,10 +4,61 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.timmy.health.mapper.RoleMapper">
 
-    <select id="getRoleByUserId" parameterType="Integer" resultType="Role">
+    <select id="getRoleByUserId" parameterType="Integer" resultType="com.timmy.health.domain.Role">
         select r.*
         from t_role r
                  join t_user_role tr on r.id = tr.role_id and tr.user_id = #{id}
     </select>
 
+    <select id="getRoleByName" parameterType="String" resultType="com.timmy.health.domain.Role">
+        select r.* from t_role r where name = #{name}
+    </select>
+
+    <select id="getPermissionsByRoleId" parameterType="Integer" resultType="com.timmy.health.domain.Permission">
+        select * from t_permission
+        inner join t_role_permission trp on t_permission.id = trp.permission_id
+        where role_id = #{roleId}
+    </select>
+
+    <delete parameterType="Integer" id="deletePermissionByRoleId">
+        delete from t_role_permission where role_id = #{id}
+    </delete>
+
+    <insert id="insertRoleAndPermission" parameterType="java.util.List">
+        insert into t_role_permission (role_id, permission_id)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.roleId}, #{item.permissionId})
+        </foreach>
+    </insert>
+
+    <insert id="save" parameterType="com.timmy.health.domain.Role" useGeneratedKeys="true" keyProperty="id">
+        insert into t_role(name, keyword, description) values(#{name},#{keyword},#{description})
+    </insert>
+
+    <update id="editRole" parameterType="com.timmy.health.domain.Role">
+        update t_role set name = #{name}, keyword = #{keyword}, description = #{description} where id = #{id}
+    </update>
+
+    <select id="getRoleList" resultType="com.timmy.health.domain.Role">
+        select id,name,description,keyword from t_role
+        where 1=1
+        <if test="description != null and description != ''">
+            and description = #{description}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and keyword = #{keyword}
+        </if>
+    </select>
+
+    <select id="getPages" resultType="com.timmy.health.domain.Role">
+        select id,name,description,keyword from t_role
+        where 1=1
+        <if test="role.description != null and role.description != ''">
+            and description = #{role.description}
+        </if>
+        <if test="role.keyword != null and role.keyword != ''">
+            and keyword = #{role.keyword}
+        </if>
+    </select>
 </mapper>

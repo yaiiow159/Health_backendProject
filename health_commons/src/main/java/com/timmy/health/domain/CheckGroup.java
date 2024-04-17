@@ -21,8 +21,6 @@ import java.util.List;
 @TableName("t_checkgroup")
 @Validated
 public class CheckGroup implements Serializable {
-
-
     @NotNull(message = "檢查項目id不能為null")
     private Integer id;
     private String code;

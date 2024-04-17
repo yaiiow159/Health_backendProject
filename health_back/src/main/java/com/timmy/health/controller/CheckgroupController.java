@@ -39,7 +39,6 @@ public class CheckgroupController {
         }
     }
 
-    // make sure the checkitemId have the relation with checkgroup then add
     @PostMapping("{checkitemIds}")
     @PreAuthorize("hasAuthority('CHECKGROUP_ADD')")
     public Result add(@RequestBody CheckGroup checkGroup,@PathVariable Integer[] checkitemIds) {
@@ -47,9 +46,9 @@ public class CheckgroupController {
             checkgroupService.add(checkGroup, checkitemIds);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false, MessageConstant.ADD_CHECKGROUP_FAIL); //checkgroup add fail
+            return new Result(false, MessageConstant.ADD_CHECKGROUP_FAIL);
         }
-        return new Result(true, MessageConstant.ADD_CHECKGROUP_SUCCESS); //checkgroup add success
+        return new Result(true, MessageConstant.ADD_CHECKGROUP_SUCCESS);
     }
 
     @GetMapping("{currenPage}/{pageSize}")
@@ -57,7 +56,6 @@ public class CheckgroupController {
                             @PathVariable("pageSize") Integer pageSize,
                             CheckGroup checkGroup) {
         IPage<CheckGroup> groupIPage = checkgroupService.getPages(currenPage, pageSize, checkGroup);
-        // make sure if the pageSize is bigger than the current page can change to the current pageSize
         if (currenPage > groupIPage.getPages()) {
             log.info("當前頁面超過取得頁面數");
             groupIPage = checkgroupService.getPages((int) groupIPage.getPages(), pageSize, checkGroup);
@@ -98,7 +96,7 @@ public class CheckgroupController {
         }
     }
 
-    @DeleteMapping(value = "/deleteGroupItemsIdByGroupId" + "{id}")
+    @DeleteMapping(value = "/deleteGroupItemsIdByGroupId/" + "{id}")
     @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")
     public Result deleteGroupItemsIdByGroupId(@PathVariable Integer id) {
           try {

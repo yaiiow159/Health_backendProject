@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 @Data
-public class Permission implements Serializable{
+public class Permission implements Serializable {
     private Integer id;
     private String name;
     private String keyword;

@@ -9,43 +9,231 @@
     <title>醫療管理系統</title>
 
     <link rel="stylesheet" href="../plugins/elementui/index.css">
-    <link rel="stylesheet" href="../css/login.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('../img/bg.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .loginBox {
+            background-color: lightblue;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-form {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #333333; /* 深灰色 */
+            font-weight: bold;
+        }
+
+        .svg-container {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        .user, .username {
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #cccccc; /* 淺灰色 */
+            border-radius: 4px;
+            padding-left: 10px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #6c7ae0; /* 淺藍色 */
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            height: 40px;
+            background-color: #6c7ae0; /* 淺藍色 */
+            color: #ffffff; /* 白色 */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #4652b7; /* 較深的藍色 */
+        }
+
+        input[type="button"] {
+            width: 100%;
+            height: 40px;
+            background-color: #6c7ae0; /* 淺藍色 */
+            color: #ffffff; /* 白色 */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="button"]:hover {
+            background-color: #4652b7; /* 較深的藍色 */
+        }
+    </style>
 </head>
-<body class="hold-transition skin-purple sidebar-mini">
-<div id="app">
-    <div class="login-container">
-        <div class="loginBox">
-            <form method="post" class="login-form" action="/login" label-position="left">
-                <div class="title-container">
-                    <div class="logoInfo clearfix">
-                        <em class="title">歡迎來到醫療管理系統</em>
-                    </div>
+<body>
+<div id="app" class="login-container">
+    <div class="loginBox">
+        <form method="post" class="login-form" action="/security/login" label-position="left">
+            <div class="title-container">
+                <div class="logoInfo clearfix">
+                    <em class="title">歡迎來到醫療管理系統</em>
                 </div>
-                <div>
-                        <span class="svg-container svg-container_login">
-                          <span class="user"></span>
-                        </span>
-                    <label id="userName">
-                        <input style="border-block-color: black;width: 80%; height: 30px;" type="text" name="username"
-                               placeholder="請輸入使用者姓名"/>
-                    </label>
-                </div>
-                <div>
-                        <span class="svg-container">
-                          <span class="username"></span>
-                        </span>
-                    <label>
-                        <input style="border-block-color: black;width: 80%; height: 30px;" type="password" name="password"
-                               placeholder="請輸入使用者密碼"/>
-                    </label>
-                </div>
-                <input type="submit" style="width:50%;margin-top: 20px;;margin-bottom:20px; height: 30px"
-                       value="登錄"/>
-            </form>
-        </div>
+            </div>
+            <div>
+                <span class="svg-container svg-container_login">
+                    <span class="user"></span>
+                </span>
+                <label id="userName">
+                    <input type="text" v-model="username" name="username" placeholder="請輸入使用者姓名"/>
+                </label>
+            </div>
+            <div>
+                <span class="svg-container">
+                    <span class="username"></span>
+                </span>
+                <label>
+                    <input type="password" v-model="password" name="password" placeholder="請輸入使用者密碼"/>
+                </label>
+            </div>
+            <input @click="validateUser" type="submit" value="登錄"/>
+            <input @click="registerDialogVisible = true" style="margin-top: 10px;" type="button" value="註冊會員"/>
+        </form>
     </div>
+
+    <!-- 註冊會員彈出框 -->
+    <el-dialog title="註冊會員" :visible.sync="registerDialogVisible">
+        <el-form ref="registerForm" :model="registerForm" label-width="80px" @submit.native.prevent="onFormSubmit">
+            <el-form-item label="姓名">
+                <el-input v-model="registerForm.registerName"></el-input>
+            </el-form-item>
+            <el-form-item label="密碼">
+                <el-input v-model="registerForm.registerPassword" type="password"></el-input>
+            </el-form-item>
+            <el-form-item label="確認密碼">
+                <el-input v-model="registerForm.confirmPassword" type="password"></el-input>
+            </el-form-item>
+            <el-form-item label="生日">
+                <el-date-picker v-model="registerForm.birthday" type="date"  placeholder="選擇日期"
+                                value-format="yyyy-MM-dd"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="性別">
+                <el-radio v-model="registerForm.gender" label="male" value="0">男</el-radio>
+                <el-radio v-model="registerForm.gender" label="female" value="1">女</el-radio>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="registerDialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="registerUser()">確定</el-button>
+        </div>
+    </el-dialog>
 </div>
 </body>
 <script src="../js/vue.js"></script>
 <script src="../plugins/elementui/index.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            username: '',
+            password: '',
+            registerDialogVisible: false,
+            registerForm: {},
+            rules: {
+                username: [
+                    { required: true, message: '請輸入使用者姓名', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: '請輸入密碼', trigger: 'blur' }
+                ],
+                birthday: [
+                    { required: true, message: '請輸入生日', trigger: 'blur' }
+                ],
+                gender: [
+                    { required: true, message: '請輸入性別', trigger: 'blur' }
+                ]
+            }
+        },
+        methods: {
+            onformSubmit: function () {
+                this.$refs['registerForm'].validate((valid) => {
+                    if (valid) {
+                        this.registerDialogVisible = false;
+                        this.registerUser();
+                    }
+                })
+            },
+            validateUser: function () {
+                let vm = this;
+                if (this.username === '') {
+                    vm.$message.error('請輸入使用者姓名');
+                    return;
+                }
+                if (this.password === '') {
+                    vm.$message.error('請輸入使用者密碼');
+                }
+            },
+            registerUser: function () {
+                let vm = this; // 保存this的引用
+                let params = new URLSearchParams();
+                params.append('username', this.registerForm.registerName);
+                params.append('password', this.registerForm.registerPassword);
+                params.append('birthday', this.registerForm.birthday);
+                params.append('gender', this.registerForm.gender);
+                axios.post('/security/register', params)
+                .then(function (response) {
+                    if (response.data.flag) {
+                        vm.$message.success('註冊成功');
+                        vm.registerDialogVisible = false;
+                    } else {
+                        vm.$message.error('註冊失敗，請稍後再試');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    vm.$message.error('註冊失敗，請稍後再試');
+                });
+        }
+        }
+    });
+</script>
 </html>

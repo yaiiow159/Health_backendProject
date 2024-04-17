@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @DubboService(interfaceClass = MailService.class)
-@Service
 public class MailServiceImpl implements MailService {
 
     private static final String GETTER = "examyou076@gmail.com";

@@ -16,28 +16,30 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     //passwordEncoder (required))
-    @Bean
+    @Bean("passwordEncoder")
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Override
     protected void configure(@NotNull HttpSecurity http) throws Exception {
-        // the overridden method is to check and set the http filter rules
         http
-                .authorizeRequests().antMatchers("/pages/**").authenticated()
-                .anyRequest().authenticated() //need to authenticate
+                .authorizeRequests()
+                .antMatchers("/security/**").permitAll()
+                .antMatchers("/pages/**").authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/pages/login.html").permitAll()
-                .loginProcessingUrl("/login")
+                .loginProcessingUrl("/security/login").permitAll()
                 .defaultSuccessUrl("/pages/main.html").failureForwardUrl("/pages/login.html")
                 .usernameParameter("username").passwordParameter("password")
                 .and()
-                .logout().permitAll().invalidateHttpSession(true).logoutSuccessUrl("/pages/login.html")
+                .logout().permitAll().invalidateHttpSession(true)
+                .logoutSuccessUrl("/pages/login.html")
                 .and().csrf().disable();
 
-        http.headers().frameOptions().sameOrigin(); //enable to use the iframe
+        http.headers().frameOptions().sameOrigin();
     }
 
 

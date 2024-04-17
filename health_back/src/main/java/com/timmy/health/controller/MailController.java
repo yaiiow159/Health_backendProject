@@ -25,7 +25,7 @@ public class MailController {
             return new Result(true, MailConstant.SEND_MAIL_SUCCESS);
         }catch (Exception e){
             e.printStackTrace();
-            return new Result(false,MailConstant.SEND_MAIL_FAILDED);
+            return new Result(false,MailConstant.SEND_MAIL_FAIL);
         }
     }
 }

@@ -23,7 +23,6 @@ import java.util.List;
 */
 @DubboService(interfaceClass = CheckItemService.class)
 @Transactional
-@Service
 public class CheckitemServiceImpl extends ServiceImpl<CheckitemMapper, CheckItem> implements CheckItemService{
 
     @Autowired

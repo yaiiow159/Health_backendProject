@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.timmy.health.mapper.SetMealMapper">
 
-    <resultMap id="BaseResultMap" type="Setmeal">
+    <resultMap id="BaseResultMap" type="com.timmy.health.domain.Setmeal">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="code" column="code" jdbcType="VARCHAR"/>
@@ -17,7 +17,6 @@
         <result property="img" column="img" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!--add setMeal and send back the id-->
     <insert id="addSetMeal">
         <selectKey keyProperty="id" resultType="Integer" order="AFTER">
             select LAST_INSERT_ID()
@@ -26,7 +25,6 @@
         values (#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
     </insert>
 
-    <!--setting the relation table with-->
     <insert id="setSetMealAndCheckGroups" parameterType="map">
         insert into t_setmeal_checkgroup(setmeal_id, checkgroup_id) values (#{setMealId},#{checkGroupId})
     </insert>
@@ -35,5 +33,8 @@
         select checkgroup_id from t_setmeal_checkgroup where setmeal_id = #{id}
     </select>
 
+    <select id="findSetmealCount" resultType="map">
+        select s.name, count(o.id) value from t_order o,t_setmeal s where o.setmeal_id = s.id group by s.name
+    </select>
 
 </mapper>

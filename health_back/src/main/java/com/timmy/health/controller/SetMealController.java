@@ -37,14 +37,11 @@ public class SetMealController {
     @PostMapping(value = "/upload")
     public Result upload(@RequestParam("imgFile") @NotNull MultipartFile imgFile) {
         String extension = null;
-
         String originalFilename = imgFile.getOriginalFilename();
 
         if (Objects.requireNonNull(originalFilename).lastIndexOf(".") > -1) {
             extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
-
-        //use uuid to get a randomId to make sure that the id is unique
         String fileName = UUID.randomUUID() + extension;
 
         try {
@@ -74,7 +71,6 @@ public class SetMealController {
                             @PathVariable("pageSize") Integer pageSize,
                             Setmeal setmeal) {
         IPage<Setmeal> setmealIPage = setMealService.getPages(currenPage, pageSize, setmeal);
-        // make sure if the pageSize is bigger than the current page can change to the current pageSize
         if (currenPage > setmealIPage.getPages()) {
             log.warn("當前頁面超過取得頁面數");
             setmealIPage = setMealService.getPages((int) setmealIPage.getPages(), pageSize, setmeal);
@@ -94,7 +90,7 @@ public class SetMealController {
         }
     }
 
-    @RequestMapping(value = "/findcheckGroupsByMealId")
+    @RequestMapping(value = "/findcheckGroupsByMealId", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     public Result findcheckGroupsByMealId(Integer id) {
         try {
@@ -104,6 +100,13 @@ public class SetMealController {
             e.printStackTrace();
             return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
         }
+    }
+
+    @GetMapping("/findAll")
+    @PreAuthorize("hasAuthority('SETMEAL_QUERY')")
+    public Result findAll() {
+        List<Setmeal> setmealList = setMealService.findAll();
+        return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS, setmealList);
     }
 
 }

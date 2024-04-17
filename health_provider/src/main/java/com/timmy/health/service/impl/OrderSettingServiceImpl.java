@@ -10,27 +10,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 @DubboService(interfaceClass = OrderSettingService.class)
 @Transactional
-@Service
-public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, OrderSetting>
-        implements OrderSettingService {
+public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, OrderSetting> implements OrderSettingService {
 
     @Autowired
     private OrderSettingMapper orderSettingMapper;
 
     @Override
     public void add(@NotNull List<OrderSetting> orderSettingList) {
-        if (orderSettingList.size() > 0) {
+        if (!orderSettingList.isEmpty()) {
             orderSettingList.forEach(orderSetting -> {
                         Long countOrderDate = orderSettingMapper.findCountOrderDate(orderSetting.getOrderdate());
                         if (countOrderDate > 0) {
-                            // already have settings order update the orderSetting
                             orderSettingMapper.editNumberByOrderDate(orderSetting);
                         } else {
-                            // the order is new order so can add
                             orderSettingMapper.add(orderSetting);
                         }
                     }
@@ -41,24 +39,12 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
     @Override
     public List<Map<String, Object>> getOrderByDateTime(@NotNull String date) {
         Map<String, String> dateMap = new HashMap<>();
-        //
-        String firstDay = date + "-01";
-        String lastDay;
+        YearMonth yearMonth = YearMonth.parse(date);
+        LocalDate firstDay = yearMonth.atDay(1);
+        LocalDate lastDay = yearMonth.atEndOfMonth();
 
-        //judge the date of the months
-        if (date.startsWith("2", 5)) {
-            lastDay = date + "-28";
-        } else if (date.startsWith("4", 5) ||
-                date.startsWith("6", 5) ||
-                date.startsWith("9", 5) ||
-                date.startsWith("11", 5)) {
-            lastDay = date + "-30";
-        } else {
-            lastDay = date + "-31";
-        }
-
-        dateMap.put("firstday", firstDay);
-        dateMap.put("lastday", lastDay);
+        dateMap.put("firstday", firstDay.toString());
+        dateMap.put("lastday", lastDay.toString());
 
         List<OrderSetting> orderList = orderSettingMapper.getOrderDateByCurrentMonth(dateMap);
         List<Map<String, Object>> newOrderList = new ArrayList<>();
@@ -80,9 +66,9 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
         Date orderDate = orderSetting.getOrderdate();
         long count = orderSettingMapper.findCountOrderDate(orderDate);
         if (count > 0) {
-            orderSettingMapper.editNumberByOrderDate(orderSetting); // if count > 0 mean that the user is already book
+            orderSettingMapper.editNumberByOrderDate(orderSetting);
         } else {
-            orderSettingMapper.add(orderSetting); //so if count is zero so that user need to add the new book
+            orderSettingMapper.add(orderSetting);
         }
     }
 }

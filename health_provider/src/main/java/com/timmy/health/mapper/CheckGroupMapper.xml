@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.timmy.health.mapper.CheckgroupMapper">
 
-    <insert id="add" parameterType="checkGroup">
+    <insert id="add" parameterType="com.timmy.health.domain.CheckGroup">
         <selectKey resultType="Integer" order="AFTER" keyProperty="id">
             select LAST_INSERT_ID()
         </selectKey>
@@ -17,17 +17,17 @@
         values (#{checkgroupId}, #{checkitemId})
     </insert>
 
-    <update id="edit" parameterType="checkGroup">
-        update
+    <update id="edit" parameterType="com.timmy.health.domain.CheckGroup">
+        UPDATE t_checkgroup
         <set>
-            <if test="name != null">name = #{name}</if>
-            <if test="code != null">code = #{code}</if>
-            <if test="helpCode != null">helpCode = #{helpCode}</if>
-            <if test="sex != null">sex = #{sex}</if>
-            <if test="remark != null">remark = #{remark}</if>
-            <if test="attention != null">attention = #{attention}</if>
+                <if test="name != null">name = #{name},</if>
+                <if test="code != null">code = #{code},</if>
+                <if test="helpCode != null">helpCode = #{helpCode},</if>
+                <if test="sex != null">sex = #{sex},</if>
+                <if test="remark != null">remark = #{remark},</if>
+                <if test="attention != null">attention = #{attention},</if>
         </set>
-        where id = #{id}
+        WHERE id = #{id}
     </update>
 
     <delete id="deleteCheckItemsByGroupId" parameterType="Integer">

@@ -3,6 +3,7 @@ package com.timmy.health.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.timmy.health.domain.Setmeal;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
@@ -14,4 +15,6 @@ public interface SetMealMapper extends BaseMapper<Setmeal> {
     void addSetMeal(Setmeal setmeal);
 
     List<Integer> findCheckGroupsById(Integer id);
+
+    List<Map<String, Object>> findSetmealCount();
 }

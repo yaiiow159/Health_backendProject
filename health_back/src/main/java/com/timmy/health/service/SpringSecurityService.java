@@ -20,24 +20,18 @@ import java.util.Set;
 @Service
 public class SpringSecurityService implements UserDetailsService {
 
-    //the method is to set the checking of the user
-
     @DubboReference(interfaceClass = UserService.class)
     private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //use the method to check the user permissions and role
-
         User user = userService.getByUserName(username);
         Set<Role> roles = Objects.requireNonNull(user).getRoles();
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
         for (Role role: roles) {
-            //add user the roles
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getKeyword()));
-            //add user the permissions
             role.getPermissions().forEach(p -> grantedAuthorities.add(new SimpleGrantedAuthority(p.getKeyword())));
         }
 

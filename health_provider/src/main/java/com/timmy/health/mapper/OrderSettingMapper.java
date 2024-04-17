@@ -10,12 +10,11 @@ import java.util.Map;
 
 @Repository
 public interface OrderSettingMapper extends BaseMapper<OrderSetting> {
-    void editNumberByOrderDate(OrderSetting orderSetting);
+        void editNumberByOrderDate(OrderSetting orderSetting);
 
-    Long findCountOrderDate(Date orderDate);
+        Long findCountOrderDate(Date orderDate);
 
-    List<OrderSetting> getOrderDateByCurrentMonth(Map<String, String> dateMap);
+        List<OrderSetting> getOrderDateByCurrentMonth(Map<String, String> dateMap);
 
-    void add(OrderSetting orderSetting);
-
+        void add(OrderSetting orderSetting);
 }

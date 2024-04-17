@@ -178,7 +178,7 @@
             </div>
 
             <!-- 編輯標簽彈層 -->
-            <div class="add-form">
+            <div class="edit-form">
                 <el-dialog title="編輯檢查組" :visible.sync="dialogFormVisible4Edit">
                     <template>
                         <el-tabs v-model="activeName" type="card">
@@ -291,7 +291,6 @@
             this.findPage();
         },
         methods: {
-            //edit the checkgroup data
             handleEdit() {
                 axios.put("/checkgroups/" + this.checkitemIds ,this.formData).then((resp)=> {
                     this.dialogFormVisible4Edit = false;
@@ -342,12 +341,9 @@
                 this.formData = {};
             },
             handleCreate() {
-                //reset the formdata
                 this.resetForm();
                 this.dialogFormVisible = true;
-                //show the first side pages
                 this.activeName = 'first';
-                //reset the checkitemIds checkbox to empty
                 this.checkitemIds = [];
                 axios.get("/checkitems/").then((resp) => {
                     if (resp.data.flag) {
@@ -363,10 +359,8 @@
                 this.activeName = 'first';
                 axios.get("/checkgroups/getCheckGroupById?id=" + row.id).then((resp) => {
                     if (resp.data.flag) {
-                        //success
                         this.formData = resp.data.data;
                     } else {
-                        //error
                         this.$message().error(resp.data.message);
                     }
                 });

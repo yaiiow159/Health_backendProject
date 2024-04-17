@@ -5,7 +5,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/health?serverTimezone=GMT%2b8&useUnicode=true&characterEncoding=UTF-8
       username: root
-      password: timmy072869
+      password: root
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration
   mvc:
@@ -15,7 +15,7 @@ spring:
   mail:
     host: smtp.gmail.com
     username: examyou076@gmail.com
-    password: spjbxszljagplkyl
+    password: uqwo taue oilk tmfu
     protocol: smtp
     properties:
       mail:
@@ -29,7 +29,7 @@ spring:
     port: 587
   #redis setting
   redis:
-    password: timmy0728
+    password: null
     host: 127.0.0.1
     port: 6379
     client-type: lettuce
@@ -48,8 +48,7 @@ dubbo:
   application:
     name: health_backend
   registry:
-    address: zookeeper://localhost
-    port: 2181
+    address: zookeeper://localhost:2181
   consumer:
     check: false
     timeout: 60000

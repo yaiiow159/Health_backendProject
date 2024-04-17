@@ -266,14 +266,11 @@
             this.findPage();
         },
         methods: {
-            //response is the return value ，file object is the return file json
             handleAvatarSuccess(response, file) {
-                //the picture if the imageUrl is notNull
                 this.imageUrl = "https://storage.googleapis.com/health_pictures/" + response.data;
                 this.$message({type: response.flag ? 'success' : 'error', message: response.data});
                 this.formData.img = response.data;
             },
-            //before update the file
             beforeAvatarUpload(file) {
                 const isJPG = file.type === 'image/jpeg';
                 const isLt2M = file.size / 1024 / 1024 < 2;

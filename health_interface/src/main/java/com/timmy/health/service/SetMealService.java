@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.timmy.health.domain.Setmeal;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface SetMealService extends IService<Setmeal> {
@@ -16,5 +17,8 @@ public interface SetMealService extends IService<Setmeal> {
 
     List<Integer> findCheckGroupById(Integer id);
 
+    List<Map<String, Object>> findSetmealCount();
+
+    List<Setmeal> findAll();
 }
 

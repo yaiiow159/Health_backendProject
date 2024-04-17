@@ -22,6 +22,19 @@
             bottom: 0;
             padding: 0;
         }
+        .user-form, mail-form, userInfo-form{
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+        }
+        .title {
+            font-size: 24px;
+            color: #333333; /* 深灰色 */
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
@@ -36,10 +49,13 @@
                     <span class="help" @click="openMailBox()"><i class="fa fa-mail-forward" aria-hidden="true"></i>聯繫我們</span>
                     <el-dropdown class="avatar-container right-menu-item" trigger="click">
                         <div class="avatar-wrapper">
-                            <img src="../img/user2-160x160.jpg" class="user-avatar" alt="notHaveImage">
-                            {{user.name}}
+                            <i class="fa fa-user-circle-o"></i>
+                            <font style="font-size: 16px ;"> 歡迎 {{ user.name }}</font>
                         </div>
                         <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>
+                                <span class="user" @click="openUserInfo()">用戶資料</span>
+                            </el-dropdown-item>
                             <el-dropdown-item>
                                 <span class="change_pwd" @click="changePassword()">修改密碼</span>
                             </el-dropdown-item>
@@ -69,12 +85,12 @@
                 </el-menu>
             </el-aside>
             <el-container>
-                <iframe name="right" class="el-main" src="ordersetting.html" width="100%" height="580px" frameborder="0"></iframe>
+                <iframe name="right" class="el-main" src="ordersetting.html" width="100%" height="580px" frameborder="0" @load="checkPageIsLoading"></iframe>
             </el-container>
         </el-container>
     </el-container>
-    <div class="add-form">
-        <el-dialog class="mail_title" title="有任何問題歡迎提供在下方郵件正文處" :visible.sync="dialogFormVisible" >
+    <div class="mail-form">
+        <el-dialog class="mail_title" title="聯繫我們" :visible.sync="dialogMailFormVisible" >
             <el-form ref="dataAddForm" :model="mail" label-position="right"
                      label-width="100px">
                 <el-row>
@@ -101,12 +117,12 @@
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button @click="dialogMailFormVisible = false">取消</el-button>
                 <el-button type="button" @click="sendMailCheck()">確定</el-button>
             </div>
         </el-dialog>
     </div>
-    <div class="add-form">
+    <div class="user-form">
         <el-dialog class="mail_title" title="帳戶修改" :visible.sync="dialogFormVisible4Edit" >
             <el-form ref="dataAddForm" :model="user" label-position="right"
                      label-width="100px">
@@ -124,8 +140,45 @@
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
                 <el-button type="button" @click="sendCheckForLogin()">確定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+
+    <div class="userInfo-form">
+        <el-dialog class="mail_title" title="帳戶修改" :visible.sync="dialogUserInfoFormVisible" >
+            <el-form ref="dataUserInfoForm" :model="user" label-position="right"
+                     label-width="100px">
+                <el-row>
+                    <el-col :span="12" >
+                        <el-form-item label="姓名:" prop="name">
+                            <el-input v-model="userInfo.username" style="width: 100%"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="使用者密碼:" prop="password">
+                            <el-input v-model="userInfo.password" style="width: 100%" type="password"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="生日:" prop="birthday">
+                            <el-date-picker v-model="userInfo.birthday" type="date" value-format="yyyy-MM-dd" placeholder="選擇日期"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="性別:" prop="gender">
+                            <el-radio-group v-model="userInfo.gender">
+                                <el-radio label="男" value="1"></el-radio>
+                                <el-radio label="女" value="0"></el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogUserInfoFormVisible = false">取消</el-button>
+                <el-button type="button" @click="editUserInfo()">確定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -151,21 +204,16 @@
                     "children": [
                         {
                             "path": "/2-1",
-                            "title": "會員檔案",
-                            "linkUrl":"member.html",
+                            "title": "會員統計",
+                            "linkUrl":"member_sum.html",
                             "children":[]
                         },
                         {
                             "path": "/2-2",
-                            "title": "新會員註冊",
+                            "title": "會員管理",
+                            "linkUrl":"member.html",
                             "children":[]
-                        },
-                        {
-                            "path": "/2-3",
-                            "title": "會員統計",
-                            "linkUrl":"all-item-list.html",
-                            "children":[]
-                        },
+                        }
                     ]
                 },
                 {
@@ -212,7 +260,7 @@
                     "children":[
                         {
                             "path": "/4-1",
-                            "title": "中醫體質辨識",
+                            "title": "報告詳情",
                             "linkUrl":"all-medical-list.html",
                             "children":[]
                         },
@@ -225,38 +273,119 @@
                     "children":[
                         {
                             "path": "/5-1",
-                            "title": "工作量統計",
-                            "linkUrl":"all-medical-list.html",
+                            "title": "會員數統計",
+                            "linkUrl":"report_member.html",
+                            "children":[]
+                        },
+                        {
+                            "path": "/5-2",
+                            "title": "套餐占比",
+                            "linkUrl":"report_setmeal.html",
+                            "children":[]
+                        },
+                        {
+                            "path": "/5-3",
+                            "title": "運營數據",
+                            "linkUrl":"report_business.html",
                             "children":[]
                         }
                     ]
+                },
+                {
+                    "path": "6",
+                    "title": "系統設置",
+                    "icon":"fa-cog",
+                    "children":[
+                        {
+                            "path": "/6-1",
+                            "title": "菜单管理",
+                            "linkUrl":"menu.html",
+                            "children":[]
+                        },
+                        {
+                            "path": "/6-2",
+                            "title": "權限管理",
+                            "linkUrl":"permission.html",
+                            "children":[]
+                        },
+                        {
+                            "path": "/6-3",
+                            "title": "角色管理",
+                            "linkUrl":"role.html",
+                            "children":[]
+                        },
+                        {
+                            "path": "/6-4",
+                            "title": "用戶管理",
+                            "linkUrl":"user.html",
+                            "children":[]
+                        },
+                    ]
                 }
             ],
-
             dialogFormVisible:false,
             dialogFormVisible4Edit:false,
+            dialogMailFormVisible:false,
+            dialogUserInfoFormVisible:false,
             mail:{
                 name: "",
                 message: "",
                 address: "",
                 title: ""
             },
-            user:{
-                name: "",
-                password:"",
-            },
+            user:{},
+            userInfo:{},
 
             resetMailList(){
                 this.mail = {};
             },
             resetUserList(){
                 this.user = {};
+            },
+            resetUserInfoList(){
+                this.userInfo = {};
             }
         },
 
+       created() {
+            this.getMenuList();
+            this.getCurrentUser();
+       },
+
         methods: {
+            getMenuList() {
+                axios.get("/menus/getMenuList").then((resp) => {
+                    if (resp.data.flag) {
+                        this.menus = resp.data.data;
+                    } else {
+                        this.$message().error(resp.data.message);
+                    }
+                });
+            },
+            getCurrentUser(){
+                axios.get("/users/getUserInfo").then((resp)=>{
+                    if(resp.data.flag){
+                        this.user.name = resp.data.data.username;
+                        this.user.password = resp.data.data.password;
+                        this.userInfo = resp.data.data;
+                    } else {
+                        this.$message().error(resp.data.message);
+                    }
+                });
+            },
+            checkPageIsLoading(event){
+                const iframe = event.target;
+                try {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    if(doc && doc.body && doc.body.innerHTML === '') {
+                        window.location.href = '/404.html';
+                    }
+                } catch (e){
+                    window.location.href = '/404.html';
+                }
+            },
             openMailBox(){
-                this.dialogFormVisible = true;
+                this.dialogMailFormVisible = true;
                 this.resetMailList();
             },
             sendMailCheck(){
@@ -266,7 +395,7 @@
                             type: "success",
                             message: resp.data.message
                         });
-                        this.dialogFormVisible = false;
+                        this.dialogMailFormVisible = false;
                     } else {
                         this.$message().error(resp.data.message);
                     }
@@ -288,8 +417,35 @@
                     }
                 });
             },
+            openUserInfo(){
+                this.dialogUserInfoFormVisible = true;
+                this.resetUserInfoList();
+                axios.get("/users/getUserInfo/").then((resp)=>{
+                    if(resp.data.flag){
+                        this.userInfo = resp.data.data;
+                    } else {
+                        this.$message().error(resp.data.message);
+                    }
+                })
+            },
+            editUserInfo(){
+                axios.put("/users/userProfileEdit",this.userInfo).then((resp)=>{
+                    if(resp.data.flag){
+                        this.$message({
+                            type: "success",
+                            message: resp.data.message
+                        });
+                    } else {
+                        this.$message().error(resp.data.message);
+                    }
+                });
+            },
             exit(){
-                location.href = "login.html";
+                axios.get("/security/logout").then((resp)=>{
+                    if(resp.data.flag){
+                        window.location.href = "./login.html";
+                    }
+                })
             }
 
         }

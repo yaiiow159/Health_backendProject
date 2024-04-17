@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class Order implements Serializable{
+public class Order implements Serializable {
     public static final String ORDERTYPE_TELEPHONE = "電話預約";
     public static final String ORDERTYPE_WEIXIN = "手機預約";
     public static final String ORDERSTATUS_YES = "已到診";

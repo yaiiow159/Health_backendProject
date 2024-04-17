@@ -64,7 +64,6 @@ public class PoiUtil {
                 int firstRowNum = sheet.getFirstRowNum(); //the first row that has a data
                 int lastRowNum = sheet.getLastRowNum(); // the last row that has a data
 
-                // run the row except firstRow because it's a title row
                 for (int rowNum = firstRowNum + 1; rowNum <= lastRowNum; rowNum++) {
 
                     Row row = sheet.getRow(rowNum);

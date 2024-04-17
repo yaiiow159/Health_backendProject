@@ -4,11 +4,58 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.timmy.health.mapper.UserMapper">
 
-    <select id="getUserByName" parameterType="String" resultType="User">
+    <resultMap id="userWithRoleResultMap" type="com.timmy.health.domain.UserAndRole">
+        <id property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="birthday" column="birthday"/>
+        <result property="gender" column="gender"/>
+        <result property="telephone" column="telephone" />
+        <result property="roleName" column="roleName"/>
+        <result property="roleDescription" column="roleDescription"/>
+    </resultMap>
+
+    <select id="getUserByName" parameterType="String" resultType="com.timmy.health.domain.User">
         select *
         from t_user
         where username = #{username}
     </select>
 
+    <select id="getUsersBySpec" parameterType="map" resultMap="userWithRoleResultMap">
+        select u.username, u.telephone, u.password, u.birthday, u.gender,
+        r.name as roleName,
+        r.description as roleDescription
+        from t_user u
+        inner join t_user_role ur on u.id = ur.user_id
+        inner join t_role r on ur.role_id = r.id
+        <where>
+            <if test="user != null">
+                <if test="user.username != null">
+                    and u.username like #{user.username}
+                </if>
+                <if test="user.gender != null">
+                    and u.gender like #{user.gender}
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <update id="updateUserProfile" parameterType="com.timmy.health.domain.User">
+        update t_user
+        set username = #{username},
+        gender = #{gender},
+        birthday = #{birthday},
+        password = #{password}
+        where id = #{id}
+    </update>
+
+    <insert id="register" parameterType="com.timmy.health.domain.User" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user (username, password, birthday, gender)
+        values (#{username}, #{password}, #{birthday}, #{gender})
+    </insert>
+
+    <insert id="addUserRole" parameterType="map">
+        insert into t_user_role (user_id, role_id)
+        values (#{userId}, #{roleId})
+    </insert>
 
 </mapper>

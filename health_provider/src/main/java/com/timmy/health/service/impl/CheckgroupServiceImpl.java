@@ -25,27 +25,24 @@ import java.util.Map;
  */
 @DubboService(interfaceClass = CheckgroupService.class)
 @Transactional
-@Service
 public class CheckgroupServiceImpl extends ServiceImpl<CheckgroupMapper, CheckGroup> implements CheckgroupService {
 
     @Autowired
     private CheckgroupMapper checkgroupMapper;
 
-    private void checkedMapInput(CheckGroup t, Integer[] e) {
+    private void checkedMapInput(CheckGroup t, Integer[] checkitemIds) {
         Map<String, Integer> map = new HashMap<>();
-        if (null != e && e.length > 0) {
-            for (Integer eId : e) {
+        if (null != checkitemIds) {
+            for (Integer checkitemId : checkitemIds) {
                 map.put("checkgroupId", t.getId());
-                map.put("checkitemId", eId);
+                map.put("checkitemId", checkitemId);
                 checkgroupMapper.setCheckGroupAndCheckItem(map);
             }
         }
     }
 
     public void add(CheckGroup checkGroup, Integer[] checkitemIds) {
-        //add checkgroup into t_checkgroup table
         checkgroupMapper.add(checkGroup);
-        //check checkItems with the relation with checkGroup
         checkedMapInput(checkGroup, checkitemIds);
     }
 
@@ -95,11 +92,8 @@ public class CheckgroupServiceImpl extends ServiceImpl<CheckgroupMapper, CheckGr
 
     @Override
     public void editCheckGroup(CheckGroup checkGroup, Integer[] checkitemIds) {
-        //edit checkgroup basic data and operate t_checkgroup table
         checkgroupMapper.edit(checkGroup);
-        //clear all the relations with the current checkgroup
         checkgroupMapper.deleteCheckItemsByGroupId(checkGroup.getId());
-        //reset the relations with the checkgroup and checkitems
         checkedMapInput(checkGroup, checkitemIds);
     }
 

@@ -4,12 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.timmy.health.mapper.OrderSettingMapper">
 
-    <insert id="add" parameterType="orderSetting">
-        insert into t_ordersetting(orderdate, number, reservations)
+    <insert id="add" parameterType="com.timmy.health.domain.OrderSetting">
+        insert into t_ordersetting(orderDate, number, reservations)
         values (#{orderdate}, #{number}, #{reservations})
     </insert>
 
-    <update id="editNumberByOrderDate" parameterType="OrderSetting">
+    <update id="editNumberByOrderDate" parameterType="com.timmy.health.domain.OrderSetting">
         update t_ordersetting
         set number = #{number}
         where orderDate = #{orderdate}
@@ -21,7 +21,7 @@
         where orderDate = #{orderDate}
     </select>
 
-    <select id="getOrderDateByCurrentMonth" parameterType="map" resultType="orderSetting">
+    <select id="getOrderDateByCurrentMonth" parameterType="map" resultType="com.timmy.health.domain.OrderSetting">
         select *
         from t_ordersetting
         where orderDate between #{firstday} and #{lastday}

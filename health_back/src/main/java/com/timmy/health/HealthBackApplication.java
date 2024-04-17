@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class HealthBackApplication {
     public static void main(String[] args) {
-        //change the system property with the dubbo logger setting
         System.setProperty("dubbo.application.logger","slf4j");
         SpringApplication.run(HealthBackApplication.class, args);
     }
