@@ -87,13 +87,13 @@
                                                 <template v-if="obj.date === dayobject.day.getDate()">
                                                     <template v-if="obj.number > obj.reservations">
                                                         <div class="usual">
-                                                            <p>可預約{{obj.number}}人</p>
+                                                            <p>可预约{{ obj.number ? obj.number : 0 }}人</p>
                                                             <p>已預約{{obj.reservations}}人</p>
                                                         </div>
                                                     </template>
                                                     <template v-else>
                                                         <div class="fulled">
-                                                            <p>可預約{{obj.number}}人</p>
+                                                            <p>可预约{{ obj.number ? obj.number : 0 }}人</p>
                                                             <p>已預約{{obj.reservations}}人</p>
                                                             <p>已滿</p>
                                                         </div>
@@ -138,6 +138,7 @@
         },
         methods: {
             handleOrderSet(day) {
+                let vm = this
                 this.$prompt('請輸入可預約人數', '預約設置', {
                     confirmButtonText: '確定',
                     cancelButtonText: '取消',
@@ -146,20 +147,20 @@
                 }).then(({value}) => {
                     axios.post("/orderSettings/editNumberByDate/", {
                         number:value,
-                        orderDate:this.formatDate(day.getFullYear(), day.getMonth() + 1, 1) //format the date
+                        orderdate:this.formatDate(day.getFullYear(), day.getMonth() + 1, 1) //format the date
                     }).then((resp) => {
                         if (resp.data.flag) {
                             this.initData(this.formatDate(day.getFullYear(), day.getMonth() + 1, 1))
-                            this.$message({
+                            vm.$message({
                                 type: 'success',
                                 message: resp.data.message
                             });
                         } else {
-                            this.$message().error(resp.data.message);
+                            vm.$message().error(resp.data.message);
                         }
                     });
                 }).catch(() => {
-                    this.$message({
+                    vm.$message({
                         type: 'info',
                         message: '取消輸入預約'
                     });
@@ -182,13 +183,14 @@
                 location.href = "../template/ordersetting_template.xlsx";
             },
             handleSuccess(response, file) {
+                let vm = this
                 if (response.flag) {
-                    this.$message({
+                    vm.$message({
                         message: response.message,
                         type: 'success'
                     });
                 } else {
-                    this.$message.error(response.message);
+                    vm.$message.error(response.message);
                 }
                 console.log(response, file, fileList);
             },
@@ -210,7 +212,7 @@
                 this.currentDay = date.getDate();
                 this.currentYear = date.getFullYear();
                 this.currentMonth = date.getMonth() + 1;
-                this.currentWeek = date.getDay(); // //本月第一天是周幾（周日0 周六 6）
+                this.currentWeek = date.getDay();
                 let today = new Date();
                 this.LocalMonth = today.getMonth() + 1;
                 if (this.currentWeek === 0) {
@@ -243,12 +245,16 @@
                     this.days.push(dayobject);
                 }
                 this.leftobj = [];
+                this.getOrderDateByMonth(this.currentYear, this.currentMonth);
+            },
 
-                axios.get("/orderSettings/getOrderDateByMonth/" + this.currentYear + "-" + this.currentMonth).then((resp) => {
+            getOrderDateByMonth: function (year, month) {
+                let vm = this
+                axios.get("/orderSettings/getOrderDateByMonth/" + year + "-" + month).then((resp) => {
                     if (resp.data.flag) {
                         this.leftobj = resp.data.data;
                     } else {
-                        this.$message().error(resp.data.message);
+                        vm.$message().error(resp.data.message);
                     }
                 });
             },

@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 @DubboService(interfaceClass = OrderSettingService.class)
@@ -39,7 +41,9 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
     @Override
     public List<Map<String, Object>> getOrderByDateTime(@NotNull String date) {
         Map<String, String> dateMap = new HashMap<>();
-        YearMonth yearMonth = YearMonth.parse(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M");
+
+        YearMonth yearMonth = YearMonth.parse(date, formatter);
         LocalDate firstDay = yearMonth.atDay(1);
         LocalDate lastDay = yearMonth.atEndOfMonth();
 
@@ -49,7 +53,7 @@ public class OrderSettingServiceImpl extends ServiceImpl<OrderSettingMapper, Ord
         List<OrderSetting> orderList = orderSettingMapper.getOrderDateByCurrentMonth(dateMap);
         List<Map<String, Object>> newOrderList = new ArrayList<>();
 
-        if (null != orderList && orderList.size() > 0) {
+        if (null != orderList && !orderList.isEmpty()) {
             orderList.forEach(orderSetting -> {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("date", orderSetting.getOrderdate().getDate());

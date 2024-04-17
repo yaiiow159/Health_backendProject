@@ -73,10 +73,11 @@
         },
         methods: {
             showErrorMsg(reason) {
+                let vm = this;
                 if (reason === "Error: Request failed with status code 403") {
-                    this.$message.error("權限不足");
+                    vm.$message.error("權限不足");
                 } else {
-                    this.$message.error("未知的錯誤");
+                    vm.$message.error("未知的錯誤");
                 }
             },
 

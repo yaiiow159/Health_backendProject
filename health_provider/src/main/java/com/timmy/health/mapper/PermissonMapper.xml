@@ -20,13 +20,14 @@
     <select id="getPages" resultMap="BaseResultMap">
         select id, name, keyword, description
         from t_permission
-        where 1=1
+        <where>
         <if test="permission.keyword != null and permission.keyword != ''">
-            and keyword like #{permission.keyword}
+            and keyword like concat('%',#{permission.keyword},'%')
         </if>
         <if test="permission.name != null and permission.name != ''">
-            and name like #{permission.name}
+            and name like concat('%',#{permission.name},'%')
         </if>
+        </where>
     </select>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.timmy.health.domain.Permission">
@@ -40,5 +41,9 @@
 
     <select id="findById" resultMap="BaseResultMap">
         select id,name,description,keyword from t_permission where id = #{id}
+    </select>
+
+    <select id="getAllPermission" resultMap="BaseResultMap">
+        select id,keyword,description,name from t_permission
     </select>
 </mapper>

@@ -55,7 +55,7 @@ public class PerMissionServiceImpl extends ServiceImpl<PermissionMapper,Permissi
 
     @Override
     public List<Permission> getAllPermission() {
-        return permissionMapper.selectList(null);
+        return permissionMapper.getAllPermission();
     }
 }
 

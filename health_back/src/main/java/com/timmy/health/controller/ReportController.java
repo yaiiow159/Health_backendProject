@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -89,9 +90,14 @@ public class ReportController {
     public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response){
         try{
             Map<String,Object> result = reportService.getBusinessReportData();
-            String reportDate = (String) result.get("reportDate");
-            Integer todayNewMember = (Integer) result.get("todayNewMember");
-            Integer totalMember = (Integer) result.get("totalMember");
+            LocalDate reportDate = (LocalDate) result.get("reportDate");
+            LocalDate todayNewMember = (LocalDate) result.get("todayNewMember");
+            LocalDate totalMember = (LocalDate) result.get("totalMember");
+            // 轉換時間到字符串
+            String reportDateStr = reportDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String todayNewMemberStr = todayNewMember.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String totalMemberStr = totalMember.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
             Integer thisWeekNewMember = (Integer) result.get("thisWeekNewMember");
             Integer thisMonthNewMember = (Integer) result.get("thisMonthNewMember");
             Integer todayOrderNumber = (Integer) result.get("todayOrderNumber");
@@ -107,11 +113,11 @@ public class ReportController {
             XSSFSheet sheet = excel.getSheetAt(0);
 
             XSSFRow row = sheet.getRow(2);
-            row.getCell(5).setCellValue(reportDate);
+            row.getCell(5).setCellValue(reportDateStr);
 
             row = sheet.getRow(4);
-            row.getCell(5).setCellValue(todayNewMember);
-            row.getCell(7).setCellValue(totalMember);
+            row.getCell(5).setCellValue(todayNewMemberStr);
+            row.getCell(7).setCellValue(totalMemberStr);
 
             row = sheet.getRow(5);
             row.getCell(5).setCellValue(thisWeekNewMember);

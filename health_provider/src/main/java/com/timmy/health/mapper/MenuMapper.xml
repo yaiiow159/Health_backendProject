@@ -34,13 +34,14 @@
 
     <select id="getSelectList" resultMap="menuResultMap">
         select id, name, linkUrl, path, priority, description, icon, parentMenuId from t_menu
-        where 1=1
+        <where>
         <if test="name != null and name != ''">
-            and name like #{name}
+            and name like concat('%',#{name},'%')
         </if>
         <if test="priority != null">
-            and priority like #{priority}
+            and priority like concat('%',#{priority},'%')
         </if>
+        </where>
     </select>
 
     <select id="findById" resultMap="menuResultMap" parameterType="Integer">

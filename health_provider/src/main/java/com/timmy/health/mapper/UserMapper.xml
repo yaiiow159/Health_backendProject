@@ -29,11 +29,11 @@
         inner join t_role r on ur.role_id = r.id
         <where>
             <if test="user != null">
-                <if test="user.username != null">
-                    and u.username like #{user.username}
+                <if test="user.username != null and user.username != ''">
+                    and u.username like concat('%', #{user.username}, '%')
                 </if>
-                <if test="user.gender != null">
-                    and u.gender like #{user.gender}
+                <if test="user.gender != null and user.gender !=  ''">
+                    and u.gender like concat('%', #{user.gender}, '%')
                 </if>
             </if>
         </where>

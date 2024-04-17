@@ -378,10 +378,10 @@
                 try {
                     const doc = iframe.contentDocument || iframe.contentWindow.document;
                     if(doc && doc.body && doc.body.innerHTML === '') {
-                        window.location.href = '/404.html';
+                        window.location.href = './404.html';
                     }
                 } catch (e){
-                    window.location.href = '/404.html';
+                    window.location.href = './404.html';
                 }
             },
             openMailBox(){

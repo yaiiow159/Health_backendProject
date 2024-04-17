@@ -65,7 +65,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public Menu getMenuById(Integer id) {
-        return menuMapper.selectById(id);
+        return menuMapper.findById(id);
     }
 
     @Override

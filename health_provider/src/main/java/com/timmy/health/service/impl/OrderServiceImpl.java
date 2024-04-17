@@ -24,8 +24,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         queryWrapper.like(null != order.getOrderStatus(), Order::getOrderStatus, order.getOrderStatus());
         queryWrapper.like(null != order.getOrderType(), Order::getOrderType, order.getOrderType());
 
-        IPage<Order> orderIPage = this.page(new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(currentPage, pageSize), queryWrapper);
-        return orderIPage;
+        return this.page(new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(currentPage, pageSize), queryWrapper);
     }
 
     @Override

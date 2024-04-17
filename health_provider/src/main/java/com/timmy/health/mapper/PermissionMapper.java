@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.timmy.health.domain.Permission;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -20,4 +21,6 @@ public interface PermissionMapper extends BaseMapper<Permission> {
     Integer edit(Permission permission);
 
     Permission findById(Integer id);
+
+    List<Permission> getAllPermission();
 }

@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
-@Validated
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -18,11 +18,11 @@ public class Mail implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull
+    @NotBlank
     private String name;
-    @NotNull
+    @NotBlank
     private String address;
-    @NotNull
+    @NotBlank
     private String title;
 
     private String message;

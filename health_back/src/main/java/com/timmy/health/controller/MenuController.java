@@ -50,9 +50,7 @@ public class MenuController {
     public Result getParentMenu(@PathVariable("id") Integer id) {
         try {
             Menu parentMenu = menuService.getParentMenu(id);
-            if (parentMenu == null) {
-                return new Result(false, MessageConstant.QUERY_MENU_FAIL);
-            } else return new Result(true, MessageConstant.QUERY_MENU_SUCCESS, parentMenu);
+            return new Result(false, MessageConstant.QUERY_MENU_FAIL, parentMenu);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false, MessageConstant.QUERY_MENU_FAIL);

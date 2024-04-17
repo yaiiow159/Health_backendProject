@@ -79,7 +79,7 @@
                                 </el-row>
                             </el-form>
                         </el-tab-pane>
-                        <el-tab-pane label="权限设置" name="second">
+                        <el-tab-pane label="權限設置" name="second">
                             <div class="permission-checkbox-group">
                                 <el-checkbox-group v-model="permissionIds">
                                     <el-checkbox v-for="permission in permissions" :key="permission.id" :label="permission.id">{{ permission.name }}</el-checkbox>
@@ -228,7 +228,7 @@
             findPage() {
                 let param = "?query";
                 param += "&name=" + this.pagination.name;
-                param += "&keyword=" + this.pagination.code;
+                param += "&keyword=" + this.pagination.keyword;
                 axios.get("/roles/" + this.pagination.currentPage + "/" + this.pagination.pageSize + param).then((resp) => {
                     this.pagination.pageSize = resp.data.data.size;
                     this.pagination.total = resp.data.data.total;

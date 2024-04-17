@@ -275,6 +275,8 @@
                 axios.get("/orders" + `/${this.pagination.currentPage}`+ `/${this.pagination.pageSize}` + param).then((resp) => {
                     this.dataList = resp.data.data.records;
                     this.pagination.total = resp.data.data.total;
+                    this.pagination.currentPage = resp.data.data.current
+                    this.pagination.pageSize = resp.data.data.size
                 });
             },
             handleCurrentChange(currentPage) {
@@ -295,11 +297,12 @@
                 this.dialogFormVisible4Edit = true;
             },
             fetchSetmeals() {
+                let vm = this;
                 axios.get("/setMeals/findAll").then((resp) => {
                 if (resp.data.flag) {
                     this.setmeals = resp.data.data;
                 } else {
-                    this.$message.error("獲取套餐選項失敗");
+                    vm.$message.error("獲取套餐選項失敗");
                 }
                 });
             },
@@ -314,17 +317,18 @@
                 });
             },
             handleDelete(row) {
+                let vm = this;
                 this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原", "提示", { type: "warning" }).then(() => {
                     axios.delete("/orders/" + row.id).then((resp) => {
                         if (resp.data.flag) {
-                            this.$message({ type: "success", message: resp.data.message });
+                            vm.$message({ type: "success", message: resp.data.message });
                             this.findPage();
                         } else {
-                            this.$message.error(resp.data.message);
+                            vm.$message.error(resp.data.message);
                         }
                     });
                 }).catch(() => {
-                    this.$message.info("取消操作");
+                    vm.$message.info("取消操作");
                 });
             },
         }

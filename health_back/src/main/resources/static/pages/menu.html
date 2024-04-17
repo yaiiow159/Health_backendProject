@@ -179,10 +179,11 @@
         },
         methods: {
             showErrorMsg(reason){
+                let vm = this;
                 if (reason.eq("Error: Request failed with status code 403")){
-                    this.$message().error("權限不足");
+                    vm.$message().error("權限不足");
                 } else {
-                    this.$message().error("未知的錯誤");
+                    vm.$message().error("未知的錯誤");
                 }
             },
             //編輯
@@ -190,11 +191,12 @@
                 //進行屬性校驗
                 this.$refs['menuEditForm'].validate((valid) => {
                     if (valid) {
+                        let vm = this;
                         axios.put("/menus",this.formData).then((resp) =>{
                             if (resp.data.flag){
-                                this.$message({type: "success",message: resp.data.message});
+                                vm.$message({type: "success",message: resp.data.message});
                             } else {
-                                this.$message.error(resp.data.message);
+                                vm.$message.error(resp.data.message);
                             }
                         }).catch(reason => {
                             this.showErrorMsg(reason);
@@ -202,7 +204,7 @@
                             this.dialogFormVisible4Edit = false;
                         });
                     } else {
-                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        vm.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
                         return false;
                     }
                 });
@@ -212,6 +214,7 @@
                 //進行屬性校驗
                 this.$refs['menuAddForm'].validate((valid) => {
                     if (valid) {
+                        let vm = this;
                         axios.post("/menus", this.formData).then((resp) => {
                             if (resp.data.flag) {
                                 this.$message({
@@ -219,13 +222,13 @@
                                     type: "success"
                                 });
                             } else {
-                                this.$message.error(resp.data.message);
+                                vm.$message.error(resp.data.message);
                             }
                         }).catch(reason => {
                             this.showErrorMsg(reason);
                         });
                     } else {
-                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        vm.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
                         return false;
                     }
                 }).finally(()=>{
@@ -251,35 +254,37 @@
             },
             // create
             handleCreate() {
+                let vm = this;
                 this.dialogFormVisible = true;
                 this.resetForm();
                 axios.get("/menus").then((resp) =>{
                     if (resp.data.flag){
                         this.tableData = resp.data.data;
                     } else {
-                        this.$message.error(resp.data.message);
+                        vm.$message.error(resp.data.message);
                     }
                 })
             },
             handleUpdate(row) {
                 this.dialogFormVisible4Edit = true;
+                let vm = this;
                 axios.get("/menus/" + row.id).then((resp) =>{
                     if (resp.data.flag && resp.data.data != null){
                         this.formData = resp.data.data;
                     } else {
-                        this.$message.error(resp.data.message);
+                        vm.$message.error(resp.data.message);
                     }
                     // 取得所有選單選項
                     axios.get("/menus").then((resp) =>{
                         if (resp.data.flag){
                             this.tableData = resp.data.data;
                         } else {
-                            this.$message.error(resp.data.message);
+                            vm.$message.error(resp.data.message);
                         }
                     })
                     // 取得之前已選取之上級選單選項
                     axios.get("/menus/getParentMenu/" + row.id).then((resp) =>{
-                        if (resp.data.flag){
+                        if (resp.data.flag && resp.data.data != null){
                             this.selectMenus = resp.data.data;
                             for (let i = 0; i < this.tableData.length; i++) {
                                 for (let j = 0; j < this.selectMenus.length; j++) {
@@ -289,7 +294,7 @@
                                 }
                             }
                         } else {
-                            this.$message.error(resp.data.message);
+                            vm.$message.error(resp.data.message);
                         }
                     })
                 }).catch(reason => {
@@ -303,15 +308,16 @@
                 this.findPage();
             },
             handleDelete(row) {
+                let vm = this;
                 this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原","提示",{type: "warning"}).then(() =>{
                     axios.delete("/menus/" + row.id).then((resp) =>{
                         if (resp.data.flag){
-                            this.$message({
+                            vm.$message({
                                 type: "success",
                                 message: resp.data.message
                             });
                         } else {
-                            this.$message.error(resp.data.message);
+                            vm.$message.error(resp.data.message);
                         }
                     }).catch(reason => {
                         this.showErrorMsg(reason);
@@ -319,7 +325,7 @@
                         this.findPage();
                     });
                 }).catch(() =>{
-                    this.$message.info("取消操作");
+                    vm.$message.info("取消操作");
                 });
             }
         }
