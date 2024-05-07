@@ -5,6 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -15,35 +20,24 @@ import org.springframework.validation.annotation.Validated;
  * 
  * @TableName t_ordersetting
  */
-@TableName(value ="t_ordersetting")
 @Data
 @NoArgsConstructor
-@Validated
+@AllArgsConstructor
+@TableName(value = "t_ordersetting")
 public class OrderSetting implements Serializable {
-    /**
-     * 
-     */
     @TableId(value = "id")
     private Integer id;
-    /**
-     * 約預日期
-     */
+
     @TableField(value = "orderDate")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date orderdate;
 
-    /**
-     * 可預約人數
-     */
     @TableField(value = "number")
     private Integer number;
 
-    /**
-     * 已預約人數
-     */
     @TableField(value = "reservations")
     private Integer reservations;
 
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     public OrderSetting(@NotNull Date orderdate, int number){

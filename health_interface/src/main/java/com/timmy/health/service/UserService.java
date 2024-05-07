@@ -23,4 +23,5 @@ public interface UserService extends IService<User> {
 
     IPage<UserAndRole> getPages(Integer currentPage, Integer pageSize, User user);
 
+    Integer findUserIdByUsername(String username);
 }

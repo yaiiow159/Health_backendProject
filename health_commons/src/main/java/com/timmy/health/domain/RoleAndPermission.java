@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class RoleAndPermission{
+public class RoleAndPermission {
     private Integer roleId;
     private Integer permissionId;
 }

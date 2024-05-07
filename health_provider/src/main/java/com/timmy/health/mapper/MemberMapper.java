@@ -20,4 +20,6 @@ public interface MemberMapper extends BaseMapper<Member> {
     Integer findMemberTotalCount();
 
     Integer findMemberCountByDateRange(String beforeDate, String afterDate);
+
+    Integer findMemberIdByUsername(String username);
 }

@@ -12,6 +12,9 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/members")
@@ -28,6 +31,18 @@ public class MemberController {
             return memberService.getMemberSumByDateRange(beforeDate, afterDate);
         } else {
             return memberService.getMemberSum();
+        }
+    }
+
+    @GetMapping("/findAll")
+    public Result findAll() {
+        List<Member> memberList;
+        try {
+             memberList = memberService.findAll();
+            return new Result(true, MessageConstant.QUERY_MEMBER_SUCCESS, memberList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_MEMBER_FAIL);
         }
     }
 

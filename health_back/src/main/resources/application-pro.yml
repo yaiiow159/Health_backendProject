@@ -1,63 +1,11 @@
-#spring setting
-spring:
-  datasource:
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/health?serverTimezone=GMT%2b8&useUnicode=true&characterEncoding=UTF-8
-      username: root
-      password: root
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
-  mail:
-    host: smtp.gmail.com
-    username: examyou076@gmail.com
-    password: uqwo taue oilk tmfu
-    protocol: smtp
-    properties:
-      mail:
-        smtp:
-          soketFactoryClass: javax.net.ssl.SSLSocketFactory
-          auth: true
-          starttls:
-            enable: true
-          timeout: 5000
-        debug: true
-    port: 587
-  #redis setting
-  redis:
-    password: null
-    host: 127.0.0.1
-    port: 6379
-    client-type: lettuce
-    connect-timeout: 30000
-    lettuce:
-      pool:
-        enabled: true
-  security:
-    user:
-      name: root
-      password: root
-server:
-  port: 82
-# dubbo setting
-dubbo:
-  application:
-    name: health_backend
-  registry:
-    address: zookeeper://localhost:2181
-  consumer:
-    check: false
-    timeout: 60000
-  config-center:
-    timeout: 60000
-  scan:
-    base-packages: com.timmy.health.controller
+db:
+  host: 104.199.166.238
+  username: root
+  password: Timmy@870728
 
+redis:
+  host: redis-service_redis
+  password: 1234
 
-
-
-
+zookeeper:
+  host: zookeeper-node-1:2181?backup=zookeeper-node-2:2182,zookeeper-node-3:2183

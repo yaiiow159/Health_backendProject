@@ -17,7 +17,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("t_checkitem")
-@Validated
 public class CheckItem implements Serializable {
 
     @NotNull(message = "檢查項目id不能為空")

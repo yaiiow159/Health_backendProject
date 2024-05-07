@@ -35,7 +35,7 @@
     <div class="app-container">
         <div class="box" style="height: 900px">
             <div class="excelTitle" >
-                <el-button @click="exportExcel">導出Excel</el-button>運營數據統計
+                <el-button @click="exportExcel" icon="el-icon-download">匯出</el-button>運營數據統計
             </div>
             <div class="excelTime">日期：{{reportData.reportDate}}</div>
             <table class="exceTable" cellspacing="0" cellpadding="0">
@@ -100,7 +100,7 @@
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script src="../js/axios-0.18.0.js"></script>
 <script>
-    var vue = new Vue({
+    let vue = new Vue({
         el: '#app',
         data:{
             reportData:{

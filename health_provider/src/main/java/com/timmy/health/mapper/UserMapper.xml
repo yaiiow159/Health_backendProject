@@ -58,4 +58,7 @@
         values (#{userId}, #{roleId})
     </insert>
 
+    <select id="findUserIdByUsername" resultType="java.lang.Integer">
+        select id from t_user where username = #{username}
+    </select>
 </mapper>

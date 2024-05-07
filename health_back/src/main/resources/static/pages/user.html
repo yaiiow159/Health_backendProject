@@ -38,7 +38,11 @@
                         <el-tag>{{ maskPassword(scope.row.password) }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="gender" label="性別" align="center"></el-table-column>
+                <el-table-column prop="gender" label="性別" align="center">
+                    <template slot-scope="scope">
+                        {{ scope.row.gender == 1 ? '男' : '女' }}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="birthday" label="出生年月日" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
@@ -58,7 +62,6 @@
                         :total="pagination.total">
                 </el-pagination>
             </div>
-
             <div class="add-form">
                 <el-dialog title="使用者信息" :visible.sync="dialogFormVisible">
                     <template>

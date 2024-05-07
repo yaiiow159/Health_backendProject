@@ -43,7 +43,11 @@
                     <span>******</span>
                 </template>
                 <el-table-column prop="phoneNumber" label="電話號碼" align="center"></el-table-column>
-                <el-table-column prop="sex" label="性別" align="center"></el-table-column>
+                <el-table-column prop="sex" label="性別" align="center">
+                    <template slot-scope="scope">
+                        {{ scope.row.sex == 1 ? '男' : '女' }}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="email" label="郵箱" align="center"></el-table-column>
                 <el-table-column prop="birthday" label="生日" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
@@ -198,10 +202,10 @@
                 phoneNumber: "",
                 email: "",
             },
-            dataList: [],//當前頁要展示的分頁列表數據
-            formData: {},//表單數據
-            dialogFormVisible: false,//增加表單是否可見
-            dialogFormVisible4Edit: false,//編輯表單是否可見
+            dataList: [],
+            formData: {},
+            dialogFormVisible: false,
+            dialogFormVisible4Edit: false,
             rules: {//校驗規則
                 password: [{required: true, message: '密碼為必填', trigger: 'blur'}],
                 name: [{required: true, message: '名稱為必填', trigger: 'blur'}],
@@ -223,41 +227,51 @@
             },
             //編輯
             handleEdit() {
-                axios.put("/members",this.formData).then((resp) =>{
-                    if (resp.data.flag){
-                        this.$message({type: "success",message: resp.data.message});
+                let vm = this;
+                this.$refs['dataEditForm'].validate((valid) => {
+                    if (valid) {
+                        axios.put("/members",this.formData).then((resp) =>{
+                            if (resp.data.flag){
+                                vm.$message({type: "success",message: resp.data.message});
+                            } else {
+                                vm.$message.error(resp.data.message);
+                            }
+                        }).catch(reason => {
+                            this.showErrorMsg(reason);
+                        }).finally(()=> {
+                            this.dialogFormVisible4Edit = false;
+                            this.findPage();
+                        });
                     } else {
-                        this.$message.error(resp.data.message);
+                        vm.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        return false;
                     }
-                }).catch(reason => {
-                    this.showErrorMsg(reason);
-                }).finally(()=> {
-                    this.dialogFormVisible4Edit = false;
-                });
+                })
             },
 
             handleAdd() {
                 this.$refs['dataAddForm'].validate((valid) => {
+                    let vm = this;
                     if (valid) {
                         axios.post("/members", this.formData).then((resp) => {
                             if (resp.data.flag) {
-                                this.$message({
+                                vm.$message({
                                     message: resp.data.message,
                                     type: "success"
                                 });
                             } else {
-                                this.$message.error(resp.data.message);
+                                vm.$message.error(resp.data.message);
                             }
                         }).catch(reason => {
                             this.showErrorMsg(reason);
-                        });
+                        }).finally(() => {
+                            this.dialogFormVisible = false;
+                            this.findPage();
+                        })
                     } else {
-                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        vm.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
                         return false;
                     }
-                }).finally(()=>{
-                    this.dialogFormVisible= false;
-                    this.findPage();
                 });
             },
             //分頁查詢
@@ -299,15 +313,16 @@
             },
             // delete the row data
             handleDelete(row) {
+                let vm = this;
                 this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原","提示",{type: "warning"}).then(() =>{
                     axios.delete("/members/" + row.id).then((resp) =>{
                         if (resp.data.flag){
-                            this.$message({
+                            vm.$message({
                                 type: "success",
                                 message: resp.data.message
                             });
                         } else {
-                            this.$message.error(resp.data.message);
+                            vm.$message.error(resp.data.message);
                         }
                     }).catch(reason => {
                         this.showErrorMsg(reason);
@@ -315,7 +330,7 @@
                         this.findPage();
                     });
                 }).catch(() =>{
-                    this.$message.info("取消操作");
+                    vm.$message.info("取消操作");
                 });
             }
         }

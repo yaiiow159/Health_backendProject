@@ -6,11 +6,16 @@ import com.timmy.health.entity.Result;
 import com.timmy.health.service.MemberService;
 import com.timmy.health.service.ReportService;
 import com.timmy.health.service.SetMealService;
+import com.timmy.health.service.UserService;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +37,9 @@ import java.util.stream.IntStream;
 @RestController
 @RequestMapping("/report")
 public class ReportController {
+
+    @Autowired
+    private ResourceLoader resourceLoader;
     @DubboReference(interfaceClass = MemberService.class)
     private MemberService memberService;
     @DubboReference(interfaceClass = SetMealService.class)
@@ -40,14 +48,21 @@ public class ReportController {
     @DubboReference(interfaceClass = ReportService.class)
     private ReportService reportService;
 
+    @DubboReference(interfaceClass = UserService.class)
+    private UserService userService;
+
     @GetMapping("/getMemberReport")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
     public Result getMemberReport(){
-        Map<String, Object> map = new HashMap<>();
-        List<String> months = IntStream.rangeClosed(1, 12)
-                .mapToObj(i -> LocalDate.now().minusMonths(12).plusMonths(i).format(DateTimeFormatter.ofPattern("yyyy.MM")))
-                .collect(Collectors.toList());
-        map.put("months", months);;
+        Map<String,Object> map = new HashMap<>();
+        List<String> months = new ArrayList();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH,-12);
+        for(int i=0;i<12;i++){
+            calendar.add(Calendar.MONTH,1);
+            Date date = calendar.getTime();
+            months.add(new SimpleDateFormat("yyyy-MM").format(date));
+        }
         List<Integer> memberCount = memberService.findMemberCountByMonths(months);
         map.put("memberCount",memberCount);
         return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS,map);
@@ -85,19 +100,34 @@ public class ReportController {
         }
     }
 
+    @GetMapping("/getMemberHealthReportData")
+    @PreAuthorize("hasAuthority('REPORT_VIEW')")
+    public Result getMemberHealthReportData(){
+        try{
+            String username = (String) SecurityContextHolder.getContext().getAuthentication().getName();
+            Integer memberId = memberService.findMemberIdByUsername(username);
+            if(null == memberId){
+                memberId = userService.findUserIdByUsername(username);
+            }
+            Map<String,Object> data = reportService.getMemberHealthReportData(memberId);
+            return new Result(true,MessageConstant.GET_MEMBER_HEALTH_REPORT_SUCCESS,data);
+        }catch (Exception e){
+            return new Result(false,MessageConstant.GET_MEMBER_HEALTH_REPORT_FAIL);
+        }
+    }
+
     //导出运营数据
     @GetMapping("/exportBusinessReport")
+    @PreAuthorize("hasAuthority('REPORT_VIEW')")
     public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response){
         try{
             Map<String,Object> result = reportService.getBusinessReportData();
             LocalDate reportDate = (LocalDate) result.get("reportDate");
-            LocalDate todayNewMember = (LocalDate) result.get("todayNewMember");
-            LocalDate totalMember = (LocalDate) result.get("totalMember");
             // 轉換時間到字符串
             String reportDateStr = reportDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String todayNewMemberStr = todayNewMember.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String totalMemberStr = totalMember.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+            Integer todayNewMember = (Integer) result.get("todayNewMember");
+            Integer totalMember = (Integer) result.get("totalMember");
             Integer thisWeekNewMember = (Integer) result.get("thisWeekNewMember");
             Integer thisMonthNewMember = (Integer) result.get("thisMonthNewMember");
             Integer todayOrderNumber = (Integer) result.get("todayOrderNumber");
@@ -108,7 +138,7 @@ public class ReportController {
             Integer thisMonthVisitsNumber = (Integer) result.get("thisMonthVisitsNumber");
             List<Map> hotSetmeal = (List<Map>) result.get("hotSetmeal");
 
-            String filePath = request.getSession().getServletContext().getRealPath("template") + File.separator + "report_template.xlsx";
+            String filePath = resourceLoader.getResource("classpath:\\static\\template\\report_template.xlsx").getFile().getAbsolutePath();
             XSSFWorkbook excel = new XSSFWorkbook(new FileInputStream(filePath));
             XSSFSheet sheet = excel.getSheetAt(0);
 
@@ -116,8 +146,8 @@ public class ReportController {
             row.getCell(5).setCellValue(reportDateStr);
 
             row = sheet.getRow(4);
-            row.getCell(5).setCellValue(todayNewMemberStr);
-            row.getCell(7).setCellValue(totalMemberStr);
+            row.getCell(5).setCellValue(todayNewMember);
+            row.getCell(7).setCellValue(totalMember);
 
             row = sheet.getRow(5);
             row.getCell(5).setCellValue(thisWeekNewMember);

@@ -21,4 +21,8 @@ public interface MemberService {
     List<Integer> findMemberCountByMonths(List<String> months);
 
     Integer getMemberSumByDateRange(String beforeDate, String afterDate);
+
+    Integer findMemberIdByUsername(String username);
+
+    List<Member> findAll();
 }

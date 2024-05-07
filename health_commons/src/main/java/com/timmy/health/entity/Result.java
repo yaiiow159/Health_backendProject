@@ -6,8 +6,6 @@ import java.io.Serializable;
 /**
  * 封装返回结果
  */
-
-
 @Setter
 @Getter
 @NoArgsConstructor

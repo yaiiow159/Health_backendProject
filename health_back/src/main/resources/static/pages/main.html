@@ -4,7 +4,7 @@
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>醫療管理系統</title>
+    <title>醫起來</title>
 
     <meta name="description" content="醫療管理系統">
     <meta name="keywords" content="醫療管理系統">
@@ -60,7 +60,7 @@
                                 <span class="change_pwd" @click="changePassword()">修改密碼</span>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <span class="pass" @click="exit()">退出</span>
+                                <span class="pass" @click="logout()">退出</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -260,8 +260,8 @@
                     "children":[
                         {
                             "path": "/4-1",
-                            "title": "報告詳情",
-                            "linkUrl":"all-medical-list.html",
+                            "title": "個人健檢數據",
+                            "linkUrl":"member_health_status.html",
                             "children":[]
                         },
                     ]
@@ -440,11 +440,10 @@
                     }
                 });
             },
-            exit(){
-                axios.get("/security/logout").then((resp)=>{
-                    if(resp.data.flag){
-                        window.location.href = "./login.html";
-                    }
+            logout(){
+                axios.get("/security/logout",{
+                }).then((resp)=>{
+                    window.location.href = './login.html';
                 })
             }
 

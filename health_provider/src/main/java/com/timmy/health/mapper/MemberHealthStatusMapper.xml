@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timmy.health.mapper.MemberHealthStatusMapper">
+
+    <select id="findByMemberId" resultType="com.timmy.health.domain.MemberHealthStatus">
+        select * from t_member_health_status where memberId = #{memberId}
+    </select>
+</mapper>

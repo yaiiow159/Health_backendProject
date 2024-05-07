@@ -9,7 +9,9 @@
     </select>
 
     <select id="findMemberCountBeforeDate" parameterType="string" resultType="java.lang.Integer">
-        select count(id) from t_member where regTime = #{value}
+        <![CDATA[
+            select count(id) from t_member where regTime <= #{value}
+        ]]>
     </select>
 
     <select id="findMemberCountByDate" parameterType="string" resultType="java.lang.Integer">
@@ -20,9 +22,15 @@
         select count(id) from t_member where regTime >= #{value}
     </select>
 
-    <select id="findMemberTotalCount" resultType="int"> select count(id) from t_member </select>
+    <select id="findMemberTotalCount" resultType="java.lang.Integer">
+        select count(id) from t_member
+    </select>
 
     <select id="findMemberCountByDateRange" parameterType="Map" resultType="java.lang.Integer">
         select COUNT(id) from t_member where regTime between #{beforeDate} and #{afterDate}
+    </select>
+
+    <select id="findMemberIdByUsername" resultType="java.lang.Integer">
+        select id from t_member where name = #{username}
     </select>
 </mapper>

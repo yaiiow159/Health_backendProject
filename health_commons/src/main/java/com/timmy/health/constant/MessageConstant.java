@@ -76,4 +76,10 @@ public class MessageConstant {
     public static final String ORDER_EDIT_SUCCESS = "編輯訂單成功";
     public static final String ORDER_DELETE_FAIL = "刪除訂單失敗";
     public static final String ORDER_DELETE_SUCCESS = "刪除訂單成功";
+    public static final String GET_MEMBER_HEALTH_REPORT_SUCCESS = "取得個人健康報表成功";
+    public static final String GET_MEMBER_HEALTH_REPORT_FAIL = "取得個人健康報表失敗";
+    public static final String INSERT_MEMBER_HEALTH_STATUS_SUCCESS = "新增個人健康狀態成功";
+    public static final String INSERT_MEMBER_HEALTH_STATUS_FAIL = "新增個人健康狀態失敗";
+    public static final String QUERY_MEMBER_SUCCESS = "查詢會員成功";
+    public static final String QUERY_MEMBER_FAIL = "查詢會員失敗";
 }

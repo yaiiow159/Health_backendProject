@@ -325,14 +325,35 @@
             },
             // 彈出添加窗口
             handleCreate() {
+                let vm = this;
                 this.dialogFormVisible = true;
                 this.resetForm();
                 axios.get("/setMeals/").then((resp) => {
                     if (resp.data.flag) {
                         this.tableData = resp.data.data;
+                        this.fetchCheckGroups();
                     } else {
-                        this.$message().error(resp.data.message);
+                        vm.$message().error(resp.data.message);
                     }
+                });
+            },
+            handleUpdate(row) {
+                let vm = this;
+                this.resetForm();
+                this.dialogFormVisible4Edit = true;
+                this.activeName = 'first';
+                axios.get("/setMeals/" + row.id).then((resp) => {
+                    if (resp.data.flag) {
+                        this.formData = resp.data.data;
+                        this.fetchCheckGroups().then(() => {
+                            // 取得之前勾選的checkgroup id
+                            this.fetchCheckGroupByMealId(this.formData.id);
+                            this.checkgroupIds = this.formData.checkgroupIds;
+                        });
+                    } else {
+                        vm.$message().error(resp.data.flag);
+                    }
+
                 });
             },
             //切換頁碼
@@ -341,10 +362,11 @@
                 this.findPage();
             },
             handleDelete(row) {
+                let vm = this;
                 this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原", "提示", {type: "warning"}).then(() => {
                     axios.delete("/setMeals/" + row.id).then((resp) => {
                         if (resp.data.flag) {
-                            this.$message({
+                            vm.$message({
                                 type: "success",
                                 message: resp.data.message
                             });
@@ -356,41 +378,45 @@
                                 }
                             });
                         } else {
-                            this.$message.error(resp.data.message);
+                            vm.$message.error(resp.data.message);
                         }
                     }).finally(() => {
                         this.findPage();
                     });
                 }).catch(() => {
-                    this.$message.info("取消操作");
+                    vm.$message.info("取消操作");
                 });
             },
-            handleUpdate(row) {
-                this.dialogFormVisible4Edit = true;
-                this.activeName = 'first';
-                axios.get("/setMeals/" + row.id).then((resp) => {
+            fetchCheckGroups() {
+                let vm = this;
+                axios.get("/checkgroups").then((resp) => {
                     if (resp.data.flag) {
                         this.tableData = resp.data.data;
                     } else {
-                        this.$message().error(resp.data.flag);
+                        vm.$message().error(resp.data.message);
                     }
-
-                    axios.get("/checkgroups/" + row.id).then((resp) => {
-                        if (resp.data.flag) {
-                            this.$message({type: "success", message: resp.data.message});
-                            axios.get("/setMeals/findcheckGroupsByMealId?id=" + row.id).then((resp) => {
-                                if (resp.data.flag) {
-                                    this.checkgroupIds = resp.data.data;
-                                } else {
-                                    this.$message().error(resp.data.message);
-                                }
-                            });
-                        } else {
-                            this.$message().error(resp.data.message);
-                        }
-                    });
                 });
-            }
+            },
+            fetchCheckGroupById(id) {
+                let vm = this;
+                axios.get("/checkgroups/" + id).then((resp) => {
+                    if (resp.data.flag) {
+                        this.formData = resp.data.data;
+                    } else {
+                        vm.$message().error(resp.data.message);
+                    }
+                });
+            },
+            fetchCheckGroupByMealId(id) {
+                let vm = this;
+                axios.get("/setMeals/findcheckGroupsByMealId?id=" + id).then((resp) => {
+                    if (resp.data.flag) {
+                        this.tableData = resp.data.data;
+                    } else {
+                        vm.$message().error(resp.data.message);
+                    }
+                });
+            },
         }
     })
 </script>

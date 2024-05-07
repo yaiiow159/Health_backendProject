@@ -31,7 +31,7 @@
 <script src="../js/vue.js"></script>
 <script src="../js/axios-0.18.0.js"></script>
 <script type="text/javascript">
-  var myChart1 = echarts.init(document.getElementById('chart1'));
+  let myChart1 = echarts.init(document.getElementById('chart1'));
 
 
   axios.get("/report/getSetmealReport").then((res)=>{
@@ -41,9 +41,9 @@
         subtext: '',
         x:'center'
       },
-      tooltip : {//提示框組件
-        trigger: 'item',//觸發類型，在餅形圖中為item
-        formatter: "{a} <br/>{b} : {c} ({d}%)"//提示內容格式
+      tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
       },
       legend: {
         orient: 'vertical',

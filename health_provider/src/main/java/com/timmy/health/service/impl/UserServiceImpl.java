@@ -36,6 +36,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    // 使用redis緩存
     @Override
     public User getByUserName(String username) {
         User user = userMapper.getUserByName(username);
@@ -111,6 +112,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public IPage<UserAndRole> getPages(Integer currentPage, Integer pageSize, User user) {
         Page<UserAndRole> page = new Page<>(currentPage, pageSize);
         return userMapper.getUsersBySpec(page, user);
+    }
+
+    @Override
+    public Integer findUserIdByUsername(String username) {
+        return userMapper.findUserIdByUsername(username);
     }
 
 }

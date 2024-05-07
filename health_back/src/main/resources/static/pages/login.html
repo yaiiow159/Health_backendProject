@@ -24,7 +24,20 @@
             height: 100vh;
         }
 
+        .image-container {
+            width: 35%;
+            height: auto;
+            margin-right: 50px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         .loginBox {
+            width: 45%;
             background-color: lightblue;
             border-radius: 8px;
             padding: 40px;
@@ -110,37 +123,46 @@
 </head>
 <body>
 <div id="app" class="login-container">
+    <div class="image-container">
+        <img src="../img/login-bg1.jpg" alt="Background Image" />
+    </div>
     <div class="loginBox">
-        <form method="post" class="login-form" action="/security/login" label-position="left">
+        <el-form ref="loginForm" :model="loginForm" class="login-form" label-position="left" label-width="0px" >
             <div class="title-container">
                 <div class="logoInfo clearfix">
-                    <em class="title">歡迎來到醫療管理系統</em>
+                    <em class="title">醫起來</em>
                 </div>
             </div>
-            <div>
-                <span class="svg-container svg-container_login">
-                    <span class="user"></span>
-                </span>
-                <label id="userName">
-                    <input type="text" v-model="username" name="username" placeholder="請輸入使用者姓名"/>
-                </label>
-            </div>
-            <div>
-                <span class="svg-container">
-                    <span class="username"></span>
-                </span>
-                <label>
-                    <input type="password" v-model="password" name="password" placeholder="請輸入使用者密碼"/>
-                </label>
-            </div>
-            <input @click="validateUser" type="submit" value="登錄"/>
-            <input @click="registerDialogVisible = true" style="margin-top: 10px;" type="button" value="註冊會員"/>
-        </form>
+
+            <el-form-item>
+                <el-input
+                        v-model="loginForm.username"
+                        prefix-icon="el-icon-user"
+                        name="username"
+                        placeholder="請輸入使用者姓名">
+                </el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-input
+                        v-model="loginForm.password"
+                        type="password"
+                        prefix-icon="el-icon-lock"
+                        name="password"
+                        placeholder="請輸入使用者密碼">
+                </el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="validateUser">登錄</el-button>
+                <el-button @click="registerDialogVisible = true" style="margin-top: 10px;">註冊會員</el-button>
+            </el-form-item>
+        </el-form>
     </div>
 
     <!-- 註冊會員彈出框 -->
     <el-dialog title="註冊會員" :visible.sync="registerDialogVisible">
-        <el-form ref="registerForm" :model="registerForm" label-width="80px" @submit.native.prevent="onFormSubmit">
+        <el-form ref="registerForm" :model="registerForm" label-width="80px">
             <el-form-item label="姓名">
                 <el-input v-model="registerForm.registerName"></el-input>
             </el-form-item>
@@ -178,6 +200,7 @@
             password: '',
             registerDialogVisible: false,
             registerForm: {},
+            loginForm: {},
             rules: {
                 username: [
                     { required: true, message: '請輸入使用者姓名', trigger: 'blur' }
@@ -194,23 +217,24 @@
             }
         },
         methods: {
-            onformSubmit: function () {
-                this.$refs['registerForm'].validate((valid) => {
+            validateUser() {
+                this.$refs.loginForm.validate((valid) => {
                     if (valid) {
-                        this.registerDialogVisible = false;
-                        this.registerUser();
+                        let params = new URLSearchParams();
+                        params.append('username', this.loginForm.username);
+                        params.append('password', this.loginForm.password);
+                        axios.post('/security/login', params, {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }).then((resp) => {
+                            window.location.href = './main.html';
+                        })
+                    } else {
+                        alert("請檢查輸入是否正確");
+                        return false;
                     }
-                })
-            },
-            validateUser: function () {
-                let vm = this;
-                if (this.username === '') {
-                    vm.$message.error('請輸入使用者姓名');
-                    return;
-                }
-                if (this.password === '') {
-                    vm.$message.error('請輸入使用者密碼');
-                }
+                });
             },
             registerUser: function () {
                 let vm = this; // 保存this的引用

@@ -70,9 +70,9 @@
                 </el-pagination>
             </div>
 
-            <div class="add-form">
-                <el-dialog title="新增預約" :visible.sync="dialogFormVisible">
-                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
+            <div class="search-form">
+                <el-dialog title="查看預約內容" :visible.sync="dialogSearchVisible">
+                    <el-form ref="dataSearchForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
                         <el-row>
                             <el-col :span="12">
                                 <el-form-item label="會員ID" prop="memberId">
@@ -98,7 +98,64 @@
                         <el-row>
                             <el-col :span="24">
                                 <el-form-item label="選擇套餐" prop="setmealId">
-                                    <el-select v-model="setmealIds" placeholder="選擇套餐">
+                                    <el-select v-model="setmealIds" placeholder="選擇套餐" @change="fetch">
+                                        <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <el-tabs v-model="activeTab" class="setmeal-tabs">
+                        <el-tab-pane label="套餐詳情" name="setmeal">
+                            <p>套餐名稱: {{ setmeal.name }}</p>
+                            <p>套餐代碼: {{ setmeal.code }}</p>
+                            <p>幫助代碼: {{ setmeal.helpCode }}</p>
+                            <p>套餐備註: {{ setmeal.remark }}</p>
+                            <p>套餐價格: {{ setmeal.price }}</p>
+                            <p>適用年齡: {{ setmeal.age }}</p>
+                        </el-tab-pane>
+                    </el-tabs>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogSearchVisible = false">返回</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+
+
+            <div class="add-form">
+                <el-dialog title="新增預約" :visible.sync="dialogFormVisible">
+                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="會員ID" prop="memberId">
+                                    <el-select v-model="memberId" placeholder="選擇成員">
+                                        <el-option v-for="member in members" :key="member.id" :label="member.name" :value="member.id">
+
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="預約日期" prop="orderDate">
+                                    <el-date-picker v-model="formData.orderDate" type="date" placeholder="選擇日期"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="預約類型" prop="orderType">
+                                    <el-select v-model="formData.orderType" placeholder="選擇預約類型">
+                                        <el-option label="電話預約" value="電話預約"></el-option>
+                                        <el-option label="手機預約" value="手機預約"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="選擇套餐" prop="setmealId">
+                                    <el-select v-model="setmealIds" placeholder="選擇套餐" @change="fetchSetmealsDetail(setmealIds)">
                                         <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -129,7 +186,9 @@
                         <el-row>
                             <el-col :span="12">
                                 <el-form-item label="會員ID" prop="memberId">
-                                    <el-input v-model="formData.memberId" type="number"></el-input>
+                                    <el-select v-model="memberId" placeholder="選擇成員">
+                                        <el-option v-for="member in members" :key="member.id" :label="member.name" :value="member.id"></el-option>
+                                    </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
@@ -151,7 +210,7 @@
                         <el-row>
                             <el-col :span="24">
                                 <el-form-item label="選擇套餐" prop="setmealId">
-                                    <el-select v-model="setmealIds" placeholder="選擇套餐">
+                                    <el-select v-model="setmealIds" placeholder="選擇套餐" @change="fetchSetmealsDetail(setmealIds)">
                                         <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -197,6 +256,7 @@
                 orderType: "",
             },
             activeTab: "0",
+            members: [],
             setmealIds: null,
             setmealDetail: {},
             setmeals: [],
@@ -205,6 +265,7 @@
             formData: {},
             dialogFormVisible: false,
             dialogFormVisible4Edit: false,
+            dialogSearchVisible: false,
             rules: {
                 orderDate: [{ required: true, message: '預約日期為必填項', trigger: 'blur' }],
                 orderType: [{ required: true, message: '預約類型為必填項', trigger: 'blur' }],
@@ -261,6 +322,21 @@
                     }
                 });
             },
+            handleSearch(row) {
+                let vm = this;
+                this.resetForm();
+                this.formData = axios.get("/orders/" + row.id).then((resp) => {
+                    if(resp.data.flag) {
+                        this.formData = resp.data.data;
+                        this.dialogSearchVisible = true;
+                        this.fetchSetmeals();
+                        this.setmealIds = this.formData.setmealId;
+                        this.fetchSetmealsDetail(this.setmealIds);
+                    } else {
+                        vm.$message().error(resp.data.message);
+                    }
+                });
+            },
             findPage() {
                 let param = "?query";
                 if (this.pagination.orderDate) {
@@ -289,11 +365,23 @@
             handleCreate() {
                 this.resetForm();
                 this.fetchSetmeals();
+                this.fetchMembers();
                 this.dialogFormVisible = true;
             },
             handleUpdate(row) {
                 this.resetForm();
-                this.formData = Object.assign({}, row);
+                this.formData = this.formData = axios.get("/orders/" + row.id).then((resp) => {
+                    if(resp.data.flag) {
+                        this.formData = resp.data.data;
+                        this.fetchSetmeals();
+                        this.fetchMembers();
+                        this.dialogSearchVisible = true;
+                        this.setmealIds = this.formData.setmealId;
+                        this.fetchSetmealsDetail(this.setmealIds);
+                    } else {
+                        vm.$message().error(resp.data.message);
+                    }
+                })
                 this.dialogFormVisible4Edit = true;
             },
             fetchSetmeals() {
@@ -306,8 +394,18 @@
                 }
                 });
             },
+            fetchMembers() {
+                let vm = this;
+                axios.get("/members/findAll").then((resp) => {
+                    if (resp.data.flag) {
+                        this.members = resp.data.data;
+                    } else {
+                        vm.$message.error("獲取會員列表失敗");
+                    }
+                });
+            },
             fetchSetmealsDetail(id) {
-                axios.get(`/setMeals/getSetMealByOrderId/${id}`).then(resp => {
+                axios.get(`/setMeals/${id}`).then(resp => {
                     if(resp.data.flag) {
                         this.setmealDetail = resp.data.data;
                     }

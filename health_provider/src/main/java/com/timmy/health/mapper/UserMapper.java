@@ -22,4 +22,6 @@ public interface UserMapper extends BaseMapper<User> {
     Integer register(User user);
 
     void addUserRole(Map<String, Object> params);
+
+    Integer findUserIdByUsername(String username);
 }

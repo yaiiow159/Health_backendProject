@@ -2,6 +2,7 @@ package com.timmy.health.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.timmy.health.domain.Order;
 import com.timmy.health.domain.Setmeal;
@@ -24,7 +25,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         queryWrapper.like(null != order.getOrderStatus(), Order::getOrderStatus, order.getOrderStatus());
         queryWrapper.like(null != order.getOrderType(), Order::getOrderType, order.getOrderType());
 
-        return this.page(new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(currentPage, pageSize), queryWrapper);
+        return orderMapper.selectPage(new Page<>(currentPage, pageSize), queryWrapper);
     }
 
     @Override

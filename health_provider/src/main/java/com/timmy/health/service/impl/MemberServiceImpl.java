@@ -1,6 +1,7 @@
 package com.timmy.health.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.timmy.health.domain.Member;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,22 +85,25 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         queryWrapper.like(member.getPhoneNumber() != null, Member::getPhoneNumber, member.getPhoneNumber());
         queryWrapper.like(member.getSex() != null, Member::getSex, member.getSex());
         queryWrapper.like(member.getEmail() != null, Member::getEmail, member.getEmail());
-        queryWrapper.select(Member::getName,Member::getPassword ,Member::getPhoneNumber, Member::getIdCard, Member::getSex, Member::getEmail);
-        IPage<Member> memberIPage = memberMapper.selectPage(new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(currentPage, pageSize), queryWrapper);
-        return memberIPage;
+        return memberMapper.selectPage(new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(currentPage, pageSize), queryWrapper);
     }
 
     @Override
     public List<Integer> findMemberCountByMonths(List<String> months) {
         List<Integer> memberCounts = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        if (months != null && !months.isEmpty()) {
-            for (String month : months) {
-                YearMonth yearMonth = YearMonth.parse(month, DateTimeFormatter.ofPattern("yyyy.MM"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+
+        for (String month : months) {
+            try {
+                YearMonth yearMonth = YearMonth.parse(month, formatter);
                 LocalDate endOfMonth = yearMonth.atEndOfMonth();
-                String endTime = endOfMonth.format(formatter);
-                Integer memberCount = memberMapper.findMemberCountBeforeDate(endTime);
-                memberCounts.add(memberCount);
+                String date = endOfMonth.toString();
+
+                Integer count = memberMapper.findMemberCountBeforeDate(date);
+                memberCounts.add(count);
+            } catch (Exception e) {
+                log.error("error", e);
+                memberCounts.add(0);
             }
         }
         return memberCounts;
@@ -122,6 +127,16 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public Integer findMemberIdByUsername(String username) {
+        return memberMapper.findMemberIdByUsername(username);
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return memberMapper.selectList(null);
     }
 
     /**

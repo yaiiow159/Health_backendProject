@@ -119,6 +119,7 @@
                 <artifactId>spring-boot-configuration-processor</artifactId>
                 <optional>true</optional>
             </dependency>
+
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -140,7 +141,6 @@
                 <version>${commons-codec.version}</version>
             </dependency>
 
-            <!--poi-->
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi</artifactId>
@@ -152,7 +152,6 @@
                 <version>5.0.0</version>
             </dependency>
 
-            <!--quartz-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-quartz</artifactId>
@@ -163,13 +162,11 @@
                 <artifactId>jersey-client</artifactId>
                 <version>1.19.4</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
             <dependency>
                 <groupId>org.dom4j</groupId>
                 <artifactId>dom4j</artifactId>
                 <version>2.1.1</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/xml-apis/xml-apis -->
             <dependency>
                 <groupId>xml-apis</groupId>
                 <artifactId>xml-apis</artifactId>

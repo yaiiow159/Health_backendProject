@@ -1,6 +1,8 @@
 package com.timmy.health.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,17 +18,26 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName(value = "t_user")
 public class User implements Serializable {
     @TableId
-    @NotNull
     private Integer id;
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @TableField(value = "birthday")
     private Date birthday;
+    @TableField(value = "gender")
     private String gender;
+    @TableField(value = "username")
     private String username;
+    @TableField(value = "password")
     private String password;
+    @TableField(value = "remark")
     private String remark;
+    @TableField(value = "station")
     private String station;
+    @TableField(value = "telephone")
     private String telephone;
+
+    @TableField(exist = false)
     private Set<Role> roles = new HashSet<>(0);//對應角色
 }

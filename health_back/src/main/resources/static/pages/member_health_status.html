@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>醫療管理系統</title>
+    <meta name="description" content="醫療管理">
+    <meta name="keywords" content="醫療管理">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .healthStatusGreen {
+            color: green;
+        }
+
+        .healthStatusRed {
+            color: red;
+        }
+    </style>
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>健檢報告<small>個人健檢數據</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/main.html' }">首頁</el-breadcrumb-item>
+            <el-breadcrumb-item>健檢報告</el-breadcrumb-item>
+            <el-breadcrumb-item>個人健檢數據</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box" style="height: 900px">
+            <div class="excelTitle" >
+                <el-button @click="exportExcel()" icon="el-icon-download">匯出</el-button>個人健檢報告
+                <el-button @click="openHealthStatusDialog()" type="primary" icon="el-icon-edit">填寫受檢人資料</el-button>
+            </div>
+            <div class="excelTime">日期：{{ Date.now().toLocaleString("zh-TW")}}</div>
+            <table class="exceTable" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td colspan="4" class="headBody">健檢數據報告</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="tabletrBg">受檢人姓名</td>
+                    <td colspan="2">{{reportData.memberName}}</td>
+                </tr>
+                <tr>
+                    <td width='20%' class="tabletrBg">身高</td>
+                    <td width='30%'>{{reportData.height}}</td>
+                    <td width='20%' class="tabletrBg">體重</td>
+                    <td width='30%'>{{reportData.weight}}</td>
+                </tr>
+                <tr>
+                    <td class="tabletrBg">BMI</td>
+                    <td>{{reportData.BMI}}</td>
+                    <td class="tabletrBg">BMR</td>
+                    <td>{{reportData.BMR}}</td>
+                </tr>
+                <tr>
+                    <td class="tabletrBg">體脂率</td>
+                    <td>{{reportData.bodyFat}}</td>
+                    <td class="tabletrBg">建議攝取卡路里量</td>
+                    <td>{{reportData.calorieIntake}}</td>
+                </tr>
+                <tr>
+                    <td class="tabletrBg" colspan="2">健康狀態</td>
+                    <td class="tabletrBg" colspan="2" :class="healthStatusClass">{{reportData.healthStatus}}</td>
+                </tr>
+            </table>
+        </div>
+        <el-dialog title="健檢人資料填寫" :visible.sync="healthStatusDialogVisible">
+            <el-form ref="healthStatusForm" :model="healthStatusForm" label-width="80px">
+                <el-form-item label="姓名">
+                    <el-input v-model="healthStatusForm.name"></el-input>
+                </el-form-item>
+                <el-form-item label="身高">
+                    <el-input v-model="healthStatusForm.height"></el-input>
+                </el-form-item>
+                <el-form-item label="體重">
+                    <el-input v-model="healthStatusForm.weight"></el-input>
+                </el-form-item>
+                <el-form-item label="年齡">
+                    <el-input v-model="healthStatusForm.age"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="healthStatusDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="handleSubmit()">確定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+</div>
+</body>
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+    let vue = new Vue({
+        el: '#app',
+        data:{
+            reportData:{
+                memberName: '',
+                height: 0,
+                weight: 0,
+                age: 0,
+                BMI: 0.0,
+                BMR: 0.0,
+                bodyFat: 0.0,
+                calorieIntake: 0.0,
+                healthStatus: '',
+            },
+            healthStatusForm:{
+                name: '',
+                height: 0,
+                weight: 0,
+                age: 0,
+            },
+            healthStatusDialogVisible: false,
+            rules: {
+                name: [
+                    { required: true, message: '請輸入姓名', trigger: 'blur' }
+                ],
+                height: [
+                    { required: true, message: '請輸入身高', trigger: 'blur' }
+                ],
+                weight: [
+                    { required: true, message: '請輸入體重', trigger: 'blur' }
+                ],
+                age: [
+                    { required: true, message: '請輸入年齡', trigger: 'blur' }
+                ]
+            }
+        },
+        computed:{
+            healthStatusClass(){
+                if(this.reportData.healthStatus === '健康'){
+                    return 'healthStatusGreen';
+                }else{
+                    return 'healthStatusRed';
+                }
+            }
+        },
+        created() {
+            this.initReportData();
+        },
+        methods:{
+            exportExcel(){
+                window.location.href = '/report/exportMemberHealthStatusReport';
+            },
+            openHealthStatusDialog(){
+                this.resetForm();
+                this.healthStatusDialogVisible = true;
+            },
+            resetForm(){
+                this.healthStatusForm = {
+                    name: '',
+                    height: 0,
+                    weight: 0,
+                    age: 0,
+                };
+            },
+            handleSubmit(){
+                let vm = this;
+                this.$refs['healthStatusForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post("/memberHealthStatus/editMemeberHealthStatus",this.healthStatusForm).then((res)=>{
+                            if(res.data.flag){
+                                vm.$message.success(res.data.message);
+                                this.healthStatusDialogVisible = false;
+                            }else{
+                                vm.$message.error(res.data.message);
+                            }
+                        }).catch((e) => {
+                            vm.$message.error(e.message);
+                        }).finally(() => {
+                            this.initReportData();
+                        })
+                    } else {
+                        vm.$message.error('請檢查輸入的資料是否正確!');
+                    }
+                })
+            },
+            initReportData(){
+                axios.get("/report/getMemberHealthReportData").then((res)=>{
+                    if(res.data.flag){
+                        this.reportData = res.data.data;
+                    }
+                }).catch((e) => {
+                    this.$message.error(e.message);
+                });
+            }
+        }
+    })
+</script>
+</html>
