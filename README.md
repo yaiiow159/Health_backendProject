@@ -22,16 +22,15 @@
 
 ## 功能介紹: <br>
 ### 會員管理: <br>
-- 會員檔案功能
-- 會員註冊功能
+- 會員管理
 - 會員統計功能
 
 ### 預約管理: <br>
 - 預約列表功能
 - 預約設定功能
-- 套餐配置功能
-- 檢查配套功能
-- 高級配套功能
+- 健檢套餐功能
+- 健檢組合功能
+- 健檢項目功能
 
 ### 健康報告 <br>
 - 報告詳情功能
@@ -39,13 +38,18 @@
 ### 統計分析 <br>
 - 會員數統計
 - 套餐占比
-- 運營數據
+- 營運數據
 
 ### 系統配置 <br>
 - 用戶管理
 - 角色管理
 - 權限管理
-- 會員管理
+
+###　其他　<br>
+- 修改密碼
+- 個人資訊
+- 登入登出
+- 聯繫我門
 
 --------------------------------------------------------------------------------------------------
 + 前端使用技術: html5、css、element-ui、vue2、axios
@@ -86,10 +90,23 @@
 會員管理畫面
 ![會員管理查詢](https://github.com/yaiiow159/Health_backendProject/assets/39752246/36061e72-a096-4c0b-babe-edc460d63150)
 ![會員管理](https://github.com/yaiiow159/Health_backendProject/assets/39752246/cf330b15-6758-4a2e-b87f-43b002157b47)
-![新增會員成功](https://github.com/yaiiow159/Health_backendProject/assets/39752246/cd72e536-fa6d-45d1-88aa-ae1e0e41f731)
-![新增會員](https://github.com/yaiiow159/Health_backendProject/assets/39752246/409f3a6b-054a-4f04-8fd7-bef2addf8487)
+![編輯會員成功](https://github.com/yaiiow159/Health_backendProject/assets/39752246/dac10656-24a4-421b-9200-e135da29d51f)
+![會員刪除功能](https://github.com/yaiiow159/Health_backendProject/assets/39752246/c262abcd-cf70-4e39-a3db-83ccc831b6d2)
+![新增會員成功畫面](https://github.com/yaiiow159/Health_backendProject/assets/39752246/a7046365-4922-4a11-9a3a-2e3fa8b468b9)
+
 
 預約列表畫面
+![預約列表畫面](https://github.com/yaiiow159/Health_backendProject/assets/39752246/97d73b77-76e6-4ace-9fcd-79b9096ea63e)
+![新增預約畫面](https://github.com/yaiiow159/Health_backendProject/assets/39752246/fa848878-0b0f-4760-b500-a12a9abb4d26)
+![新增預約畫面](https://github.com/yaiiow159/Health_backendProject/assets/39752246/9c2d6ad7-425e-4da8-9618-da3b8be36604)
+
+
+預約設置畫面
+![模板下載](https://github.com/yaiiow159/Health_backendProject/assets/39752246/fe187219-b76e-42d2-b719-2aab10c3656a)
+![預約設置成功](https://github.com/yaiiow159/Health_backendProject/assets/39752246/5ddb70b9-be1c-4c38-ba11-1fd5d3885ffb)
+
+健檢項目畫面
+
 
 
 
