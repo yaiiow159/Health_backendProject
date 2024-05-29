@@ -1,5 +1,4 @@
 html, body {
-    /* overflow-y: scroll; */
     margin: 0;
 }
 
@@ -8,25 +7,24 @@ a {
     text-decoration: none;
 }
 
-/* new style */
-.skin-purple .main-sidebar {
+.main-sidebar {
     background: #fff;
 }
 
-.skin-purple .main-header {
+.main-header {
     background: #0abdfe;
 }
 
-.skin-purple .main-header .navbar .sidebar-toggle:hover {
-    /* background: #0abdfe; */
+.main-header .navbar .sidebar-toggle:hover {
+    background: rgba(0, 0, 0, 0.1);
 }
 
-.skin-purple .main-header {
+.main-header {
     min-height: 70px;
     padding: 0;
 }
 
-.skin-purple .main-header .logo {
+.main-header .logo {
     height: 30px;
     float: left;
     padding: 20px 0 0 15px;
@@ -42,7 +40,6 @@ a {
 .skin-purple .main-header .navbar {
     height: 70px;
     background: linear-gradient(to right, #0afe4f, #67f0e0);
-    /* margin-left: 230px; */
 }
 
 .winfo {
@@ -121,147 +118,21 @@ a {
     border-color: #0abdfe;
 }
 
-.box-body .nav > li > a {
-    color: #666
-}
-
-.box-body .nav > li.active > a {
-    color: #0abdfe;
-}
-
-
-/* tab 1*/
-.double {
-    line-height: 58px;
-}
-
 .title .glyphicon {
     padding: 3px;
     font-size: 13px;
     border-radius: 8px;
     color: #fff;
-
-}
-
-.data span.arrowup {
-    color: #d88918;
 }
 
 .data span.arrowdown {
     color: #6bb10a;
 }
 
-.item-blue .glyphicon {
-    background-color: #39a9ea;
-}
-
-.item-green {
-    line-height: 58px;
-}
-
-.item-green .glyphicon {
-    background-color: #6bb10a;
-    line-height: 12px;
-}
-
-.item-orange .glyphicon {
-    background-color: #d88918;
-}
-
-.item-red .glyphicon {
-    background-color: #f14f4f;
-}
-
 .chart .chart-box {
     margin: 10px;
 }
 
-/* 数据表格label */
-.content-wrapper .data-type {
-    /*width: 90%;*/
-    margin: 10px 5px;
-    border: 1px solid #d4d4d4;
-    border-radius: 2px;
-}
-
-.data-type .title,
-.data-type .data {
-    padding: 3px 12px;
-    border-top: 1px solid #d4d4d4;
-    overflow: hidden;
-    height: 42px;
-}
-
-.data-type .title {
-    line-height: 34px;
-    border-right: 1px solid #d4d4d4;
-}
-
-.data-type .data:last-child {
-    border-right: 0;
-}
-
-.data-type .title {
-    text-align: center;
-    background: #ececec;
-}
-
-.data-type .data .line {
-    vertical-align: middle;
-    overflow: hidden;
-    padding-bottom: 10px;
-    padding-top: 10px;
-}
-
-/* label行高度 */
-.data-type .data > label {
-    line-height: 36px;
-}
-
-.data-type .data > .form-group {
-    line-height: 36px;
-}
-
-.data-type .data.text {
-    line-height: 36px;
-}
-
-/* label行分隔符 */
-.data-type .data.border-right {
-    border-right: 1px solid #d4d4d4;
-}
-
-/* 表格双倍高度 */
-.data-type .title.rowHeight2x,
-.data-type .data.rowHeight2x {
-    height: 84px;
-}
-
-.data-type .title.rowHeight2x,
-.data-type .data.rowHeight2x.text {
-    line-height: 78px;
-}
-
-/*.data-type .data.rowHeight2x > label {
-	line-height:78px;
-}*/
-.data-type .title.editer,
-.data-type .data.editer {
-    height: 320px;
-}
-
-.data-type .title.editer {
-    line-height: 300px;
-}
-
-/*清除parding*/
-.padding-clear {
-    padding-right: 0;
-    padding-left: 0;
-}
-
-/* 文件上传 */
-/*a  upload */
 .a-upload {
     padding: 4px 10px;
     height: 35px;
@@ -534,35 +405,6 @@ label input[type="radio"]:checked {
     border: 0 none;
 }
 
-.main {
-    height: 100vh;
-    min-width: 800px;
-    min-height: 600px;
-    overflow: hidden;
-}
-
-.main aside {
-    overflow: visible;
-    height: 100%;
-}
-
-.main aside.isClossTab {
-    width: 100%;
-    height: 60px;
-    cursor: pointer;
-    font-size: 25px;
-    text-align: center;
-    line-height: 60px;
-    font-weight: bold;
-    border-right: 1px solid #807c7c;
-    box-sizing: border-box;
-}
-
-.main aside .menu {
-    width: 100%;
-    border-right: 0;
-}
-
 .el-menu .fa {
     vertical-align: middle;
     margin-right: 5px;
@@ -577,7 +419,7 @@ label input[type="radio"]:checked {
 
 .el-menu-item:hover, .el-menu-item.is-active {
     color: #fff;
-    background: lightgreen;
+    background: lightskyblue;
     transition: color;
 }
 
@@ -587,14 +429,8 @@ label input[type="radio"]:checked {
 
 .el-submenu__title:hover {
     color: #ffffff;
-    background: lightgreen;
+    background: lightskyblue;
     transition: color;
-}
-
-.main-footer {
-    background: #fff;
-    padding: 15px 0;
-    color: #444;
 }
 
 
@@ -631,7 +467,6 @@ label input[type="radio"]:checked {
 
 /*  */
 .app-container {
-    background: #b3e19d;
     margin: 15px 30px 15px 15px;
 }
 
@@ -640,7 +475,7 @@ label input[type="radio"]:checked {
     padding: 15px;
 }
 
-.box {
+.container {
     position: relative;
     border-radius: 3px;
     background: #ffffff;
@@ -696,46 +531,37 @@ label input[type="radio"]:checked {
     display: inline-block;
 }
 
-.excelTitle {
-    text-align: center;
-    overflow: hidden;
-    line-height: 40px;
-}
-
-.excelTitle .el-button {
-    float: left;
-}
-
-.excelTime {
-    padding: 10px 0;
+.tableTimer {
+    padding: 10px 20px;
     text-align: right;
+    color: #95A5A6; 
+    font-size: 16px; 
 }
 
-.exceTable {
+.table {
     width: 100%;
-    border-right: 1px solid #e6e6e6;
-    border-bottom: 1px solid #e6e6e6;
+    border-collapse: collapse; 
+}
+
+.table tr, .table td {
+    border: 1px solid #EAECEE; 
+    height: 50px; 
+    padding: 0 15px; 
     font-size: 14px;
-    color: #333;
+    color: #34495E; 
 }
 
-.exceTable tr, .exceTable td {
-    border-left: 1px solid #e6e6e6;
-    border-top: 1px solid #e6e6e6;
-    height: 40px;
-    line-height: 40px;
-    padding: 0 10px;
-}
-
-.exceTable .headBody {
+.table .headBody {
+    background-color: #ECF0F1; 
+    color: #2C3E50; 
     text-align: center;
-    font-weight: 700;
-    font-size: 14px;
+    font-weight: bold;
+    font-size: 16px; 
 }
 
-.tabletrBg {
-    background: #fcfcfc;
-    color: #6f7180;
+.tableBg {
+    background: #F8F9F9; 
+    color: #7F8C8D; 
     text-align: right;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -744,7 +570,7 @@ label input[type="radio"]:checked {
     text-align: center
 }
 
-.checkScrol {
+.checkScroll {
     height: 277px;
     overflow-y: scroll;;
 }
@@ -755,77 +581,40 @@ label input[type="radio"]:checked {
     color: #6f7180;
 }
 
-.order_setting {
+.setting {
     font-size: 12px;
     font-weight: bolder;
-    color: darkseagreen;
+    color: lightblue;
 }
 
-.order_title :hover {
+.title :hover {
     cursor:pointer;
 }
 
-.order_title {
+.title {
     font-size: 14px;
     font-weight: bolder;
-    color: darkseagreen;
+    color: lightblue;
 }
 
-.order_setting :hover {
-    cursor:pointer;
-}
-
-.user_title {
-    font-size: 14px;
-    font-weight: bolder;
-    color: darkseagreen;
-}
-
-.user_setting {
-    font-size: 12px;
-    font-weight: bolder;
-    color: darkseagreen;
-}
-
-.user_setting :hover {
-    cursor:pointer;
-}
-
-.user_title :hover {
+.setting :hover {
     cursor:pointer;
 }
 
 .top_pages {
-    color: darkseagreen;
+    color: lightblue;
     font-size: 16px;
     font-weight: bolder;
 }
 
-.order_manage {
+.manage {
     color: lightslategray;
     font-weight: bold;
 }
 
-.check_manage {
-    color: lightslategray; font-weight: bold;
-}
-
-.system_manage {
-    color: lightslategray; font-weight: bold;
-}
-
-.user_manage {
-    color: lightslategray; font-weight: bold;
-}
-
-.change_pwd  .pass{
-    display:block;
-    cursor:pointer;
-    font-weight: bolder;
-}
 
 .mail_title {
-    color: mediumseagreen;
+    color: mediumturquoise;
     font-weight: bolder;
     font-style: italic;
 }

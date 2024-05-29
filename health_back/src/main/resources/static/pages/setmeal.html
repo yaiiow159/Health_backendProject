@@ -80,6 +80,7 @@
         </el-breadcrumb>
     </div>
     <div class="app-container">
+        <div class="cotainer">
         <div class="box">
             <div class="filter-container">
                 <el-input placeholder="編號" v-model="pagination.code" style="width: 150px;"
@@ -213,15 +214,15 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="c in tableData">
+                                        <tr v-for="checkGroup in tableData">
                                             <td>
                                                 <label>
-                                                    <input :id="c.id" v-model="checkgroupIds" type="checkbox" :value="c.id">
+                                                    <input :id="checkGroup.id" v-model="checkgroupIds" type="checkbox" :value="checkGroup.id">
                                                 </label>
                                             </td>
-                                            <td><label :for="c.id">{{c.code}}</label></td>
-                                            <td><label :for="c.id">{{c.name}}</label></td>
-                                            <td><label :for="c.id">{{c.remark}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.code}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.name}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.remark}}</label></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -235,6 +236,123 @@
                     </div>
                 </el-dialog>
             </div>
+
+            <!-- 新增標簽彈層 -->
+            <div class="edit-form">
+                <el-dialog title="編輯健檢套餐" :visible.sync="dialogFormVisible4Edit">
+                    <template>
+                        <el-tabs v-model="activeName" type="card">
+                            <el-tab-pane label="基本信息" name="first">
+                                <el-form label-position="right" label-width="100px">
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="編碼">
+                                                <el-input v-model="formData.code"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="名稱">
+                                                <el-input v-model="formData.name"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="適用性別">
+                                                <el-select v-model="formData.sex">
+                                                    <el-option label="不限" value="0"></el-option>
+                                                    <el-option label="男" value="1"></el-option>
+                                                    <el-option label="女" value="2"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="記憶碼">
+                                                <el-input v-model="formData.helpCode"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="高級組合價格">
+                                                <el-input v-model="formData.price"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="適用年齡">
+                                                <el-input v-model="formData.age"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="上傳圖片">
+                                                <el-upload
+                                                        class="avatar-uploader"
+                                                        action="/setMeals/upload"
+                                                        :auto-upload="autoUpload"
+                                                        name="imgFile"
+                                                        :show-file-list="false"
+                                                        :on-success="handleAvatarSuccess"
+                                                        :before-upload="beforeAvatarUpload">
+                                                    <img v-if="imageUrl" :src="imageUrl" class="avatar"
+                                                         alt="noShowAnyImage">
+                                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                                </el-upload>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="說明">
+                                                <el-input v-model="formData.remark" type="textarea"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="注意事項">
+                                                <el-input v-model="formData.attention" type="textarea"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-form>
+                            </el-tab-pane>
+                            <el-tab-pane label="檢查組合信息" name="second">
+                                <div class="checkScrol">
+                                    <table class="datatable">
+                                        <thead>
+                                        <tr>
+                                            <th>選擇</th>
+                                            <th>項目編碼</th>
+                                            <th>項目名稱</th>
+                                            <th>項目說明</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="checkGroup in tableData">
+                                            <td>
+                                                <label>
+                                                    <input :name="checkGroup.id" :id="checkGroup.id" v-model="checkgroupIds" type="checkbox" :value="checkGroup.id">
+                                                </label>
+                                            </td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.code}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.name}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.remark}}</label></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </template>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取消</el-button>
+                        <el-button type="primary" @click="handleEdit()">確定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+        </div>
         </div>
     </div>
 </div>
@@ -285,10 +403,14 @@
             //添加
             handleAdd() {
                 axios.post("/setMeals/" + this.checkgroupIds, this.formData).then((resp) => {
-                    this.dialogFormVisible = false;
                     if (resp.data.flag) {
-                        this.$message({type: "success", message: resp.data.message})
-
+                        this.$message(
+                            {
+                                type: "success",
+                                message: resp.data.message
+                            }
+                        )
+                        this.dialogFormVisible = false;
                     } else {
                         this.$message().error(resp.data.message);
                     }
@@ -328,13 +450,24 @@
                 let vm = this;
                 this.dialogFormVisible = true;
                 this.resetForm();
-                axios.get("/setMeals/").then((resp) => {
-                    if (resp.data.flag) {
-                        this.tableData = resp.data.data;
-                        this.fetchCheckGroups();
+                this.activeName = 'first';
+                this.fetchCheckGroups().then(() => {
+                    this.checkgroupIds = [];
+                });
+            },
+
+            handleEdit() {
+                axios.put("/setMeals/" + this.checkgroupIds, this.formData).then((resp) => {
+                    if(resp.data.flag) {
+                        this.dialogFormVisible4Edit = false;
+                        this.$message({type: "success", message: resp.data.message})
                     } else {
-                        vm.$message().error(resp.data.message);
+                        this.$message().error(resp.data.message);
                     }
+                }).catch(error => {
+                    this.$message().error(error.message);
+                }).finally(() => {
+                    this.findPage();
                 });
             },
             handleUpdate(row) {

@@ -54,9 +54,7 @@ public class CheckitemServiceImpl extends ServiceImpl<CheckitemMapper, CheckItem
 
     @Override
     public int edit(@NotNull CheckItem checkItem) {
-        UpdateWrapper<CheckItem> updateWrapper = new UpdateWrapper<>();
-        update().eq("id",checkItem.getId());
-        return checkitemMapper.update(checkItem,updateWrapper);
+        return checkitemMapper.updateById(checkItem);
     }
 
 }

@@ -90,7 +90,7 @@ public class SetMealController {
         }
     }
 
-    @RequestMapping(value = "/findcheckGroupsByMealId", method = RequestMethod.GET)
+    @GetMapping("/findcheckGroupsByMealId")
     @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     public Result findcheckGroupsByMealId(Integer id) {
         try {

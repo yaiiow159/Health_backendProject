@@ -15,15 +15,15 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1 class="order_manage">預約管理<small class="check_manage">檢查專案管理</small></h1>
+        <h1 class="manage">預約管理<small class="check_manage">健檢專案管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
             <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_title">預約管理</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_setting">檢查項管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="title">預約管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="setting">健檢項目管理</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
-        <div class="box">
+        <div class="container">
             <div class="filter-container">
                 <el-input placeholder="專案名稱" v-model="pagination.name" style="width: 17%;"
                           class="filter-item"></el-input>
@@ -62,7 +62,7 @@
             </div>
             <!-- 新增標簽彈層 -->
             <div class="add-form">
-                <el-dialog title="新增檢查項" :visible.sync="dialogFormVisible">
+                <el-dialog title="新增健檢項目" :visible.sync="dialogFormVisible">
                     <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
                         <el-row>
@@ -97,7 +97,7 @@
                             <el-col :span="12">
                                 <el-form-item label="類型">
                                     <el-select v-model="formData.type">
-                                        <el-option label="檢查" value="1"></el-option>
+                                        <el-option label="健檢" value="1"></el-option>
                                         <el-option label="檢驗" value="2"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -132,7 +132,7 @@
 
             <!-- 編輯標簽彈層 -->
             <div class="edit-form">
-                <el-dialog title="編輯檢查項" :visible.sync="dialogFormVisible4Edit">
+                <el-dialog title="編輯健檢項目" :visible.sync="dialogFormVisible4Edit">
                     <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
                         <el-row>
@@ -167,7 +167,7 @@
                             <el-col :span="12">
                                 <el-form-item label="類型">
                                     <el-select v-model="formData.type">
-                                        <el-option label="檢查" value="1"></el-option>
+                                        <el-option label="健檢" value="1"></el-option>
                                         <el-option label="檢驗" value="2"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -259,6 +259,7 @@
                 //進行屬性校驗
                 this.$refs['dataAddForm'].validate((valid) => {
                     if (valid) {
+                        let vm = this;
                         axios.post("/checkitems", this.formData).then((resp) => {
                             if (resp.data.flag) {
                                 this.$message({
@@ -266,13 +267,13 @@
                                     type: "success"
                                 });
                             } else {
-                                this.$message.error(resp.data.message);
+                                vm.$message.error(resp.data.message);
                             }
                         }).catch(reason => {
                             this.showErrorMsg(reason);
                         });
                     } else {
-                        this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
+                        vm.$message.error("資料填寫不正確，請確認必要欄位都已填寫");
                         return false;
                     }
                 }).finally(()=>{
@@ -303,11 +304,12 @@
             },
             handleUpdate(row) {
                 this.dialogFormVisible4Edit = true;
+                let vm = this;
                 axios.get("/checkitems/" + row.id).then((resp) =>{
                     if (resp.data.flag && resp.data.data != null){
                         this.formData = resp.data.data;
                     } else {
-                        this.$message.error(resp.data.message);
+                        vm.$message.error(resp.data.message);
                     }
                 }).catch(reason => {
                     this.showErrorMsg(reason);
@@ -323,14 +325,15 @@
             // delete the row data
             handleDelete(row) {
                 this.$confirm("確認刪除該筆資料嗎? 刪除後無法復原","提示",{type: "warning"}).then(() =>{
+                    let vm = this;
                     axios.delete("/checkitems/" + row.id).then((resp) =>{
                         if (resp.data.flag){
-                            this.$message({
+                            vm.$message({
                                 type: "success",
                                 message: resp.data.message
                             });
                         } else {
-                            this.$message.error(resp.data.message);
+                            vm.$message.error(resp.data.message);
                         }
                     }).catch(reason => {
                         this.showErrorMsg(reason);
@@ -338,7 +341,7 @@
                         this.findPage();
                     });
                 }).catch(() =>{
-                    this.$message.info("取消操作");
+                    vm.$message.info("取消操作");
                 });
             }
         }

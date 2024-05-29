@@ -97,7 +97,7 @@
                 </executions>
                 <configuration>
                     <contextDirectory>${project.basedir}</contextDirectory>
-                    <repository>tommychung/health-project</repository>
+                    <repository>tommychung/health-provider</repository>
                     <tag>${project.version}</tag>
                     <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                     <buildArgs>

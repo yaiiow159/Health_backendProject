@@ -6,7 +6,6 @@ html, body {
     display: inline-block;
     height: 47px;
     width: 85%;
-
 }
 
 .login-container .input input {
@@ -142,15 +141,6 @@ html, body {
     height: 22px;
     display: inline-block;
 }
-
-.svg-container .user {
-    background: url(../img/user.png) no-repeat 0 50%;
-}
-
-.svg-container .username {
-    background: url(../img/pwd.png) no-repeat 0 50%;
-}
-
 
 .title {
     font-weight: bold;

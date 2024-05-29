@@ -33,4 +33,8 @@
     <select id="findMemberIdByUsername" resultType="java.lang.Integer">
         select id from t_member where name = #{username}
     </select>
+
+    <select id="findById" resultType="com.timmy.health.domain.Member">
+        select * from t_user where id = #{id}
+    </select>
 </mapper>

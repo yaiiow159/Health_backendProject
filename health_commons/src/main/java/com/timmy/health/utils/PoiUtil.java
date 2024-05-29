@@ -61,8 +61,8 @@ public class PoiUtil {
             for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) { //get the sheets that the workbook has
                 Sheet sheet = workbook.getSheetAt(sheetNum);
 
-                int firstRowNum = sheet.getFirstRowNum(); //the first row that has a data
-                int lastRowNum = sheet.getLastRowNum(); // the last row that has a data
+                int firstRowNum = sheet.getFirstRowNum();
+                int lastRowNum = sheet.getLastRowNum();
 
                 for (int rowNum = firstRowNum + 1; rowNum <= lastRowNum; rowNum++) {
 
@@ -70,7 +70,7 @@ public class PoiUtil {
                     if (null == row) continue;
 
                     int firstCellNum = row.getFirstCellNum();
-                    int lastCellNum = row.getPhysicalNumberOfCells(); //get the existing cells of number
+                    int lastCellNum = row.getPhysicalNumberOfCells();
                     String[] cells = new String[row.getPhysicalNumberOfCells()];
 
                     for (int cellNum = firstCellNum; cellNum < lastCellNum; cellNum++) {

@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>
- * Frontier Controller
- * </p>
- *
  * @author TimmyChung
  * @since 2022-04-23
  */
@@ -74,7 +70,7 @@ public class CheckgroupController {
         }
     }
 
-    @RequestMapping(value = "/getCheckGroupById",method = RequestMethod.GET)
+    @GetMapping("/getCheckGroupById")
     @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     public Result getCheckGroupById(Integer id) {
         try {
@@ -110,7 +106,6 @@ public class CheckgroupController {
 
     //find all checkgroups
     @GetMapping
-    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     public Result getAllCheckgroups(){
         try {
             List<CheckGroup> checkGroupList = checkgroupService.getAll();

@@ -38,7 +38,7 @@ public class MemberHealthStatusController {
             } else {
                 return new Result(false, MessageConstant.INSERT_MEMBER_HEALTH_STATUS_FAIL);
             }
-            memberHealthStatus.setMemberId(memberId);
+            memberHealthStatus.setMember_id(memberId);
             Integer result = memberHealthStatusService.addMemberHealthStatus(memberHealthStatus);
             if (result == 0) {
                 return new Result(false, MessageConstant.INSERT_MEMBER_HEALTH_STATUS_FAIL);

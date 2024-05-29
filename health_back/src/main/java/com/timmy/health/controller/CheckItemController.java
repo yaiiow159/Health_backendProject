@@ -39,9 +39,9 @@ public class CheckItemController {
     @PreAuthorize("hasAuthority('CHECKITEM_ADD')")
     public Result add(@RequestBody CheckItem checkItem) {
         if (checkItemService.save(checkItem)) {
-            return new Result(true, Optional.of(MessageConstant.ADD_CHECKITEM_SUCCESS));
+            return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);
         } else {
-            return new Result(false, Optional.of(MessageConstant.ADD_CHECKITEM_FAIL));
+            return new Result(false, MessageConstant.ADD_CHECKITEM_FAIL);
         }
     }
 
@@ -57,12 +57,12 @@ public class CheckItemController {
 
     //delete checkItem
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')") //if the user have the premisson the user can delete the checkitem
+    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")
     public Result deleteCheck(@PathVariable Integer id) {
         if (checkItemService.removeById(id)) {
-            return new Result(checkItemService.removeById(id), Optional.of(MessageConstant.DELETE_CHECKITEM_SUCCESS));
+            return new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS);
         } else {
-            return new Result(checkItemService.removeById(id), Optional.of(MessageConstant.DELETE_CHECKITEM_FAIL));
+            return new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL);
         }
     }
 
@@ -71,17 +71,17 @@ public class CheckItemController {
     @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     public Result getCheckItem(@PathVariable Integer id) {
         if (checkItemService.getById(id) != null) {
-            return new Result(true, checkItemService.getById(id));
+            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS,checkItemService.getById(id));
         } else {
-            return new Result(false, Optional.of("查無此結果"));
+            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL);
         }
     }
 
     //get all checkItems
     @GetMapping()
     public Result getAllCheckItems() {
-        List<CheckItem> checkItemList = checkItemService.getAllCheckItems();
         try {
+            List<CheckItem> checkItemList = checkItemService.getAllCheckItems();
             return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS, checkItemList);
         } catch (Exception e) {
             e.printStackTrace();

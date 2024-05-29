@@ -50,10 +50,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void editUser(User user) {
         UpdateWrapper<User> queryWrapper = new UpdateWrapper<>();
-        if (Objects.nonNull(user)) {
-            queryWrapper.set("password", "username");
-            userMapper.update(user, queryWrapper);
-        }
+        queryWrapper.eq("id",user.getId());
+        userMapper.update(user,queryWrapper);
     }
 
     @Override

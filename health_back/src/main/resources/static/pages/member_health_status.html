@@ -32,41 +32,41 @@
         </el-breadcrumb>
     </div>
     <div class="app-container">
-        <div class="box" style="height: 900px">
+        <div class="container" style="height: 900px">
             <div class="excelTitle" >
-                <el-button @click="exportExcel()" icon="el-icon-download">匯出</el-button>個人健檢報告
+                <el-button @click="exportExcel()" icon="el-icon-download">匯出</el-button>
                 <el-button @click="openHealthStatusDialog()" type="primary" icon="el-icon-edit">填寫受檢人資料</el-button>
             </div>
-            <div class="excelTime">日期：{{ Date.now().toLocaleString("zh-TW")}}</div>
-            <table class="exceTable" cellspacing="0" cellpadding="0">
+            <div class="tableTimer">日期：{{ reportData.reportDate }}</div>
+            <table class="table" cellspacing="0" cellpadding="0">
                 <tr>
                     <td colspan="4" class="headBody">健檢數據報告</td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="tabletrBg">受檢人姓名</td>
+                    <td colspan="2" class="tableBg">受檢人姓名</td>
                     <td colspan="2">{{reportData.memberName}}</td>
                 </tr>
                 <tr>
-                    <td width='20%' class="tabletrBg">身高</td>
+                    <td width='20%' class="tableBg">身高</td>
                     <td width='30%'>{{reportData.height}}</td>
-                    <td width='20%' class="tabletrBg">體重</td>
+                    <td width='20%' class="tableBg">體重</td>
                     <td width='30%'>{{reportData.weight}}</td>
                 </tr>
                 <tr>
-                    <td class="tabletrBg">BMI</td>
+                    <td class="tableBg">BMI</td>
                     <td>{{reportData.BMI}}</td>
-                    <td class="tabletrBg">BMR</td>
+                    <td class="tableBg">BMR</td>
                     <td>{{reportData.BMR}}</td>
                 </tr>
                 <tr>
-                    <td class="tabletrBg">體脂率</td>
+                    <td class="tableBg">體脂率</td>
                     <td>{{reportData.bodyFat}}</td>
-                    <td class="tabletrBg">建議攝取卡路里量</td>
+                    <td class="tableBg">建議攝取卡路里量</td>
                     <td>{{reportData.calorieIntake}}</td>
                 </tr>
                 <tr>
-                    <td class="tabletrBg" colspan="2">健康狀態</td>
-                    <td class="tabletrBg" colspan="2" :class="healthStatusClass">{{reportData.healthStatus}}</td>
+                    <td class="tableBg" colspan="2">健康狀態</td>
+                    <td class="tableBg" colspan="2" :class="healthStatusClass">{{reportData.healthStatus}}</td>
                 </tr>
             </table>
         </div>

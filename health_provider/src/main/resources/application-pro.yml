@@ -4,8 +4,8 @@ db:
   password: Timmy@870728
 
 redis:
-  host: redis-service
+  host: redis-service_redis
   password: 1234
 
 zookeeper:
-  host: zookeeper-node-1:2181?backup=zookeeper-node-2:2182,zookeeper-node-3:2183
+  host: zookeeper-cluster_zookeeper-node-1:2181?backup=zookeeper-cluster_zookeeper-node-2:2182,zookeeper-cluster_zookeeper-node-3:2183

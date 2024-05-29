@@ -55,10 +55,6 @@ dubbo:
     timeout: 30000
   scan:
     base-packages: com.timmy.health.service.impl
-  protocol:
-    server:
-      port: 38080
-    port: 30880
 #MyBatisPlus setting
 mybatis-plus:
   configuration:

@@ -22,7 +22,7 @@ import java.util.Set;
 public class User implements Serializable {
     @TableId
     private Integer id;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @TableField(value = "birthday")
     private Date birthday;
     @TableField(value = "gender")

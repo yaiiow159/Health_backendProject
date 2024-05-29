@@ -27,7 +27,6 @@
 .month {
     width: 100%;
     line-height: 3;
-    /* background: #00B8EC; */
 }
 
 .month ul {
@@ -99,7 +98,7 @@
 }
 
 .weekdays li:hover {
-    background-color: lightgreen;
+    background-color: lightskyblue;
     transition-duration: 5ms;
 }
 
@@ -196,18 +195,6 @@
     height: 140px;
     color: gainsboro;
     background: #f9f9f9;
-}
-
-/* .singlebtn {
-    font-size: 18px;
-}
-.mutiplebtn {
-    font-size: 18px;
-} */
-
-
-.filebox {
-    position: relative;
 }
 
 .el-card__body {
@@ -365,9 +352,9 @@
 }
 
 .front-month :hover{
-    box-shadow: gray;
+    box-shadow: rgb(128, 128, 128);
 }
 
 .next-month :hover{
-   box-shadow: gray;
+   box-shadow: rgb(128, 128, 128);
 }

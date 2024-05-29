@@ -8,7 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -16,14 +18,16 @@ import java.nio.file.Paths;
 public class GoogleFileUtil {
 
     private static final String BUCKET_NAME = "health_pictures";
-    private static final String KEY_FOR_ACCESS = "src/main/resources/json/key_for_access.json";
     private static final String GCP_URL = "https://www.googleapis.com/auth/cloud-platform";
 
 
     private static GoogleCredentials getGoogleAccess() throws IOException {
-        return GoogleCredentials
-                .fromStream(new FileInputStream(KEY_FOR_ACCESS))
-                .createScoped(Lists.newArrayList((GCP_URL)));
+        try (InputStream is = GoogleFileUtil.class.getClassLoader().getResourceAsStream("json/key_for_access.json")) {
+            if (is == null) {
+                throw new FileNotFoundException("找不到該文件");
+            }
+            return GoogleCredentials.fromStream(is).createScoped(Lists.newArrayList((GCP_URL)));
+        }
     }
 
     // get the storage

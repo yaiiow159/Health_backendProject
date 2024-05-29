@@ -24,13 +24,16 @@
         delete from t_role_permission where role_id = #{id}
     </delete>
 
+
     <insert id="insertRoleAndPermission" parameterType="java.util.List">
         insert into t_role_permission (role_id, permission_id)
         values
         <foreach collection="list" item="item" separator=",">
             (#{item.roleId}, #{item.permissionId})
         </foreach>
+        on duplicate key update role_id = VALUES(role_id), permission_id = VALUES(permission_id)
     </insert>
+
 
     <insert id="save" parameterType="com.timmy.health.domain.Role" useGeneratedKeys="true" keyProperty="id">
         insert into t_role(name, keyword, description) values(#{name},#{keyword},#{description})

@@ -44,15 +44,15 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1 class="order_manage">預約管理<small class="check_manage">檢查組管理</small></h1>
+        <h1 class="manage">預約管理<small class="check_manage">健檢組管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
             <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_title">預約管理</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_setting">檢查組別管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="title">預約管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="setting">健檢組合管理</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
-        <div class="box">
+        <div class="container">
             <div class="filter-container">
                 <el-input placeholder="代碼" v-model="pagination.code" style="width: 15%;"
                           class="filter-item"></el-input>
@@ -65,8 +65,8 @@
             </div>
             <el-table size="small" currrent-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序號"></el-table-column>
-                <el-table-column prop="code" label="檢查組編號" align="center"></el-table-column>
-                <el-table-column prop="name" label="檢查組名稱" align="center"></el-table-column>
+                <el-table-column prop="code" label="健檢組編號" align="center"></el-table-column>
+                <el-table-column prop="name" label="健檢組名稱" align="center"></el-table-column>
                 <el-table-column label="適用性別" align="center">
                     <template slot-scope="scope">
                         <span>{{ scope.row.sex === '0' ? '不限' : scope.row.sex === '1' ? '男' : '女'}}</span>
@@ -93,7 +93,7 @@
             </div>
             <!-- 新增標簽彈層 -->
             <div class="add-form">
-                <el-dialog title="新增檢查組別" :visible.sync="dialogFormVisible">
+                <el-dialog title="新增健檢組合" :visible.sync="dialogFormVisible">
                     <template>
                         <el-tabs v-model="activeName" type="card">
                             <el-tab-pane label="基本信息" name="first">
@@ -142,8 +142,8 @@
                                     </el-row>
                                 </el-form>
                             </el-tab-pane>
-                            <el-tab-pane label="檢查項信息" name="second">
-                                <div class="checkScrol">
+                            <el-tab-pane label="健檢項信息" name="second">
+                                <div class="checkScroll">
                                     <table class="datatable">
                                         <thead>
                                         <tr>
@@ -154,15 +154,16 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="c in tableData">
+                                        <tr v-for="checkGroup in tableData">
                                             <td>
                                                 <label>
-                                                    <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
+                                                    <input :id="checkGroup.id" v-model="checkitemIds" type="checkbox" :value="checkGroup.id">
                                                 </label>
                                             </td>
-                                            <td><label :for="c.id">{{c.code}}</label></td>
-                                            <td><label :for="c.id">{{c.name}}</label></td>
-                                            <td><label :for="c.id">{{c.remark}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.code}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.name}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.remark}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.remark}}</label></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -179,7 +180,7 @@
 
             <!-- 編輯標簽彈層 -->
             <div class="edit-form">
-                <el-dialog title="編輯檢查組" :visible.sync="dialogFormVisible4Edit">
+                <el-dialog title="編輯健檢組" :visible.sync="dialogFormVisible4Edit">
                     <template>
                         <el-tabs v-model="activeName" type="card">
                             <el-tab-pane label="基本信息" name="first">
@@ -228,8 +229,8 @@
                                     </el-row>
                                 </el-form>
                             </el-tab-pane>
-                            <el-tab-pane label="檢查項信息" name="second">
-                                <div class="checkScrol">
+                            <el-tab-pane label="健檢項信息" name="second">
+                                <div class="checkScroll">
                                     <table class="datatable">
                                         <thead>
                                         <tr>
@@ -240,15 +241,16 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="c in tableData">
+                                        <tr v-for="checkGroup in tableData">
                                             <td>
                                                 <label>
-                                                    <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
+                                                    <input :id="checkGroup.id" v-model="checkitemIds" type="checkbox" :value="checkGroup.id">
                                                 </label>
                                             </td>
-                                            <td><label :for="c.id">{{c.code}}</label></td>
-                                            <td><label :for="c.id">{{c.name}}</label></td>
-                                            <td><label :for="c.id">{{c.remark}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.code}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.name}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.remark}}</label></td>
+                                            <td><label :for="checkGroup.id">{{checkGroup.remark}}</label></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -282,8 +284,8 @@
             },
             dataList: [],//list data
             formData: {},//form data
-            tableData: [],//新增和編輯表單中對應的檢查項列表數據
-            checkitemIds: [],//新增和編輯表單中檢查項對應的復選框
+            tableData: [],//新增和編輯表單中對應的健檢項列表數據
+            checkitemIds: [],//新增和編輯表單中健檢項對應的復選框
             dialogFormVisible: false,//控制添加窗口顯示隱藏
             dialogFormVisible4Edit: false//控制編輯窗口顯示/隱藏
         },
@@ -304,7 +306,10 @@
                     } else {
                         this.$message().error(resp.data.message);
                     }
-                }).finally(()=> {
+                }).catch((error)=> {
+                    this.$message().error(error.data.message);
+                })
+                    .finally(()=> {
                     this.findPage();
                 });
             },
@@ -319,7 +324,9 @@
                     } else {
                         this.$message().error(resp.data.message);
                     }
-                }).finally(() => {
+                }).catch((error) => {
+                    this.$message().error(error.data.message);
+                 }).finally(() => {
                     this.dialogFormVisible = false;
                     this.findPage();
                 });
@@ -363,6 +370,8 @@
                     } else {
                         this.$message().error(resp.data.message);
                     }
+                }).catch((error) => {
+                    this.$message().error(error.data.message);
                 });
                 axios.get("/checkitems").then((resp) => {
                     if (resp.data.flag) {

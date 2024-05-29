@@ -22,15 +22,15 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1 class="order_manage">預約管理<small class="check_manage">檢查專案管理</small></h1>
+        <h1 class="manage">預約管理<small class="check_manage">健檢專案管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
             <el-breadcrumb-item :to="{ path: '/' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_title">預約管理</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_setting">預約項目管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="title">預約管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="setting">預約項目管理</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
-        <div class="box">
+        <div class="container">
             <div class="filter-container">
                 <el-input placeholder="會員ID" v-model="pagination.memberId" style="width: 200px;" class="filter-item"></el-input>
                 <el-date-picker placeholder="預約日期" v-model="pagination.orderDate" type="date" value-format="yyyy-MM-dd" style="width: 200px;" class="filter-item"></el-date-picker>
@@ -50,10 +50,19 @@
                 <el-table-column prop="memberId" label="會員ID" align="center"></el-table-column>
                 <el-table-column prop="orderDate" label="預約日期" align="center"></el-table-column>
                 <el-table-column prop="orderType" label="預約類型" align="center"></el-table-column>
-                <el-table-column prop="orderStatus" label="預約狀態" align="center"></el-table-column>
+                <el-table-column prop="orderStatus" label="預約狀態" align="center">
+                    <template slot-scope="scope">
+                        <el-tag type="success" v-if="scope.row.orderStatus === '已到診'">
+                            已到診
+                        </el-tag>
+                        <el-tag type="danger" v-if="scope.row.orderStatus === '未到診' || scope.row.orderStatus === null">
+                            未到診
+                        </el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="handleSearch(scope.row)">查看</el-button>
+                        <el-button type="secondary" size="mini" @click="handleSearch(scope.row)">查看</el-button>
                         <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.row)">刪除</el-button>
                     </template>
@@ -76,19 +85,19 @@
                         <el-row>
                             <el-col :span="12">
                                 <el-form-item label="會員ID" prop="memberId">
-                                    <el-input v-model="formData.memberId" type="number"></el-input>
+                                    <el-input readonly="readonly" v-model="formData.memberId" type="number"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
                                 <el-form-item label="預約日期" prop="orderDate">
-                                    <el-date-picker v-model="formData.orderDate" type="date" placeholder="選擇日期"></el-date-picker>
+                                    <el-date-picker readonly="readonly" v-model="formData.orderDate" type="date" placeholder="選擇日期"></el-date-picker>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="24">
                                 <el-form-item label="預約類型" prop="orderType">
-                                    <el-select v-model="formData.orderType" placeholder="選擇預約類型">
+                                    <el-select readonly="readonly" v-model="formData.orderType" placeholder="選擇預約類型">
                                         <el-option label="電話預約" value="電話預約"></el-option>
                                         <el-option label="手機預約" value="手機預約"></el-option>
                                     </el-select>
@@ -99,7 +108,7 @@
                             <el-col :span="24">
                                 <el-form-item label="選擇套餐" prop="setmealId">
                                     <el-select v-model="setmealIds" placeholder="選擇套餐" @change="fetch">
-                                        <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
+                                        <el-option readonly="readonly" v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
@@ -107,12 +116,12 @@
                     </el-form>
                     <el-tabs v-model="activeTab" class="setmeal-tabs">
                         <el-tab-pane label="套餐詳情" name="setmeal">
-                            <p>套餐名稱: {{ setmeal.name }}</p>
-                            <p>套餐代碼: {{ setmeal.code }}</p>
-                            <p>幫助代碼: {{ setmeal.helpCode }}</p>
-                            <p>套餐備註: {{ setmeal.remark }}</p>
-                            <p>套餐價格: {{ setmeal.price }}</p>
-                            <p>適用年齡: {{ setmeal.age }}</p>
+                            <p>套餐名稱: {{ setmealDetail.name }}</p>
+                            <p>套餐代碼: {{ setmealDetail.code }}</p>
+                            <p>幫助代碼: {{ setmealDetail.helpCode }}</p>
+                            <p>套餐備註: {{ setmealDetail.remark }}</p>
+                            <p>套餐價格: {{ setmealDetail.price }}</p>
+                            <p>適用年齡: {{ setmealDetail.age }}</p>
                         </el-tab-pane>
                     </el-tabs>
                     <div slot="footer" class="dialog-footer">
@@ -129,64 +138,7 @@
                         <el-row>
                             <el-col :span="12">
                                 <el-form-item label="會員ID" prop="memberId">
-                                    <el-select v-model="memberId" placeholder="選擇成員">
-                                        <el-option v-for="member in members" :key="member.id" :label="member.name" :value="member.id">
-
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="預約日期" prop="orderDate">
-                                    <el-date-picker v-model="formData.orderDate" type="date" placeholder="選擇日期"></el-date-picker>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="預約類型" prop="orderType">
-                                    <el-select v-model="formData.orderType" placeholder="選擇預約類型">
-                                        <el-option label="電話預約" value="電話預約"></el-option>
-                                        <el-option label="手機預約" value="手機預約"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="選擇套餐" prop="setmealId">
-                                    <el-select v-model="setmealIds" placeholder="選擇套餐" @change="fetchSetmealsDetail(setmealIds)">
-                                        <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                    </el-form>
-                    <el-tabs v-model="activeTab" class="setmeal-tabs">
-                        <el-tab-pane label="套餐詳情" name="setmeal">
-                            <p>套餐名稱: {{ setmeal.name }}</p>
-                            <p>套餐代碼: {{ setmeal.code }}</p>
-                            <p>幫助代碼: {{ setmeal.helpCode }}</p>
-                            <p>套餐備註: {{ setmeal.remark }}</p>
-                            <p>套餐價格: {{ setmeal.price }}</p>
-                            <p>適用年齡: {{ setmeal.age }}</p>
-                        </el-tab-pane>
-                    </el-tabs>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="dialogFormVisible = false">取消</el-button>
-                        <el-button type="primary" @click="handleAdd()">確定</el-button>
-                    </div>
-                </el-dialog>
-            </div>
-
-            <!-- 編輯標籤彈層 -->
-            <div class="edit-form">
-                <el-dialog title="編輯預約" :visible.sync="dialogFormVisible4Edit">
-                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="top" label-width="100px">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="會員ID" prop="memberId">
-                                    <el-select v-model="memberId" placeholder="選擇成員">
+                                    <el-select v-model="formData.memberId" placeholder="選擇成員">
                                         <el-option v-for="member in members" :key="member.id" :label="member.name" :value="member.id"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -209,8 +161,83 @@
                         </el-row>
                         <el-row>
                             <el-col :span="24">
+                                <el-form-item label="預約狀態" prop="orderStatus">
+                                    <el-select readonly="readonly" v-model="formData.orderStatus" placeholder="選擇預約狀態">
+                                        <el-option label="已到診" value="已到診"></el-option>
+                                        <el-option label="未到診" value="未到診" selected></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
                                 <el-form-item label="選擇套餐" prop="setmealId">
-                                    <el-select v-model="setmealIds" placeholder="選擇套餐" @change="fetchSetmealsDetail(setmealIds)">
+                                    <el-select v-model="setmealIds" placeholder="選擇套餐" @change="fetchSetmealsDetail">
+                                        <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <el-tabs v-model="activeTab" class="setmeal-tabs">
+                        <el-tab-pane label="套餐詳情" name="setmeal">
+                            <p>套餐名稱: {{ setmealDetail.name }}</p>
+                            <p>套餐代碼: {{ setmealDetail.code }}</p>
+                            <p>幫助代碼: {{ setmealDetail.helpCode }}</p>
+                            <p>套餐備註: {{ setmealDetail.remark }}</p>
+                            <p>套餐價格: {{ setmealDetail.price }}</p>
+                            <p>適用年齡: {{ setmealDetail.age }}</p>
+                        </el-tab-pane>
+                    </el-tabs>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取消</el-button>
+                        <el-button type="primary" @click="handleAdd()">確定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+            <!-- 編輯標籤彈層 -->
+            <div class="edit-form">
+                <el-dialog title="編輯預約" :visible.sync="dialogFormVisible4Edit">
+                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="top" label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="會員ID" prop="memberId">
+                                    <el-select v-model="formData.memberId" placeholder="選擇成員">
+                                        <el-option v-for="member in members" :key="member.id" :label="member.name" :value="member.id"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="預約日期" prop="orderDate">
+                                    <el-date-picker v-model="formData.orderDate" type="date" placeholder="選擇日期"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="預約類型" prop="orderType">
+                                    <el-select v-model="formData.orderType" placeholder="選擇預約類型">
+                                        <el-option label="電話預約" value="電話預約"></el-option>
+                                        <el-option label="手機預約" value="手機預約"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="預約狀態" prop="orderStatus">
+                                    <el-select v-model="formData.orderStatus" placeholder="選擇預約狀態">
+                                        <el-option label="已到診" value="已到診"></el-option>
+                                        <el-option label="未到診" value="未到診"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="選擇套餐" prop="setmealId">
+                                    <el-select v-model="setmealIds" placeholder="選擇套餐" @change="fetchSetmealsDetail">
                                         <el-option v-for="setmeal in setmeals" :key="setmeal.id" :label="setmeal.name" :value="setmeal.id"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -219,12 +246,12 @@
                     </el-form>
                     <el-tabs v-model="activeTab" class="setmeal-tabs">
                         <el-tab-pane label="套餐详情" name="setmeal">
-                            <p>套餐名稱: {{ setmeal.name }}</p>
-                            <p>套餐代碼: {{ setmeal.code }}</p>
-                            <p>幫助代碼: {{ setmeal.helpCode }}</p>
-                            <p>套餐備註: {{ setmeal.remark }}</p>
-                            <p>套餐價格: {{ setmeal.price }}</p>
-                            <p>適用年齡: {{ setmeal.age }}</p>
+                            <p>套餐名稱: {{ setmealDetail.name }}</p>
+                            <p>套餐代碼: {{ setmealDetail.code }}</p>
+                            <p>幫助代碼: {{ setmealDetail.helpCode }}</p>
+                            <p>套餐備註: {{ setmealDetail.remark }}</p>
+                            <p>套餐價格: {{ setmealDetail.price }}</p>
+                            <p>適用年齡: {{ setmealDetail.age }}</p>
                         </el-tab-pane>
                     </el-tabs>
                     <div slot="footer" class="dialog-footer">
@@ -255,7 +282,7 @@
                 orderStatus: "",
                 orderType: "",
             },
-            activeTab: "0",
+            activeTab: "setmeal",
             members: [],
             setmealIds: null,
             setmealDetail: {},
@@ -410,7 +437,7 @@
                         this.setmealDetail = resp.data.data;
                     }
                 }).catch(error => {
-                    console.error('獲取套餐詳細訊息失敗:', error);
+                    console.log(error.message);
                     this.setmealDetail = {};
                 });
             },

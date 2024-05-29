@@ -3,10 +3,7 @@ package com.timmy.health.controller;
 
 import com.timmy.health.constant.MessageConstant;
 import com.timmy.health.entity.Result;
-import com.timmy.health.service.MemberService;
-import com.timmy.health.service.ReportService;
-import com.timmy.health.service.SetMealService;
-import com.timmy.health.service.UserService;
+import com.timmy.health.service.*;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
@@ -51,11 +49,14 @@ public class ReportController {
     @DubboReference(interfaceClass = UserService.class)
     private UserService userService;
 
+    @DubboReference(interfaceClass = ExcelGenerator.class)
+    private ExcelGenerator excelGenerator;
+
     @GetMapping("/getMemberReport")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
     public Result getMemberReport(){
         Map<String,Object> map = new HashMap<>();
-        List<String> months = new ArrayList();
+        List<String> months = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH,-12);
         for(int i=0;i<12;i++){
@@ -116,7 +117,30 @@ public class ReportController {
         }
     }
 
-    //导出运营数据
+    @GetMapping("/exportMemberHealthStatusReport")
+    @PreAuthorize("hasAuthority('REPORT_VIEW')")
+    public Result exportMemberHealthStatusReport(HttpServletRequest request, HttpServletResponse response){
+        try{
+            String username = (String) SecurityContextHolder.getContext().getAuthentication().getName();
+            Integer memberId = memberService.findMemberIdByUsername(username);
+            if(null == memberId){
+                memberId = userService.findUserIdByUsername(username);
+            }
+            Map<String,Object> data = reportService.getMemberHealthReportData(memberId);
+            ByteArrayInputStream excelByteArrayStream = excelGenerator.generateExcel(data);
+
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("content-Disposition", "attachment;filename=healthStatus.xlsx");
+            OutputStream out = response.getOutputStream();
+            out.write(excelByteArrayStream.readAllBytes());
+            out.flush();
+            out.close();
+            return null;
+        }catch (Exception e){
+            return new Result(false,MessageConstant.GET_MEMBER_HEALTH_REPORT_FAIL);
+        }
+    }
+
     @GetMapping("/exportBusinessReport")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
     public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response){

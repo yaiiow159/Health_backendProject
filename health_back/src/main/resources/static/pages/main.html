@@ -128,8 +128,8 @@
                      label-width="100px">
                 <el-row>
                     <el-col :span="12" >
-                        <el-form-item label="姓名:" prop="name">
-                            <el-input v-model="user.name" style="width: 100%"></el-input>
+                        <el-form-item label="姓名:" prop="username">
+                            <el-input v-model="user.username" style="width: 100%"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -235,19 +235,19 @@
                         },
                         {
                             "path": "/3-3",
-                            "title": "高級配套管理",
+                            "title": "健檢套餐管理",
                             "linkUrl":"setmeal.html",
                             "children":[]
                         },
                         {
                             "path": "/3-4",
-                            "title": "檢查配套管理",
+                            "title": "健檢組合管理",
                             "linkUrl":"checkgroup.html",
                             "children":[]
                         },
                         {
                             "path": "/3-5",
-                            "title": "檢查項目管理",
+                            "title": "健檢項目管理",
                             "linkUrl":"checkitem.html",
                             "children":[]
                         },
@@ -406,7 +406,10 @@
                 this.resetUserList();
             },
             sendCheckForLogin(){
-                axios.put("/users/changePassword",this.user).then((resp)=>{
+                axios.put("/users/changePassword",{
+                    username: this.user.username,
+                    password: this.user.password
+                }).then((resp)=>{
                     if(resp.data.flag){
                         this.$message({
                            type: "success",

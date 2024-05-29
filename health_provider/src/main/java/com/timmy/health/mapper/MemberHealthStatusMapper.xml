@@ -5,6 +5,6 @@
 <mapper namespace="com.timmy.health.mapper.MemberHealthStatusMapper">
 
     <select id="findByMemberId" resultType="com.timmy.health.domain.MemberHealthStatus">
-        select * from t_member_health_status where memberId = #{memberId}
+        select * from t_member_health_status where member_id = #{memberId}
     </select>
 </mapper>

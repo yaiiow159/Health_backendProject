@@ -28,7 +28,7 @@ public class MemberHealthStatus implements Serializable {
 
     @TableField(value = "member_id")
     // 會員編號
-    private Integer memberId;
+    private Integer member_id;
 
     @TableField(value = "age")
     private Integer age;

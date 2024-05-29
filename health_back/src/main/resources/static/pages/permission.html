@@ -15,26 +15,26 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1 class="order_manage">系統配置<small class="check_manage">權限管理</small></h1>
+        <h1 class="manage">系統配置<small class="check_manage">權限管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
             <el-breadcrumb-item :to="{ path: '/main.html' }"><span class="top_pages">首頁</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_manage">系統配置</span></el-breadcrumb-item>
-            <el-breadcrumb-item><span class="order_title">權限管理</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="manage">系統配置</span></el-breadcrumb-item>
+            <el-breadcrumb-item><span class="title">權限管理</span></el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
-        <div class="box">
+        <div class="container">
             <div class="filter-container">
-                <el-input placeholder="角色名稱" v-model="pagination.name" style="width: 17%;"
+                <el-input placeholder="權限名稱" v-model="pagination.name" style="width: 17%;"
                           class="filter-item"></el-input>
-                <el-input placeholder="角色關鍵字" v-model="pagination.keyword" style="width: 17%;"
+                <el-input placeholder="權限關鍵字" v-model="pagination.keyword" style="width: 17%;"
                           class="filter-item"></el-input>
                 <el-button @click="findPage()" class="dalfBut">查詢</el-button>
                 <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
             </div>
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序號"></el-table-column>
-                <el-table-column prop="name" label="角色名稱" align="center"></el-table-column>
+                <el-table-column prop="name" label="權限名稱" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="關鍵字" align="center"></el-table-column>
                 <el-table-column prop="description" label="描述" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
@@ -56,17 +56,17 @@
             </div>
             <!-- 新增標簽彈層 -->
             <div class="add-form">
-                <el-dialog title="新增角色" :visible.sync="dialogFormVisible">
+                <el-dialog title="新增權限" :visible.sync="dialogFormVisible">
                     <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="角色名稱" prop="name">
+                                <el-form-item label="權限名稱" prop="name">
                                     <el-input v-model="formData.name"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="角色關鍵字" prop="keyword">
+                                <el-form-item label="權限關鍵字" prop="keyword">
                                     <el-input v-model="formData.keyword"></el-input>
                                 </el-form-item>
                             </el-col>
@@ -88,17 +88,17 @@
 
             <!-- 編輯標簽彈層 -->
             <div class="add-form">
-                <el-dialog title="編輯角色" :visible.sync="dialogFormVisible4Edit">
+                <el-dialog title="編輯權限" :visible.sync="dialogFormVisible4Edit">
                     <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="角色名稱" prop="name">
+                                <el-form-item label="權限名稱" prop="name">
                                     <el-input v-model="formData.name"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="角色關鍵字" prop="keyword">
+                                <el-form-item label="權限關鍵字" prop="keyword">
                                     <el-input v-model="formData.keyword"></el-input>
                                 </el-form-item>
                             </el-col>

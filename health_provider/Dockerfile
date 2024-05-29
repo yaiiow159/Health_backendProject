@@ -11,8 +11,8 @@ WORKDIR /usr/app
 ENV TZ=Asia/Taipei
 ENV JAVA_OPTS="-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"
 
-COPY ./target/${JAR_FILE} /usr/app/health_provider.jar
+COPY ${JAR_FILE} /usr/app/health_provider.jar
 
-EXPOSE 81
+EXPOSE 8081:8081
 
 CMD java ${JAVA_OPTS} -jar /usr/app/health_provider.jar

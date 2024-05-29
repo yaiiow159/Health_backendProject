@@ -8,4 +8,4 @@ redis:
   password: null
 
 zookeeper:
-  host: localhost:2181
+  host: localhost:2181?backup=localhost:2182,localhost:2183

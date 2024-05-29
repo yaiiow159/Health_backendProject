@@ -97,15 +97,23 @@ public class ReportServiceImpl implements ReportService {
         result.put("BMI",BMI);
         // 計算BMR
         double BMR = 0;
-        Member member = memberMapper.selectById(memberId);
+        Member member = memberMapper.findById(memberId);
         User user = null;
         if(null == member){
-            user  = userMapper.selectById(memberId);
+            user  = userMapper.findById(memberId);
         }
-        if("1".equals(member.getSex()) || "1".equals(user.getGender())){
+        if(null != member && "男".equals(member.getSex())){
             BMR = 66 + (13.7 * memberHealthStatus.getWeight()) + (5 * memberHealthStatus.getHeight()) - (6.8 * memberHealthStatus.getAge());
         } else{
             BMR = 665 + (9.6 * memberHealthStatus.getWeight()) + (1.8 * memberHealthStatus.getHeight()) - (4.7 * memberHealthStatus.getAge());
+        }
+        // 如果member 為null 比對user
+        if(null != user && null != user.getGender()){
+            if("男".equals(user.getGender())){
+                BMR = 66 + (13.7 * memberHealthStatus.getWeight()) + (5 * memberHealthStatus.getHeight()) - (6.8 * memberHealthStatus.getAge());
+            } else{
+                BMR = 665 + (9.6 * memberHealthStatus.getWeight()) + (1.8 * memberHealthStatus.getHeight()) - (4.7 * memberHealthStatus.getAge());
+            }
         }
         result.put("BMR",BMR);
         // 計算卡路里建議攝取量
@@ -113,8 +121,8 @@ public class ReportServiceImpl implements ReportService {
         result.put("calorieIntake",calorieIntake);
 
         // 計算dobyFat
-        double bodyFat = (BMR - memberHealthStatus.getCalorieIntake()) / BMR * 100;
-        result.put("bodyFat",bodyFat);
+        //double bodyFat = (BMR - calorieIntake) / BMR * 100;
+        result.put("bodyFat", "暫時無法測量");
 
         // 計算健康狀態
         String healthStatus = "";
