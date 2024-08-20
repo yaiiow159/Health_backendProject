@@ -356,7 +356,9 @@
             getMenuList() {
                 axios.get("/menus/getMenuList").then((resp) => {
                     if (resp.data.flag) {
-                        this.menus = resp.data.data;
+                        if(resp.data.data.length > 0){
+                            this.menus = resp.data.data;
+                        }
                     } else {
                         this.$message().error(resp.data.message);
                     }

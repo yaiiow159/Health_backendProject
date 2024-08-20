@@ -24,7 +24,6 @@ import java.util.Map;
  * @createDate 2022-04-17 02:59:38
  */
 @DubboService(interfaceClass = CheckgroupService.class)
-@Transactional
 public class CheckgroupServiceImpl extends ServiceImpl<CheckgroupMapper, CheckGroup> implements CheckgroupService {
 
     @Autowired

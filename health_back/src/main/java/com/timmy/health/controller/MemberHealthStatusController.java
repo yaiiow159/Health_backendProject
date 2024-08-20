@@ -33,8 +33,8 @@ public class MemberHealthStatusController {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             Integer memberId = memberService.findMemberIdByUsername(username);
-            if(memberId == null) {
-                memberId =  userService.findUserIdByUsername(username);
+            if (memberId == null) {
+                memberId = userService.findUserIdByUsername(username);
             } else {
                 return new Result(false, MessageConstant.INSERT_MEMBER_HEALTH_STATUS_FAIL);
             }

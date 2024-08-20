@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 
-@Transactional
 @DubboService(interfaceClass = PerMissionService.class)
 public class PerMissionServiceImpl extends ServiceImpl<PermissionMapper,Permission> implements PerMissionService {
 

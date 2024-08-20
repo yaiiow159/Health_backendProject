@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 
 @DubboService(interfaceClass = MemberService.class)
-@Transactional
 public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> implements MemberService {
 
     @Autowired

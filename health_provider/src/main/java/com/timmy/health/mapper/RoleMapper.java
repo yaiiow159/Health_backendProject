@@ -31,5 +31,5 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     List<Role> getRoleList(Role role);
 
-    IPage<Role> getPages(Page<Role> page, Role role);
+    IPage<Role> getPages(Role role);
 }

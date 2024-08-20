@@ -78,6 +78,7 @@ public class MenuController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('MENU_ADD')")
     public Result add(@RequestBody Menu menu) {
         try {
             if (menuService.add(menu) > 0) {
@@ -92,6 +93,7 @@ public class MenuController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('MENU_EDIT')")
     public Result edit(@RequestBody Menu menu) {
         try {
             menuService.edit(menu);
@@ -103,6 +105,7 @@ public class MenuController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('MENU_DELETE')")
     public Result delete(@PathVariable("id") Integer id) {
         if (menuService.delete(id) > -1) {
             return new Result(true, MessageConstant.DELETE_MENU_SUCCESS);

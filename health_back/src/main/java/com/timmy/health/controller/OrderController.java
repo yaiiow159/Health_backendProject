@@ -8,6 +8,7 @@ import com.timmy.health.entity.Result;
 import com.timmy.health.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -46,6 +47,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ORDER_ADD')")
     public Result addOrder(@RequestBody Order order) {
         try {
             if(orderService.addOrder(order) == 0){
@@ -58,6 +60,7 @@ public class OrderController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('ORDER_EDIT')")
     public Result editOrder(@RequestBody Order order) {
         try {
             if(orderService.editOrder(order) == 0){
@@ -70,6 +73,7 @@ public class OrderController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('ORDER_DELETE')")
     public Result deleteOrder(@PathVariable("id") Integer id) {
         try {
             if(orderService.deleteOrder(id) == 0){

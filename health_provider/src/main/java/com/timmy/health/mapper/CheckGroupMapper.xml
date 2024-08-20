@@ -20,12 +20,12 @@
     <update id="edit" parameterType="com.timmy.health.domain.CheckGroup">
         UPDATE t_checkgroup
         <set>
-                <if test="name != null">name = #{name},</if>
-                <if test="code != null">code = #{code},</if>
-                <if test="helpCode != null">helpCode = #{helpCode},</if>
-                <if test="sex != null">sex = #{sex},</if>
-                <if test="remark != null">remark = #{remark},</if>
-                <if test="attention != null">attention = #{attention},</if>
+                <if test="name != null and name != ''">name = #{name},</if>
+                <if test="code != null and code != ''" >code = #{code},</if>
+                <if test="helpCode != null and helpCode != ''">helpCode = #{helpCode},</if>
+                <if test="sex != null and sex != ''">sex = #{sex},</if>
+                <if test="remark != null and remark != ''">remark = #{remark},</if>
+                <if test="attention != null and attention != ''">attention = #{attention},</if>
         </set>
         WHERE id = #{id}
     </update>

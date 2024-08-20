@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @DubboService(interfaceClass = MenuService.class)
-@Transactional
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
     @Autowired
@@ -44,8 +43,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         // 先查詢初當前選單
         Menu menu = menuMapper.findById(id);
         // 獲取上層選單
-        Menu parentMenu = menuMapper.findByParentMenuId(menu.getParentMenuId());
-        return parentMenu;
+        return menuMapper.findByParentMenuId(menu.getParentMenuId());
     }
 
     @Override
@@ -70,31 +68,36 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<Menu> getMenuList() {
-        List<Menu> menuList = menuMapper.findAllMenus();
-//        Map<Integer, Menu> menuMap = new HashMap<>();
-//        menuList.forEach(menu -> {
-//            menuMap.put(menu.getId(), menu);
-//        });
-//        List<Menu> menuTree = new ArrayList<>();
-//        menuList.forEach(menu -> {
-//            if (menu.getParentMenuId() == 0) {
-//                menuTree.add(menu);
-//            } else {
-//                Menu parentMenu = menuMap.get(menu.getParentMenuId());
-//                parentMenu.getChildren().add(menu);
-//            }
-//        });
-//        // 按照Path順序 排序菜單
-//        menuTree.forEach(this::sortMenuChildren);
-        return menuList;
+        List<Menu> allMenus = menuMapper.findAllMenus();
+        return buildMenuTree(allMenus);
     }
 
-    private void sortMenuChildren(Menu menu) {
-        if (menu.getChildren().isEmpty()) {
-            return;
+    private List<Menu> buildMenuTree(List<Menu> allMenus) {
+        List<Menu> rootMenus = new ArrayList<>();
+        Map<Integer, Menu> menuMap = new HashMap<>();
+
+        // 將所有菜單存入 Map 方便查找
+        for (Menu menu : allMenus) {
+            menuMap.put(menu.getId(), menu);
         }
-        menu.getChildren().sort(Comparator.comparing(Menu::getPath));
-        menu.getChildren().forEach(this::sortMenuChildren);
+
+        // 組建樹狀結構
+        for (Menu menu : allMenus) {
+            if (menu.getParentMenuId() == null) {
+                rootMenus.add(menu);
+                // 針對 path 進行排序
+                rootMenus.sort(Comparator.comparing(Menu::getPath));
+            } else {
+                Menu parent = menuMap.get(menu.getParentMenuId());
+                if (parent != null) {
+                    parent.getChildren().add(menu);
+                    // 針對 path 進行排序
+                    parent.getChildren().sort(Comparator.comparing(Menu::getPath));
+                }
+            }
+        }
+        return rootMenus;
     }
+
 
 }

@@ -5,7 +5,6 @@ import com.timmy.health.constant.MessageConstant;
 import com.timmy.health.entity.Result;
 import com.timmy.health.service.*;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -28,8 +26,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 @RestController
@@ -54,79 +50,79 @@ public class ReportController {
 
     @GetMapping("/getMemberReport")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
-    public Result getMemberReport(){
-        Map<String,Object> map = new HashMap<>();
+    public Result getMemberReport() {
+        Map<String, Object> map = new HashMap<>();
         List<String> months = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH,-12);
-        for(int i=0;i<12;i++){
-            calendar.add(Calendar.MONTH,1);
+        calendar.add(Calendar.MONTH, -12);
+        for (int i = 0; i < 12; i++) {
+            calendar.add(Calendar.MONTH, 1);
             Date date = calendar.getTime();
             months.add(new SimpleDateFormat("yyyy-MM").format(date));
         }
         List<Integer> memberCount = memberService.findMemberCountByMonths(months);
-        map.put("memberCount",memberCount);
-        return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS,map);
+        map.put("memberCount", memberCount);
+        return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS, map);
     }
 
     @GetMapping("/getSetmealReport")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
-    public Result getSetmealReport(){
-        Map<String,Object> data = new HashMap<>();
-        try{
-            List<Map<String,Object>> setmealCount = setmealService.findSetmealCount();
-            data.put("setmealCount",setmealCount);
+    public Result getSetmealReport() {
+        Map<String, Object> data = new HashMap<>();
+        try {
+            List<Map<String, Object>> setmealCount = setmealService.findSetmealCount();
+            data.put("setmealCount", setmealCount);
 
             List<String> setmealNames = new ArrayList<>();
             for (Map<String, Object> map : setmealCount) {
                 String name = (String) map.get("name");
                 setmealNames.add(name);
             }
-            data.put("setmealNames",setmealNames);
-            return new Result(true,MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS,data);
-        }catch (Exception e){
+            data.put("setmealNames", setmealNames);
+            return new Result(true, MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS, data);
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.GET_SETMEAL_COUNT_REPORT_FAIL);
+            return new Result(false, MessageConstant.GET_SETMEAL_COUNT_REPORT_FAIL);
         }
     }
 
     @GetMapping("/getBusinessReportData")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
-    public Result getBusinessReportData(){
-        try{
-            Map<String,Object> data = reportService.getBusinessReportData();
-            return new Result(true,MessageConstant.GET_BUSINESS_REPORT_SUCCESS,data);
-        }catch (Exception e){
-            return new Result(false,MessageConstant.GET_BUSINESS_REPORT_FAIL);
+    public Result getBusinessReportData() {
+        try {
+            Map<String, Object> data = reportService.getBusinessReportData();
+            return new Result(true, MessageConstant.GET_BUSINESS_REPORT_SUCCESS, data);
+        } catch (Exception e) {
+            return new Result(false, MessageConstant.GET_BUSINESS_REPORT_FAIL);
         }
     }
 
     @GetMapping("/getMemberHealthReportData")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
-    public Result getMemberHealthReportData(){
-        try{
+    public Result getMemberHealthReportData() {
+        try {
             String username = (String) SecurityContextHolder.getContext().getAuthentication().getName();
             Integer memberId = memberService.findMemberIdByUsername(username);
-            if(null == memberId){
+            if (null == memberId) {
                 memberId = userService.findUserIdByUsername(username);
             }
-            Map<String,Object> data = reportService.getMemberHealthReportData(memberId);
-            return new Result(true,MessageConstant.GET_MEMBER_HEALTH_REPORT_SUCCESS,data);
-        }catch (Exception e){
-            return new Result(false,MessageConstant.GET_MEMBER_HEALTH_REPORT_FAIL);
+            Map<String, Object> data = reportService.getMemberHealthReportData(memberId);
+            return new Result(true, MessageConstant.GET_MEMBER_HEALTH_REPORT_SUCCESS, data);
+        } catch (Exception e) {
+            return new Result(false, MessageConstant.GET_MEMBER_HEALTH_REPORT_FAIL);
         }
     }
 
     @GetMapping("/exportMemberHealthStatusReport")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
-    public Result exportMemberHealthStatusReport(HttpServletRequest request, HttpServletResponse response){
-        try{
+    public Result exportMemberHealthStatusReport(HttpServletRequest request, HttpServletResponse response) {
+        try {
             String username = (String) SecurityContextHolder.getContext().getAuthentication().getName();
             Integer memberId = memberService.findMemberIdByUsername(username);
-            if(null == memberId){
+            if (null == memberId) {
                 memberId = userService.findUserIdByUsername(username);
             }
-            Map<String,Object> data = reportService.getMemberHealthReportData(memberId);
+            Map<String, Object> data = reportService.getMemberHealthReportData(memberId);
             ByteArrayInputStream excelByteArrayStream = excelGenerator.generateExcel(data);
 
             response.setContentType("application/vnd.ms-excel");
@@ -136,16 +132,16 @@ public class ReportController {
             out.flush();
             out.close();
             return null;
-        }catch (Exception e){
-            return new Result(false,MessageConstant.GET_MEMBER_HEALTH_REPORT_FAIL);
+        } catch (Exception e) {
+            return new Result(false, MessageConstant.GET_MEMBER_HEALTH_REPORT_FAIL);
         }
     }
 
     @GetMapping("/exportBusinessReport")
     @PreAuthorize("hasAuthority('REPORT_VIEW')")
-    public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response){
-        try{
-            Map<String,Object> result = reportService.getBusinessReportData();
+    public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, Object> result = reportService.getBusinessReportData();
             LocalDate reportDate = (LocalDate) result.get("reportDate");
             // 轉換時間到字符串
             String reportDateStr = reportDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -190,11 +186,11 @@ public class ReportController {
             row.getCell(7).setCellValue(thisMonthVisitsNumber);
 
             int rowNum = 12;
-            for(Map map : hotSetmeal){
+            for (Map map : hotSetmeal) {
                 String name = (String) map.get("name");
                 Long setmeal_count = (Long) map.get("setmeal_count");
                 BigDecimal proportion = (BigDecimal) map.get("proportion");
-                row = sheet.getRow(rowNum ++);
+                row = sheet.getRow(rowNum++);
                 row.getCell(4).setCellValue(name);
                 row.getCell(5).setCellValue(setmeal_count);
                 row.getCell(6).setCellValue(proportion.doubleValue());
@@ -209,8 +205,8 @@ public class ReportController {
             out.close();
             excel.close();
             return null;
-        } catch (Exception e){
-            return new Result(false,MessageConstant.GET_BUSINESS_REPORT_FAIL);
+        } catch (Exception e) {
+            return new Result(false, MessageConstant.GET_BUSINESS_REPORT_FAIL);
         }
     }
 }

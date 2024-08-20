@@ -118,8 +118,8 @@
                         <el-form-item label="描述" prop="description">
                             <el-input v-model="formData.description" type="textarea"></el-input>
                         </el-form-item>
-                        <el-form-item label="上级菜单" prop="parentMenuId">
-                            <font color="red" style="font-size: 12px;">*不選擇的視為最上層菜單</font>
+                        <el-form-item label="上级菜单" prop="parentMenuId" id="parentMenuId">
+                            <font style="font-size: 12px; color: red; ">*不選擇的視為最上層菜單</font>
                             <el-select v-model="formData.parentMenuId">
                                 <el-option label="不選擇" value="0">無</el-option>
                                 <el-option v-for="parentMenu in tableData" :key="parentMenu.id" :label="parentMenu.name" :value="parentMenu.id">
@@ -282,21 +282,28 @@
                             vm.$message.error(resp.data.message);
                         }
                     })
-                    // 取得之前已選取之上級選單選項
-                    axios.get("/menus/getParentMenu/" + row.id).then((resp) =>{
-                        if (resp.data.flag && resp.data.data != null){
-                            this.selectMenus = resp.data.data;
-                            for (let i = 0; i < this.tableData.length; i++) {
-                                for (let j = 0; j < this.selectMenus.length; j++) {
-                                    if (this.tableData[i].id === this.selectMenus[j].id) {
-                                        this.tableData[i].checked = true;
-                                    }
-                                }
+                    // 如果 本身是子選單 則 不能更改父選單
+                    // 如果本身是父選單 則 可查看子選單 但不能更改
+                    if (this.formData.parentId === null){
+                        // 是父選單 則 不能更改父選單
+                        this.formData.parentId = null;
+                        // id 為 parentId 的選單 改為 不可更改 只能讀
+                        this.tableData.forEach(item => {
+                            if (item.id === this.formData.parentId){
+                                item.disabled = true;
                             }
-                        } else {
-                            vm.$message.error(resp.data.message);
-                        }
-                    })
+                        });
+                    } else {
+                        // 本身是子選單 可 更改父選單
+                        // 如果tableTata的parentId 跟 formData的parentId相同則是 之前新增時的父選單 預設selected
+                        // 勾選 該 id 的 option
+                        this.tableData.forEach(item => {
+                            if (item.id === this.formData.parentId){
+                                item.selected = true;
+                            }
+                        });
+                    }
+
                 }).catch(reason => {
                     this.showErrorMsg(reason);
                 }).finally(() =>{

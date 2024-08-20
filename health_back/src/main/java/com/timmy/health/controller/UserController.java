@@ -3,7 +3,6 @@ package com.timmy.health.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.timmy.health.constant.UserConstant;
-import com.timmy.health.domain.CheckGroup;
 import com.timmy.health.domain.User;
 import com.timmy.health.domain.UserAndRole;
 import com.timmy.health.entity.Result;

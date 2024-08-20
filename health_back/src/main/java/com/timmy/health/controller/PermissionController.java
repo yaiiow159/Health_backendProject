@@ -4,15 +4,11 @@ package com.timmy.health.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.timmy.health.constant.MessageConstant;
 import com.timmy.health.domain.Permission;
-import com.timmy.health.domain.Setmeal;
 import com.timmy.health.entity.Result;
 import com.timmy.health.service.PerMissionService;
 import com.timmy.health.service.RoleService;
-import com.timmy.health.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

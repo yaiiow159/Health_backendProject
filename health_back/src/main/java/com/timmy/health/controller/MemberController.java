@@ -38,7 +38,7 @@ public class MemberController {
     public Result findAll() {
         List<Member> memberList;
         try {
-             memberList = memberService.findAll();
+            memberList = memberService.findAll();
             return new Result(true, MessageConstant.QUERY_MEMBER_SUCCESS, memberList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class MemberController {
     @GetMapping("/{currentPage}/{pageSize}")
     public Result findPages(@PathVariable Integer currentPage,
                             @PathVariable Integer pageSize,
-                            Member member){
+                            Member member) {
         IPage<Member> userIPage = memberService.getPages(currentPage, pageSize, member);
         if (currentPage > userIPage.getPages()) {
             log.info("當前頁面超過取得頁面數");
@@ -72,9 +72,10 @@ public class MemberController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('MEMBER_ADD')")
     public Result addMember(@RequestBody Member member) {
         try {
-            if(memberService.addMember(member) == 0){
+            if (memberService.addMember(member) == 0) {
                 return new Result(false, MessageConstant.MEMBER_ADD_FAIL);
             } else return new Result(true, MessageConstant.MEMBER_ADD_SUCCESS);
         } catch (Exception e) {
@@ -84,9 +85,10 @@ public class MemberController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('MEMBER_EDIT')")
     public Result editMember(@RequestBody Member member) {
         try {
-            if(memberService.editMember(member) == 0){
+            if (memberService.editMember(member) == 0) {
                 return new Result(false, MessageConstant.MEMBER_EDIT_FAIL);
             } else return new Result(true, MessageConstant.MEMBER_EDIT_SUCCESS);
         } catch (Exception e) {
@@ -96,9 +98,10 @@ public class MemberController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('MEMBER_DELETE')")
     public Result deleteMemberById(@PathVariable("id") Integer id) {
         try {
-            if(memberService.deleteMemberById(id) == 0){
+            if (memberService.deleteMemberById(id) == 0) {
                 return new Result(false, MessageConstant.MEMBER_DELETE_FAIL);
             } else return new Result(true, MessageConstant.MEMBER_DELETE_SUCCESS);
         } catch (Exception e) {

@@ -203,7 +203,7 @@
                 //進行屬性校驗
                 this.$refs['dataAddForm'].validate((valid) => {
                     if (valid) {
-                        axios.post("/roles/" + this.permissionIds, this.formData).then((resp) => {
+                            axios.post("/roles/" + this.permissionIds, this.formData).then((resp) => {
                             if (resp.data.flag) {
                                 this.$message({
                                     message: resp.data.message,
@@ -216,7 +216,7 @@
                             this.showErrorMsg(reason);
                         }).finally(()=>{
                             this.findPage();
-                            this.dialogFormVisible4Edit= false;
+                            this.dialogFormVisible= false;
                         });
                     } else {
                         this.$message.error("資料填寫不正確，請確認必要欄位都已填寫");

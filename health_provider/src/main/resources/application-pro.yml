@@ -1,5 +1,5 @@
 db:
-  host: 104.199.166.238
+  host: localhost
   username: root
   password: Timmy@870728
 

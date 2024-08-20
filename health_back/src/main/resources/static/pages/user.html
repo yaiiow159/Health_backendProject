@@ -135,13 +135,15 @@
         created() {
             this.findPage();
         },
-        methods: {
+        computed: {
             formateDate(date) {
                 return date ? new Date(date).toLocaleDateString("zh-TW") : '';
             },
             maskPassword(password) {
                 return password ? '*'.repeat(password.length) : '';
             },
+        },
+        methods: {
             findPage() {
                 let vm = this;
                 let param = "?query";

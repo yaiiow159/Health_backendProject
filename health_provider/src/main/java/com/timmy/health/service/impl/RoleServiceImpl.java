@@ -33,8 +33,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper,Role> implements Rol
 
     @Override
     public IPage<Role> getPages(Integer currenPage, Integer pageSize, Role role) {
-        Page<Role> page = new Page<>(currenPage, pageSize);
-        return roleMapper.getPages(page, role);
+        PageHelper.startPage(currenPage, pageSize);
+        return roleMapper.getPages(role);
     }
 
     @Override
@@ -45,6 +45,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper,Role> implements Rol
 
 
     @Override
+    @Transactional
     public Integer addRole(Role role, Integer[] permissionIds) {
         Integer roleId = roleMapper.save(role);
         List<RoleAndPermission> rolePermissions = new ArrayList<>();
@@ -61,6 +62,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper,Role> implements Rol
     }
 
     @Override
+    @Transactional
     public Integer editRole(Role role, Integer[] permissionIds) {
         roleMapper.editRole(role);
         roleMapper.deletePermissionByRoleId(role.getId());

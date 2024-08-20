@@ -41,7 +41,7 @@ public class ReportServiceImpl implements ReportService {
         String thisWeekMondayString = thisWeekMonday.format(formatter);
         String firstDay4ThisMonthString = firstDay4ThisMonth.format(formatter);
 
-        Integer todayNewMember = memberMapper.findMemberCountByDate(todayString);//select count(id) from t_member where regTime = today
+        Integer todayNewMember = memberMapper.findMemberCountByDate(todayString);
         Integer totalMember = memberMapper.findMemberTotalCount();
         Integer thisWeekNewMember = memberMapper.findMemberCountAfterDate(thisWeekMondayString);
         Integer thisMonthNewMember = memberMapper.findMemberCountAfterDate(firstDay4ThisMonthString);

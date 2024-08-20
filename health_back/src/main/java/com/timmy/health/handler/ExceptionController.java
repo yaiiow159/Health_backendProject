@@ -12,8 +12,6 @@ import javax.validation.ConstraintViolationException;
 
 /**
  * @author timmy
- * @date 2022/7/19
- * @description 統一處理錯誤訊息
  */
 @RestControllerAdvice
 public class ExceptionController {

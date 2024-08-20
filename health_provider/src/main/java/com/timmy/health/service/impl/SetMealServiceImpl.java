@@ -21,7 +21,6 @@ import java.util.Map;
 
 
 @DubboService(interfaceClass = SetMealService.class)
-@Transactional
 public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, Setmeal> implements SetMealService {
 
     @Autowired
@@ -30,6 +29,7 @@ public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, Setmeal> impl
     private StringRedisTemplate redisTemplate;
 
     @Override
+    @Transactional
     public void add(Setmeal setmeal, Integer[] checkgroupIds) {
         setMealMapper.addSetMeal(setmeal);
         Integer setMealId = setmeal.getId();
@@ -81,7 +81,7 @@ public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, Setmeal> impl
 
     private static @NotNull Map<String, Integer> setSetMealAndCheckGroupRelate(Integer id, Integer[] checkGroupIds) {
         Map<String, Integer> map = new HashMap<>();
-        if (checkGroupIds != null && checkGroupIds.length != 0) {
+        if (checkGroupIds != null) {
             for (Integer checkGroupId : checkGroupIds) {
                 map.put("checkGroupId", checkGroupId);
                 map.put("setMealId", id);
